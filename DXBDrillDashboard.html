@@ -1,0 +1,3361 @@
+<!DOCTYPE html>
+<html lang="en"><head><style id="qw-theme">:root {
+  --color-bg: #faf9fc;
+  --color-text: #131920;
+  --color-navbar-bg: #f9f9fb;
+  --color-bg-chat-view: #fcfcfd;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #f9fafb;
+  --color-bg-hover: #f3f4f6;
+  --color-surface: #f9fafb;
+  --color-surface-hover: #f3f4f6;
+  --color-surface-active: #e5e7eb;
+  --color-border: rgba(0, 0, 0, .12);
+  --color-border-light: rgba(0, 0, 0, .06);
+  --color-border-strong: #d1d5db;
+  --color-primary: #4200db;
+  --color-primary-dark: #35009e;
+  --color-primary-light: #8575ff;
+  --color-primary-bg: #e8e6ff;
+  --color-primary-hover-border: #35009e;
+  --color-nav-icon-active: #4200db;
+  --color-nav-hover-border: #4200db;
+  --color-primary-alpha-3: color-mix(in srgb, #4200db 3%, transparent);
+  --color-primary-alpha-5: color-mix(in srgb, #4200db 5%, transparent);
+  --color-primary-alpha-8: color-mix(in srgb, #4200db 8%, transparent);
+  --color-primary-alpha-12: color-mix(in srgb, #4200db 12%, transparent);
+  --color-primary-alpha-15: color-mix(in srgb, #4200db 15%, transparent);
+  --color-primary-alpha-20: color-mix(in srgb, #4200db 20%, transparent);
+  --color-primary-alpha-25: color-mix(in srgb, #4200db 25%, transparent);
+  --color-primary-alpha-30: color-mix(in srgb, #4200db 30%, transparent);
+  --color-primary-alpha-40: color-mix(in srgb, #4200db 40%, transparent);
+  --color-primary-alpha-50: color-mix(in srgb, #4200db 50%, transparent);
+  --color-primary-alpha-60: color-mix(in srgb, #4200db 60%, transparent);
+  --color-primary-subtle: color-mix(in srgb, #4200db 12%, transparent);
+  --color-primary-border: color-mix(in srgb, #4200db 30%, transparent);
+  --color-focus-ring: color-mix(in srgb, #4200db 50%, transparent);
+  --color-sidebar-hover: color-mix(in srgb, #4200db 12%, transparent);
+  --color-accent: #4200db;
+  --color-accent-foreground: #4200db;
+  --color-accent-dark: #35009e;
+  --color-accent-light: #e8e6ff;
+  --color-accent-inverse: #ffffff;
+  --color-link: #4200db;
+  --color-primary-gradient-end: #e8e6ff;
+  --color-primary-bg-solid: #e8e6ff;
+  --color-user-bubble: #F3F3F7;
+  --color-user-bubble-text: #131920;
+  --color-text-secondary: #5e5e5e;
+  --color-text-tertiary: #656871;
+  --color-text-muted: #9ca3af;
+  --color-text-on-primary: #ffffff;
+  --color-success: #00802f;
+  --color-success-dark: #00471e;
+  --color-success-light: #d9ffd6;
+  --color-success-hover: #005c26;
+  --color-success-bg: #e6f5eb;
+  --color-success-border: #b3d9bf;
+  --color-success-foreground: #00802f;
+  --color-success-dark-foreground: #00471e;
+  --color-success-text: #00471e;
+  --color-error: #db0000;
+  --color-error-dark: #700000;
+  --color-error-light: #ffe0e0;
+  --color-error-hover: #ffe0e0;
+  --color-error-bg: #fceaea;
+  --color-error-border: #f2cccc;
+  --color-error-active-border: #db0000;
+  --color-error-foreground: #db0000;
+  --color-error-dark-foreground: #700000;
+  --color-error-inverse: #ffffff;
+  --color-error-text: #700000;
+  --color-warning: #f2b100;
+  --color-warning-dark: #573a00;
+  --color-warning-light: #fffbbd;
+  --color-warning-hover: #db9200;
+  --color-warning-bg: #fef7e6;
+  --color-warning-border: #f9dfa3;
+  --color-warning-foreground: #f2b100;
+  --color-warning-dark-foreground: #573a00;
+  --color-warning-inverse: #573a00;
+  --color-surface-warning: #fffbbd;
+  --color-text-warning: #573a00;
+  --color-info: #006ce0;
+  --color-info-dark: #002a66;
+  --color-info-light: #d1f1ff;
+  --color-info-hover: #003b8f;
+  --color-info-bg: #ebf3fc;
+  --color-info-border: #b3d1f0;
+  --color-info-foreground: #006ce0;
+  --color-info-dark-foreground: #002a66;
+  --color-info-inverse: #ffffff;
+  --color-overlay: rgba(0, 0, 0, .5);
+  --color-shadow: rgba(0, 0, 0, .08);
+  --color-hover: rgba(0, 0, 0, .05);
+  --color-tooltip-bg: rgba(0, 0, 0, .85);
+  --color-tooltip-text: #ffffff;
+  --color-voice-purple: #8575ff;
+  --color-voice-purple-dark: #4200db;
+  --color-voice-purple-light: #8575ff;
+  --color-voice-red: #db0000;
+  --color-voice-red-dark: #700000;
+  --color-voice-amber: #f2b100;
+  --color-voice-purple-glow: rgba(66, 0, 219, .4);
+  --color-voice-red-glow: rgba(219, 0, 0, .4);
+  --font-sans: "Amazon Ember", "Helvetica Neue", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", "Monaco", "Menlo", "Consolas", monospace;
+  --text-2xs: .5625rem;
+  --text-xs: .625rem;
+  --text-sm: .6875rem;
+  --text-base: .75rem;
+  --text-md: .8125rem;
+  --text-lg: .875rem;
+  --text-xl: 1rem;
+  --text-2xl: 1.125rem;
+  --text-3xl: 1.25rem;
+  --text-4xl: 1.5rem;
+  --text-5xl: 2rem;
+  --spacing-1: calc(.25rem * 1);
+  --spacing-1-5: calc(.25rem * 1.5);
+  --spacing-2: calc(.25rem * 2);
+  --spacing-3: calc(.25rem * 3);
+  --spacing-4: calc(.25rem * 4);
+  --spacing-5: calc(.25rem * 5);
+  --spacing-6: calc(.25rem * 6);
+  --spacing-7: calc(.25rem * 7);
+  --spacing-8: calc(.25rem * 8);
+  --spacing-9: calc(.25rem * 9);
+  --spacing-10: calc(.25rem * 10);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-card: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 8px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, .08);
+  --color-success-bg-solid: #d9ffd6;
+  --color-error-bg-solid: #ffe0e0;
+  --color-error-border-solid: #ffe0e0;
+  --color-warning-bg-solid: #fffbbd;
+  --color-warning-text: #573a00;
+  --color-info-bg-solid: #d1f1ff;
+  --color-info-bg-solid-alt: #d1f1ff;
+  --color-info-text: #002a66;
+  --color-info-text-alt: #002a66;
+  --color-emerald: #10b981;
+  --color-teal: #4ecdc4;
+  --color-code-bg: #F3F3F7;
+  --color-code-header-bg: #f1f3f5;
+  --color-code-text: #24292e;
+  --color-code-border: #e1e4e8;
+  --color-code-muted: #6a737d;
+  --color-inline-code-bg: #F3F3F7;
+  --color-inline-code-text: #24292e;
+  --color-inline-code-border: #e1e4e8;
+  --color-scrollbar-thumb: #d1d5db;
+  --color-scrollbar-track: transparent;
+  --color-graph-node-text: #333333;
+  --color-graph-node-text-dim: #7F8C8D;
+  --color-graph-edge-default: #95A5A6;
+  --color-graph-edge-cross: #E67E22;
+  --color-graph-edge-text: #666666;
+  --color-graph-edge-stroke: #ffffff;
+  --color-graph-highlight-bg: #FF6B6B;
+  --color-graph-highlight-border: #E74C3C;
+  --color-graph-search-bg: #FFD700;
+  --color-graph-search-border: #FFA500;
+  --color-graph-focus-border: #C0392B;
+  --color-graph-external-border: #95A5A6;
+  --color-graph-cat-file: #3498DB;
+  --color-graph-cat-folder: #7F8C8D;
+  --color-graph-cat-file-aggregate: #2980B9;
+  --color-graph-cat-class: #9B59B6;
+  --color-graph-cat-function: #2ECC71;
+  --color-graph-cat-method: #1ABC9C;
+  --color-graph-cat-variable: #F39C12;
+  --color-graph-cat-import: #D35400;
+  --color-graph-cat-module: #5B6ABF;
+  --color-graph-cat-concept: #E74C3C;
+  --color-graph-cat-person: #FF6B6B;
+  --color-graph-cat-org: #4ECDC4;
+  --color-graph-cat-organization: #4ECDC4;
+  --color-graph-cat-product: #A29BFE;
+  --color-graph-cat-metric: #FD79A8;
+  --color-graph-cat-location: #34495E;
+  --color-graph-cat-date: #E056A0;
+  --color-graph-cat-code: #3498DB;
+  --color-graph-cat-doc: #7F8C8D;
+  --color-graph-cat-url: #00B894;
+  --color-graph-cat-email: #6C5CE7;
+  --color-graph-cat-unknown: #BDC3C7;
+  --color-graph-rel-contains: #BDC3C7;
+  --color-graph-rel-extends: #9B59B6;
+  --color-graph-rel-implements: #3498DB;
+  --color-graph-rel-imports: #E67E22;
+  --color-graph-rel-uses: #2ECC71;
+  --color-graph-rel-calls: #27AE60;
+  --color-graph-rel-references: #F39C12;
+  --color-graph-rel-related-to: #95A5A6;
+  --color-graph-rel-works-on: #E74C3C;
+  --color-graph-rel-owns: #1ABC9C;
+  --color-graph-rel-depends-on: #E67E22;
+  --color-graph-rel-parent-of: #BDC3C7;
+  --qs-content: #fff;
+  --qs-main: #fff;
+  --qs-primary-foreground: #131920;
+  --qs-secondary-foreground: #656871;
+  --qs-tertiary-foreground: #9ca3af;
+  --qs-placeholder-foreground: #8c8c94;
+  --qs-divider: #dedee3;
+  --qs-default-border: #8c8c94;
+  --qs-neutral-soft: #b4b4bb;
+  --qs-neutral-gray-50: #f9fafb;
+  --qs-tertiary-background: #f9fafb;
+  --qs-action-hover: #f3f3f7;
+  --qs-primary-default: #4200db;
+  --qs-primary-dark: #35009e;
+  --qs-primary-light: #e8e6ff;
+  --qs-success-default: #00802f;
+  --qs-error-default: #db0000;
+  --qs-font-sans: "Amazon Ember", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+  --qs-font-family: "Amazon Ember", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+  --qs-font-base-letter-spacing: .15px;
+  --qs-shadow-sm: 0 0 2px 0 #00000029, 0 0 4px 0 #00000029;
+  --qs-shadow-md: 0 0 2px 0 #00000029, 0 2px 8px 1px #00000029;
+  --qs-shadow-lg: 0 4px 16px 4px #00000029, 0 2px 6px 1px #00000029;
+  --qs-shadow-xl: 0 4px 8px 2px #00000029, 0 6px 20px 4px #00000029;
+  --qs-width-modal-sm: 384px;
+  --qs-width-modal-md: 600px;
+  --qs-width-modal-lg: 1136px;
+  --qs-grid-gap: 16px;
+  --qs-grid-gap-xl: 24px;
+  --qs-primary-medium: #8575ff;
+  --qs-primary-inverse: #fff;
+  --qs-neutral-lightest: #f9f9fb;
+  --qs-neutral-light: #f3f3f7;
+  --qs-neutral-default: #dedee3;
+  --qs-neutral-medium: #8c8c94;
+  --qs-neutral-deep: #656871;
+  --qs-neutral-dark: #333843;
+  --qs-neutral-strong: #131920;
+  --qs-neutral-white: #fff;
+  --qs-neutral-black: #000;
+  --qs-success-medium: #005c26;
+  --qs-success-dark: #00471e;
+  --qs-success-light: #d9ffd6;
+  --qs-success-inverse: #fff;
+  --qs-info-default: #006ce0;
+  --qs-info-medium: #003b8f;
+  --qs-info-dark: #002a66;
+  --qs-info-light: #d1f1ff;
+  --qs-info-inverse: #fff;
+  --qs-warning-default: #f2b100;
+  --qs-warning-medium: #db9200;
+  --qs-warning-dark: #573a00;
+  --qs-warning-light: #fffbbd;
+  --qs-warning-inverse: #573a00;
+  --qs-warning-experimental: #f2b100;
+  --qs-warning-experimental-light: #fffbbd;
+  --qs-warning-experimental-light-foreground: #fffbbd;
+  --qs-error-medium: #900;
+  --qs-error-dark: #700000;
+  --qs-error-light: #ffe0e0;
+  --qs-error-inverse: #fff;
+  --qs-connection-default: #db3300;
+  --qs-connection-soft: #ff997a;
+  --qs-connection-light: #ffe0d6;
+  --qs-connection-dark: #661800;
+  --qs-automation-default: #b3008f;
+  --qs-automation-medium: #d600ba;
+  --qs-automation-soft: #ff94f1;
+  --qs-automation-light: #ffe0fb;
+  --qs-automation-dark: #660052;
+  --qs-insight-default: #a000b8;
+  --qs-insight-soft: #f299ff;
+  --qs-insight-light: #fce6ff;
+  --qs-insight-dark: #590066;
+  --qs-visualization-default: #7300e5;
+  --qs-visualization-soft: #d4a8ff;
+  --qs-visualization-light: #f2e5ff;
+  --qs-visualization-dark: #45008a;
+  --qs-spice: #ff9800;
+  --qs-coachmark: #006ce0;
+  --qs-brand: #fff;
+  --qs-brand-foreground: #131920;
+  --qs-brand-navbar: #131920;
+  --qs-brand-navbar-foreground: #fff;
+  --qs-brand-navbar-light: #dedee3;
+  --qs-brand-navbar-dark: #000;
+  --qs-application-navbar: #4200db;
+  --qs-application-navbar-foreground: #fff;
+  --qs-application-navbar-light: #e8e6ff;
+  --qs-application-navbar-dark: #35009e;
+  --qs-dimension: #4200db;
+  --qs-dimension-foreground: #fff;
+  --qs-dimension-experimental: #4200db;
+  --qs-dimension-experimental-foreground: #4200db;
+  --qs-measure: #00802f;
+  --qs-measure-foreground: #fff;
+  --qs-measure-experimental: #f2b100;
+  --qs-measure-experimental-foreground: #f2b100;
+  --qs-content-inverse: #333843;
+  --qs-content-inverse-active: #131920;
+  --qs-secondary: #dedee3;
+  --qs-disabled: #8c8c94;
+  --qs-divider-light: #f3f3f7;
+  --qs-hover-border: #333843;
+  --qs-active-border: #4200db;
+  --qs-disabled-border: #dedee3;
+  --qs-error-border: #ffe0e0;
+  --qs-error-active-border: #db0000;
+  --qs-disabled-foreground: #b4b4bb;
+  --qs-primary-inverse-foreground: #fff;
+  --qs-error-foreground: #db0000;
+  --qs-contrast-foreground: #131920;
+  --qs-main-foreground: #131920;
+  --qs-main-secondary-foreground: #656871;
+  --qs-action-disabled: #f3f3f7;
+  --qs-action-active: #e8e6ff;
+  --qs-default-badge: #dedee3;
+  --qs-tag-default: #dedee3;
+  --qs-tag-soft-border: #b4b4bb;
+  --qs-focus-offset: 1px;
+  --qs-toggle-tile-sm: calc(.25rem * 8);
+  --qs-toggle-tile-md: calc(.25rem * 12);
+  --qs-toggle-tile-lg: calc(.25rem * 15);
+  --qs-shadow-pin-right: inset 4px 0 4px -4px #00000029;
+  --qs-shadow-pin-left: inset -4px 0 4px -4px #00000029;
+  --react-pdf-text-layer: 1;
+  --highlight-bg-color: rgba(180, 0, 170, 1);
+  --highlight-selected-bg-color: rgba(0, 100, 0, 1);
+  --react-pdf-annotation-layer: 1;
+  --annotation-unfocused-field-background: url("data:image/svg+xml;charset=UTF-8,<svg width='1px' height='1px' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' style='fill:rgba(0, 54, 255, 0.13);'/></svg>");
+  --input-focus-border-color: Highlight;
+  --input-focus-outline: 1px solid Canvas;
+  --input-unfocused-border-color: transparent;
+  --input-disabled-border-color: transparent;
+  --input-hover-border-color: black;
+  --link-outline: none;
+  color-scheme: light;
+}
+body { background: var(--color-bg); color: var(--color-text); }
+a { color: var(--color-link, var(--color-primary)); }</style>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DXB Infraops LSE/CSE Training Program — Rev 1</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/highcharts@12.1.2/highcharts.js"></script>
+
+<style>
+
+:root {
+
+  --bg:#edf2f7; --bg2:#e2eaf4; --surface:#fff; --surface2:#f8fafc;
+
+  --border:#d8e3ee; --border2:#c2d4e6;
+
+  --text:#17294a; --text2:#3d5a80; --text3:#6b87a4; --text4:#a0b5c8;
+
+  --accent:#1a6bb0; --accent-bg:#e7f2fc; --accent-lt:#cde3f5;
+
+  --green:#0a8f64; --green-bg:#e4f7f1; --green-bd:#9dd9c5;
+
+  --yellow:#b07200; --yellow-bg:#fdf6e3; --yellow-bd:#f0cc7a;
+
+  --red:#b83025; --red-bg:#fdf0ee; --red-bd:#eaaba2;
+
+  --orange:#c45000; --orange-bg:#fff0e6; --orange-bd:#f5b97a;
+
+  --dxb60:#c96b00; --dxb60-bg:#fdf3e3; --dxb60-bd:#f5c882;
+
+  --dxb61:#1a6bb0; --dxb61-bg:#e7f2fc; --dxb61-bd:#a4ceed;
+
+  --dxb62:#6d32cc; --dxb62-bg:#f2ecfd; --dxb62-bd:#c5a8f0;
+
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+
+  --sh:0 1px 3px rgba(20,45,85,.07),0 3px 10px rgba(20,45,85,.05);
+
+  --r:10px; --r-sm:6px;
+
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;line-height:1.55;min-width:960px}
+
+/* TOPBAR */
+
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 1px 6px rgba(20,45,85,.08)}
+
+.brand{display:flex;align-items:center;gap:14px}
+
+.brand-icon{width:34px;height:34px;background:linear-gradient(135deg,#1a6bb0,#2278c4);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;box-shadow:0 2px 6px rgba(26,107,176,.3);flex-shrink:0}
+
+.brand-name{font-weight:700;font-size:14px;color:var(--text);letter-spacing:-.2px}
+
+.brand-sub{font-size:10px;color:var(--text3)}
+
+.divv{width:1px;height:28px;background:var(--border)}
+
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600}
+
+.badge-site{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-lt)}
+
+.nav{display:flex;gap:2px}
+
+.ntab{padding:6px 13px;border-radius:var(--r-sm);cursor:pointer;color:var(--text2);font-size:11.5px;font-weight:500;border:none;background:none;transition:all .14s;white-space:nowrap}
+
+.ntab:hover{background:var(--bg);color:var(--text)}
+
+.ntab.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(26,107,176,.22)}
+
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px var(--green-bg)}
+
+.topbar-meta{font-size:10px;color:var(--text3);display:flex;align-items:center;gap:7px}
+
+.main{padding:20px 24px 56px;max-width:1800px;margin:0 auto}
+
+.page{display:none}.page.active{display:block}
+
+.sh{display:flex;align-items:center;justify-content:space-between;margin-top:22px;margin-bottom:13px}
+
+.st{font-size:10.5px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:7px}
+
+.st i{color:var(--accent);font-size:10px}
+
+/* LEADER */
+
+.leader{background:linear-gradient(130deg,#1a6bb0 0%,#1e7dcc 55%,#145d9e 100%);border-radius:var(--r);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;margin-top:4px;box-shadow:0 4px 18px rgba(26,107,176,.22)}
+
+.l-left{display:flex;align-items:center;gap:14px}
+
+.l-av{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;flex-shrink:0}
+
+.l-name{font-weight:800;font-size:15px;color:#fff}
+
+.l-role{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px}
+
+.l-alias{font-size:10px;color:rgba(255,255,255,.5);margin-top:1px}
+
+.l-stats{display:flex;gap:28px}
+
+.l-sv{font-size:22px;font-weight:800;color:#fff;line-height:1}
+
+.l-sl{font-size:10px;color:rgba(255,255,255,.65);margin-top:3px}
+
+/* KPI */
+
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:15px 16px;box-shadow:var(--sh)}
+
+.kpi-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+
+.kpi-ico{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+
+.kpi-lbl{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+
+.kpi-val{font-size:26px;font-weight:800;line-height:1;color:var(--text)}
+
+.kpi-sub{font-size:10px;color:var(--text4);margin-top:3px}
+
+.k-blue .kpi-ico{background:var(--accent-bg);color:var(--accent)}.k-blue .kpi-val{color:var(--accent)}
+
+.k-green .kpi-ico{background:var(--green-bg);color:var(--green)}.k-green .kpi-val{color:var(--green)}
+
+.k-yellow .kpi-ico{background:var(--yellow-bg);color:var(--yellow)}.k-yellow .kpi-val{color:var(--yellow)}
+
+.k-red .kpi-ico{background:var(--red-bg);color:var(--red)}.k-red .kpi-val{color:var(--red)}
+
+.k-orange .kpi-ico{background:var(--orange-bg);color:var(--orange)}.k-orange .kpi-val{color:var(--orange)}
+
+.k-slate .kpi-ico{background:var(--bg2);color:var(--text2)}
+
+/* CHARTS */
+
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.cc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh)}
+
+.cc-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+
+.cc-title i{color:var(--accent)}
+
+/* ASSESSOR CARDS */
+
+.asr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+
+.asr-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
+
+.asr-site-lbl{font-weight:700;font-size:12px;display:flex;align-items:center;gap:7px;margin-bottom:12px}
+
+.asr-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+
+.asr-row:last-child{margin-bottom:0}
+
+.asr-name{font-weight:700;font-size:12px;color:var(--text)}
+
+.asr-title{font-size:10px;color:var(--text3)}
+
+.asr-alias{font-size:10px;color:var(--text4);font-family:monospace}
+
+/* ROLE PILLS */
+
+.rp{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;flex-shrink:0;white-space:nowrap}
+
+.rp-ce{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-lt)}
+
+.rp-fm{background:var(--dxb62-bg);color:var(--dxb62);border:1px solid var(--dxb62-bd)}
+
+.rp-sec{background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-bd)}
+
+.rp-dco{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+
+.rp-ctrls{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+
+.rp-id{background:#edfaf3;color:#136a38;border:1px solid #9dd9b8}
+
+/* CHIPS */
+
+.chip{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:500;display:inline-block}
+
+.chip-s{background:var(--bg2);color:var(--text2);border:1px solid var(--border);margin:1px}
+
+.chip-b{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-lt)}
+
+/* UPCOMING */
+
+.uc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
+.uc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh);border-left:3px solid var(--border2)}
+
+.uc-card.u60{border-left-color:var(--dxb60)}.uc-card.u61{border-left-color:var(--dxb61)}.uc-card.u62{border-left-color:var(--dxb62)}
+
+.uc-date{font-size:10px;color:var(--text3);margin-bottom:6px}
+
+.uc-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
+
+.uc-site{font-size:10px;margin-bottom:8px}
+
+/* SITE COLOURS */
+
+.c60{color:var(--dxb60);font-weight:700}.c61{color:var(--dxb61);font-weight:700}.c62{color:var(--dxb62);font-weight:700}
+
+/* TABLES */
+
+.tw{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
+
+.tw-scroll{overflow-x:auto;overflow-y:visible;width:100%;max-height:calc(100vh - 260px);overflow-y:auto;}
+
+table{border-collapse:separate;border-spacing:0;min-width:1400px;width:max-content;}
+
+thead{background:var(--surface2);}
+
+th{padding:9px 10px;text-align:left;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border);white-space:nowrap;background:var(--surface2);position:sticky;top:0;z-index:3;}
+
+td{padding:7px 10px;border-bottom:1px solid var(--bg2);font-size:11px;vertical-align:middle;}
+
+tr:last-child td{border-bottom:none}
+
+tr:hover td{background:var(--accent-bg)}
+
+.rn{color:var(--text4);font-size:10px;font-weight:600}
+
+tr.row-overdue td{background:#fff8f5 !important}
+
+tr.row-overdue:hover td{background:#fdeee8 !important}
+
+/* FILTER BAR */
+
+.fb-wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+
+.fb{display:flex;gap:5px;align-items:center}
+
+.fl{font-size:10px;color:var(--text3);font-weight:600;white-space:nowrap}
+
+.fb-btn{padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text2);font-size:10px;font-weight:600;cursor:pointer;transition:all .14s}
+
+.fb-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+.fb-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* DROPDOWNS */
+
+.sel{font-size:10px;font-family:var(--font);color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px 18px 3px 6px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M0 0l4.5 5 4.5-5z' fill='%236b87a4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 5px center;cursor:pointer;transition:border-color .14s;width:100%}
+
+.sel:hover{border-color:var(--accent)}
+
+.sel:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-lt)}
+
+.sel-fr{border-left:2px solid var(--red)}
+
+.sel-ic{border-left:2px solid var(--accent)}
+
+.sel-seot{border-left:2px solid var(--dxb62)}
+
+.sel-assor{border-left:2px solid var(--dxb62)}
+
+.sel-dept{border-left:2px solid var(--yellow)}
+
+.sel-contact{border-left:2px solid var(--green)}
+
+/* DEPT CELL */
+
+.dept-cell{display:flex;flex-direction:column;gap:4px;min-width:110px}
+
+.dept-cell .sel-contact{font-style:italic;color:var(--text3)}
+
+/* site mini-tag */
+
+.stag{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;flex-shrink:0}
+
+.stag-60{background:var(--dxb60-bg);color:var(--dxb60)}
+
+.stag-61{background:var(--dxb61-bg);color:var(--dxb61)}
+
+.stag-62{background:var(--dxb62-bg);color:var(--dxb62)}
+
+.role-row{display:flex;align-items:center;gap:4px}
+
+/* STATUS */
+
+.status-sel{font-size:10px;font-family:var(--font);border:1px solid var(--border);border-radius:20px;padding:3px 22px 3px 9px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M0 0l4.5 5 4.5-5z' fill='%236b87a4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;cursor:pointer;font-weight:600;transition:all .14s}
+
+.status-sel.pending{background-color:var(--bg2);color:var(--text3);border-color:var(--border2)}
+
+.status-sel.completed{background-color:var(--green-bg);color:var(--green);border-color:var(--green-bd)}
+
+/* OVERDUE BADGE inline with date */
+
+.overdue-badge{display:inline-flex;align-items:center;gap:3px;background:var(--orange-bg);color:var(--orange);border:1px solid var(--orange-bd);border-radius:10px;padding:1px 6px;font-size:9px;font-weight:700;margin-left:5px;vertical-align:middle;white-space:nowrap}
+
+/* TEXT AREAS */
+
+.inline-text{font-size:11px;font-family:var(--font);color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:4px 7px;transition:border-color .14s;width:100%;resize:none;min-height:38px}
+
+.inline-text:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-lt)}
+
+.inline-text::placeholder{color:var(--text4)}
+
+/* RESULT % */
+
+.result-pct-wrap{display:flex;align-items:center;gap:4px}
+
+.result-pct{font-size:12px;font-family:var(--font);color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:4px 5px;width:55px;text-align:center;font-weight:700;transition:all .14s}
+
+.result-pct:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-lt)}
+
+.pct-label{font-size:10px;color:var(--text3);font-weight:600}
+
+/* COLUMN TOGGLE SLIDER */
+
+.col-toggle-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:8px 14px;margin-bottom:10px;box-shadow:var(--sh);overflow-x:auto;}
+
+.col-toggle-inner{display:flex;gap:6px;align-items:center;white-space:nowrap;min-width:max-content}
+
+.col-toggle-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-right:4px;flex-shrink:0}
+
+.ctog{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;font-size:10px;font-weight:600;color:var(--text2);transition:all .14s;user-select:none;flex-shrink:0}
+
+.ctog:hover{border-color:var(--accent);color:var(--accent)}
+
+.ctog.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.ctog input{display:none}
+
+/* GRADING */
+
+.gc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+.gc{border-radius:var(--r);padding:18px;box-shadow:var(--sh)}
+
+.gc-g{background:var(--green-bg);border:1px solid var(--green-bd)}.gc-y{background:var(--yellow-bg);border:1px solid var(--yellow-bd)}.gc-r{background:var(--red-bg);border:1px solid var(--red-bd)}
+
+.gc-title{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+
+.gc-g .gc-title{color:var(--green)}.gc-y .gc-title{color:var(--yellow)}.gc-r .gc-title{color:var(--red)}
+
+.gc-list{list-style:none;display:flex;flex-direction:column;gap:5px}
+
+.gc-list li{font-size:11px;color:var(--text2);display:flex;align-items:flex-start;gap:6px;line-height:1.45}
+
+.gc-list li::before{content:"–";flex-shrink:0;margin-top:1px;font-size:10px}
+
+.gc-g .gc-list li::before{color:var(--green)}.gc-y .gc-list li::before{color:var(--yellow)}.gc-r .gc-list li::before{color:var(--red)}
+
+.score-pill{display:inline-block;padding:3px 11px;border-radius:20px;font-size:11px;font-weight:700;margin-top:10px}
+
+.sp-g{background:var(--green);color:#fff}.sp-y{background:var(--yellow);color:#fff}.sp-r{background:var(--red);color:#fff}
+
+/* MEMBER GRID */
+
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+.mc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+
+.mc-hdr{padding:11px 15px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+
+.mc-title{font-weight:700;font-size:12px;display:flex;align-items:center;gap:7px}
+
+.mc-asrs{padding:7px 15px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+.mc-asr-item{display:flex;align-items:center;gap:5px;font-size:10px}
+
+.mr{display:flex;align-items:center;justify-content:space-between;padding:8px 15px;border-bottom:1px solid var(--bg2);gap:8px}
+
+.mr:last-child{border-bottom:none}.mr:hover{background:var(--bg)}
+
+.m-info{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+
+.av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+
+.m-name{font-size:12px;font-weight:600;color:var(--text)}
+
+.m-stat{font-size:10px;color:var(--text4)}
+
+.m-mgs{display:flex;gap:3px}
+
+.mmg{width:18px;height:18px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700}
+
+.mmg-g{background:var(--green-bg);color:var(--green)}.mmg-y{background:var(--yellow-bg);color:var(--yellow)}
+
+.mmg-r{background:var(--red-bg);color:var(--red)}.mmg-p{background:var(--bg2);color:var(--text4);border:1px dashed var(--border2)}
+
+/* score def table */
+
+.score-def-table{width:100%;border-collapse:collapse;font-size:11px}
+
+.score-def-table th{padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border);background:var(--surface2)}
+
+.score-def-table td{padding:8px 12px;border-bottom:1px solid var(--bg2);color:var(--text)}
+
+.score-def-table tr:last-child td{border-bottom:none}
+
+/* ── SCENARIO LIBRARY ── */
+
+.scen-stat-pill{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 14px;box-shadow:var(--sh);}
+
+.scen-stat-num{font-size:20px;font-weight:800;line-height:1;}
+
+.scen-stat-lbl{font-size:10px;color:var(--text3);font-weight:600;}
+
+.scen-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px 14px 20px;box-shadow:var(--sh);position:relative;overflow:hidden;transition:box-shadow .14s,transform .12s;}
+
+.scen-card:hover{box-shadow:0 4px 18px rgba(20,45,85,.13);transform:translateY(-2px);}
+
+.scen-card-accent{position:absolute;top:0;left:0;width:5px;height:100%;}
+
+.scen-card-cat{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+
+.scen-card-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.35;}
+
+.scen-card-desc{font-size:11px;color:var(--text3);line-height:1.5;margin-bottom:8px;}
+
+.scen-card-chips{display:flex;gap:4px;flex-wrap:wrap;}
+
+.sel-sc-cat{border-left:2px solid var(--dxb60)!important;}
+
+.sel-sc-sub{border-left:2px solid var(--dxb62)!important;}
+
+/* ── COMPLIANCE TRACKER ── */
+.comp-section{margin-top:20px;}
+.comp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px;}
+.comp-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh);}
+.comp-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.comp-card-title{font-size:11px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.comp-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.comp-badge-ok{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);}
+.comp-badge-warn{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);}
+.comp-badge-na{background:var(--bg2);color:var(--text3);border:1px solid var(--border);}
+.comp-rule{font-size:10px;color:var(--text3);margin-bottom:10px;font-style:italic;}
+.comp-member-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-light);}
+.comp-member-row:last-child{border-bottom:none;}
+.comp-member-name{font-size:11px;font-weight:600;color:var(--text);}
+.comp-member-detail{font-size:10px;color:var(--text3);}
+.comp-status-ok{font-size:10px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:3px;}
+.comp-status-warn{font-size:10px;font-weight:700;color:var(--red);display:flex;align-items:center;gap:3px;}
+.comp-status-pending{font-size:10px;font-weight:700;color:var(--text4);display:flex;align-items:center;gap:3px;}
+.comp-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;}
+.comp-kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;box-shadow:var(--sh);text-align:center;}
+.comp-kpi-val{font-size:22px;font-weight:800;line-height:1;}
+.comp-kpi-lbl{font-size:9px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-top:4px;}
+.comp-kpi-sub{font-size:9px;color:var(--text4);margin-top:2px;}
+.comp-kpi-ok .comp-kpi-val{color:var(--green);}
+.comp-kpi-warn .comp-kpi-val{color:var(--red);}
+.comp-kpi-neutral .comp-kpi-val{color:var(--accent);}
+
+/* ── AUTH / LOCK ── */
+.auth-overlay{position:fixed;inset:0;background:rgba(23,41,74,.72);z-index:9999;display:flex;align-items:center;justify-content:center;}
+.auth-box{background:var(--surface);border-radius:var(--r);padding:32px 36px;box-shadow:0 8px 40px rgba(20,45,85,.22);min-width:340px;max-width:420px;width:100%;}
+.auth-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.auth-sub{font-size:11px;color:var(--text3);margin-bottom:20px;}
+.auth-sel{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:12px;color:var(--text);background:var(--surface);margin-bottom:12px;outline:none;}
+.auth-sel:focus{border-color:var(--accent);}
+.auth-btn{width:100%;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);font-size:13px;font-weight:700;cursor:pointer;transition:background .14s;}
+.auth-btn:hover{background:var(--accent-dark, #145d9e);}
+.auth-err{font-size:11px;color:var(--red);margin-top:8px;display:none;}
+.auth-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:var(--accent-bg);color:var(--accent);font-size:11px;font-weight:700;border:1px solid var(--accent-lt);}
+.auth-signout{background:none;border:none;color:var(--text3);font-size:11px;cursor:pointer;text-decoration:underline;padding:0;margin-left:8px;}
+.auth-signout:hover{color:var(--red);}
+.row-locked td .sel, .row-locked td textarea, .row-locked td input{pointer-events:none;opacity:.55;background:var(--bg2) !important;cursor:not-allowed;}
+.row-locked td .status-sel{pointer-events:none;opacity:.55;cursor:not-allowed;}
+.lock-icon{font-size:9px;color:var(--text4);margin-left:4px;}
+.row-mine td .sel, .row-mine td textarea, .row-mine td input{background:var(--surface);}
+.row-mine-completed td .sel, .row-mine-completed td textarea, .row-mine-completed td input[type=number]{pointer-events:none;opacity:.55;cursor:not-allowed;}
+.row-mine-completed td .status-sel{pointer-events:none;opacity:.55;cursor:not-allowed;}
+.assessor-banner{display:flex;align-items:center;gap:10px;padding:8px 16px;background:var(--accent-bg);border:1px solid var(--accent-lt);border-radius:var(--r-sm);margin-bottom:12px;font-size:11px;}
+.assessor-banner.viewer-mode{background:var(--bg2);border-color:var(--border);}
+
+/* ── ASSESSOR CONFIRM MODAL ── */
+.confirm-overlay{position:fixed;inset:0;background:rgba(23,41,74,.65);z-index:10000;display:flex;align-items:center;justify-content:center;}
+.confirm-box{background:var(--surface);border-radius:var(--r);padding:28px 32px;box-shadow:0 8px 40px rgba(20,45,85,.25);max-width:420px;width:90%;}
+.confirm-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:9px;}
+.confirm-title i{color:var(--orange);font-size:16px;}
+.confirm-body{font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:20px;}
+.confirm-body strong{color:var(--text);font-weight:700;}
+.confirm-actions{display:flex;gap:10px;justify-content:flex-end;}
+.confirm-btn-cancel{padding:8px 18px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface2);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;}
+.confirm-btn-cancel:hover{border-color:var(--accent);color:var(--accent);}
+.confirm-btn-proceed{padding:8px 18px;border:none;border-radius:var(--r-sm);background:var(--orange);color:#fff;font-size:12px;font-weight:700;cursor:pointer;}
+.confirm-btn-proceed:hover{filter:brightness(.9);}
+</style>
+
+</head>
+
+<body>
+
+<div id="browser-warning" style="display:none;background:#c47a00;color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:600;position:sticky;top:0;z-index:9999;">
+  ⚠️ This dashboard must be opened in a browser — not the desktop app.
+  <a href="?web=1" style="color:#fff;text-decoration:underline;margin-left:12px;">Click here to open in browser →</a>
+</div>
+<script>
+  /* Detect if running inside Office desktop app / electron shell */
+  (function() {
+    var ua = navigator.userAgent || '';
+    var isOfficeApp = /MSOffice|microsoft office|electron/i.test(ua);
+    var isFilePath  = location.protocol === 'file:';
+    if (isOfficeApp || isFilePath) {
+      document.getElementById('browser-warning').style.display = 'block';
+    }
+  })();
+</script>
+
+<div class="topbar">
+
+  <div class="brand">
+
+    <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+
+    <div>
+
+      <div class="brand-name">DXB Infraops LSE/CSE Training Program — Rev 1</div>
+
+      <div class="brand-sub"></div>
+
+    </div>
+
+    <div class="divv"></div>
+
+    <span class="badge badge-site"><i class="fas fa-map-marker-alt" style="font-size:9px;"></i> DXB60 · DXB61 · DXB62</span>
+
+  </div>
+
+  <div style="display:flex;align-items:center;gap:12px;">
+
+    <div class="nav">
+
+      <button class="ntab active" data-action="goPage" data-page="overview"><i class="fas fa-th-large" style="margin-right:5px;opacity:.8;"></i>Overview</button>
+
+      <button class="ntab" data-action="goPage" data-page="schedule"><i class="fas fa-calendar-alt" style="margin-right:5px;opacity:.8;"></i>Schedule</button>
+
+      <button class="ntab" data-action="goPage" data-page="members"><i class="fas fa-users" style="margin-right:5px;opacity:.8;"></i>Team</button>
+
+      <button class="ntab" data-action="goPage" data-page="grading"><i class="fas fa-star" style="margin-right:5px;opacity:.8;"></i>Grading</button>
+
+      <button class="ntab" data-action="goPage" data-page="scenarios"><i class="fas fa-list-alt" style="margin-right:5px;opacity:.8;"></i>Scenarios</button>
+
+    </div>
+
+    <div class="topbar-meta"><span id="autosave-indicator" style="font-size:10px;font-weight:600;opacity:0;transition:opacity 1s;margin-right:10px;"></span> <span id="sp-sync-indicator" style="font-size:11px;opacity:0;transition:opacity 0.3s;margin-left:8px;"></span><div class="live-dot"></div> Live · 2026</div>
+
+  </div>
+
+</div>
+
+<div class="main">
+
+<!-- ════ OVERVIEW ════ -->
+
+<div id="page-overview" class="page active">
+
+  <div class="leader">
+
+    <div class="l-left">
+
+      <div class="l-av" style="font-size:11px;">DXB</div>
+
+      <div>
+
+        <div class="l-name">DXB Infraops LSE/CSE Training Program</div>
+
+        <div class="l-role"></div>
+
+        <div class="l-alias">DXB60 · DXB61 · DXB62</div>
+
+      </div>
+
+    </div>
+
+    <div class="l-stats">
+
+      <div><div class="l-sv">39</div><div class="l-sl">Program Members</div></div>
+
+      <div><div class="l-sv">3</div><div class="l-sl">Sites</div></div>
+
+      <div><div class="l-sv" id="ov-total">—</div><div class="l-sl">Total Sessions</div></div>
+
+      <div><div class="l-sv" id="ov-done">0</div><div class="l-sl">Completed</div></div>
+
+    </div>
+
+  </div>
+
+  <div class="sh">
+
+    <div class="st"><i class="fas fa-tachometer-alt"></i> Key Performance Indicators — 2026</div>
+
+    <div style="display:flex;gap:14px;align-items:center;">
+
+      <div style="display:flex;align-items:center;gap:6px;font-size:10px;font-weight:600;color:var(--text2);"><div style="width:8px;height:8px;border-radius:50%;background:var(--green);"></div>GREEN ≥ 85%</div>
+
+      <div style="display:flex;align-items:center;gap:6px;font-size:10px;font-weight:600;color:var(--text2);"><div style="width:8px;height:8px;border-radius:50%;background:var(--yellow);"></div>YELLOW 65–84%</div>
+
+      <div style="display:flex;align-items:center;gap:6px;font-size:10px;font-weight:600;color:var(--text2);"><div style="width:8px;height:8px;border-radius:50%;background:var(--red);"></div>RED &lt;65%</div>
+
+    </div>
+
+  </div>
+
+  <div class="kpi-grid">
+
+    <div class="kpi k-slate"><div class="kpi-top"><div></div><div class="kpi-ico"><i class="fas fa-calendar-check"></i></div></div><div class="kpi-lbl">Per Week</div><div class="kpi-val">2</div><div class="kpi-sub">Tue &amp; Thu</div></div>
+
+    <div class="kpi k-slate"><div class="kpi-top"><div></div><div class="kpi-ico"><i class="fas fa-layer-group"></i></div></div><div class="kpi-lbl">Total Sessions</div><div class="kpi-val" id="kpi-total">—</div><div class="kpi-sub">Full year</div></div>
+
+    <div class="kpi k-green"><div class="kpi-top"><div></div><div class="kpi-ico"><i class="fas fa-check-circle"></i></div></div><div class="kpi-lbl">GREEN</div><div class="kpi-val" id="ov-green">0</div><div class="kpi-sub">≥ 85%</div></div>
+
+    <div class="kpi k-yellow"><div class="kpi-top"><div></div><div class="kpi-ico"><i class="fas fa-exclamation-circle"></i></div></div><div class="kpi-lbl">YELLOW</div><div class="kpi-val" id="ov-yellow">0</div><div class="kpi-sub">65–84%</div></div>
+
+    <div class="kpi k-red"><div class="kpi-top"><div></div><div class="kpi-ico"><i class="fas fa-times-circle"></i></div></div><div class="kpi-lbl">RED</div><div class="kpi-val" id="ov-red">0</div><div class="kpi-sub">&lt; 65%</div></div>
+
+    <div class="kpi k-orange"><div class="kpi-top"><div></div><div class="kpi-ico"><i class="fas fa-exclamation-triangle"></i></div></div><div class="kpi-lbl">Overdue</div><div class="kpi-val" id="ov-overdue">0</div><div class="kpi-sub">Still pending</div></div>
+
+  </div>
+
+  <!-- ════ COMPLIANCE TRACKER ════ -->
+  <div class="sh" style="margin-top:18px;">
+    <div class="st"><i class="fas fa-clipboard-check"></i> Attendance Compliance Tracker</div>
+    <span style="font-size:10px;color:var(--text3);">Flags members not meeting attendance frequency requirements</span>
+  </div>
+  <div class="comp-kpi-row" style="grid-template-columns:repeat(2,1fr);">
+    <div class="comp-kpi comp-kpi-ok" id="comp-kpi-compliant-wrap">
+      <div class="comp-kpi-val" id="comp-compliant">—</div>
+      <div class="comp-kpi-lbl">Compliant</div>
+      <div class="comp-kpi-sub">Requirements met</div>
+    </div>
+    <div class="comp-kpi comp-kpi-warn" id="comp-kpi-flagged-wrap">
+      <div class="comp-kpi-val" id="comp-flagged">—</div>
+      <div class="comp-kpi-lbl">Flagged</div>
+      <div class="comp-kpi-sub">Need attention</div>
+    </div>
+  </div>
+  <div class="comp-grid" id="comp-grid" style="margin-top:10px;">
+    <div class="comp-card" id="comp-card-dco">
+      <div class="comp-card-hdr">
+        <div class="comp-card-title"><i class="fas fa-tools" style="color:#0a8f64;font-size:10px;"></i> DCO Team (H2 2026)</div>
+        <span class="comp-badge comp-badge-warn" id="badge-dco">⚠ Checking...</span>
+      </div>
+      <div class="comp-rule">Bi-annual — at least once in H2 2026</div>
+      <div class="comp-member-row">
+        <div>
+          <div class="comp-member-name">Hussam - @bikmhd</div>
+          <div class="comp-member-detail" id="comp-detail-hussam">0 attended · checking...</div>
+        </div>
+        <div class="comp-status-warn" id="comp-status-hussam">⚠ Missing</div>
+      </div><div class="comp-member-row">
+        <div>
+          <div class="comp-member-name">Sarafuddin - @kunnoos</div>
+          <div class="comp-member-detail" id="comp-detail-sarafuddin">0 attended · checking...</div>
+        </div>
+        <div class="comp-status-warn" id="comp-status-sarafuddin">⚠ Missing</div>
+      </div><div class="comp-member-row">
+        <div>
+          <div class="comp-member-name">Ahmed Al Zaabi - @aalzaabi</div>
+          <div class="comp-member-detail" id="comp-detail-ahmed">0 attended · checking...</div>
+        </div>
+        <div class="comp-status-warn" id="comp-status-ahmed">⚠ Missing</div>
+      </div><div class="comp-member-row">
+        <div>
+          <div class="comp-member-name">Faran - @faranmdq</div>
+          <div class="comp-member-detail" id="comp-detail-faran">0 attended · checking...</div>
+        </div>
+        <div class="comp-status-warn" id="comp-status-faran">⚠ Missing</div>
+      </div><div class="comp-member-row">
+        <div>
+          <div class="comp-member-name">Jerwin - @jtaduran</div>
+          <div class="comp-member-detail" id="comp-detail-jerwin">0 attended · checking...</div>
+        </div>
+        <div class="comp-status-warn" id="comp-status-jerwin">⚠ Missing</div>
+      </div>
+    </div>
+    <div class="comp-card" id="comp-card-esc2">
+      <div class="comp-card-hdr">
+        <div class="comp-card-title"><i class="fas fa-arrow-up" style="color:#6d32cc;font-size:10px;"></i> 2nd Escalation</div>
+        <span class="comp-badge comp-badge-warn" id="badge-esc2">⚠ Checking...</span>
+      </div>
+      <div class="comp-rule">Quarterly — at least once per quarter</div>
+      <div class="comp-member-row">
+        <div>
+          <div class="comp-member-name">Hisham - @hishamh</div>
+          <div class="comp-member-detail" id="comp-detail-hisham">0 attended · checking...</div>
+        </div>
+        <div class="comp-status-warn" id="comp-status-hisham">⚠ Missing</div>
+      </div><div class="comp-member-row">
+        <div>
+          <div class="comp-member-name">Ali Kh - @alkhash</div>
+          <div class="comp-member-detail" id="comp-detail-ali">0 attended · checking...</div>
+        </div>
+        <div class="comp-status-warn" id="comp-status-ali">⚠ Missing</div>
+      </div><div class="comp-member-row">
+        <div>
+          <div class="comp-member-name">Haifa - @enghaifa</div>
+          <div class="comp-member-detail" id="comp-detail-haifa">0 attended · checking...</div>
+        </div>
+        <div class="comp-status-warn" id="comp-status-haifa">⚠ Missing</div>
+      </div><div class="comp-member-row">
+        <div>
+          <div class="comp-member-name">Oliver - @oliversp</div>
+          <div class="comp-member-detail" id="comp-detail-oliver">0 attended · checking...</div>
+        </div>
+        <div class="comp-status-warn" id="comp-status-oliver">⚠ Missing</div>
+      </div><div class="comp-member-row">
+        <div>
+          <div class="comp-member-name">Shanilkumar - @shanilkm</div>
+          <div class="comp-member-detail" id="comp-detail-shanilkumar">0 attended · checking...</div>
+        </div>
+        <div class="comp-status-warn" id="comp-status-shanilkumar">⚠ Missing</div>
+      </div>
+    </div>
+    <div class="comp-card" id="comp-card-enviro">
+      <div class="comp-card-hdr">
+        <div class="comp-card-title"><i class="fas fa-leaf" style="color:#0e7490;font-size:10px;"></i> Enviro Team</div>
+        <span class="comp-badge comp-badge-warn" id="badge-enviro">⚠ Checking...</span>
+      </div>
+      <div class="comp-rule">Quarterly — at least once per quarter</div>
+      <div class="comp-member-row">
+        <div>
+          <div class="comp-member-name">Kashif - @kashnad</div>
+          <div class="comp-member-detail" id="comp-detail-kashif">0 attended · checking...</div>
+        </div>
+        <div class="comp-status-warn" id="comp-status-kashif">⚠ Missing</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh" style="margin-top:18px;"><div class="st"><i class="fas fa-chart-bar"></i> Completed Drills — Full Year 2026</div></div>
+  <div class="charts-row">
+
+    <div class="cc">
+
+      <div class="cc-title"><i class="fas fa-chart-bar"></i> Drills Completed vs Planned — Monthly</div>
+
+      <div id="ch-year" style="height:240px;"></div>
+
+    </div>
+
+    <div class="cc">
+
+      <div class="cc-title"><i class="fas fa-exclamation-triangle" style="color:var(--orange);"></i> Overdue Pending Drills — by Month</div>
+
+      <div id="ch-overdue" style="height:240px;"></div>
+
+    </div>
+
+  </div>
+
+  <div class="sh"><div class="st"><i class="fas fa-calendar-week"></i> Upcoming Drills — Next 2 Weeks</div><span id="upcoming-range" style="font-size:10px;color:var(--text3);"></span></div>
+
+  <div id="upcoming-grid" class="uc-grid"></div>
+
+</div>
+
+<!-- ════ SCHEDULE ════ -->
+
+<div id="page-schedule" class="page">
+  <div class="sh" style="margin-top:6px;">
+    <div class="st"><i class="fas fa-calendar-alt"></i> Full Year 2026 — Drill Schedule</div>
+  </div>
+  <!-- ASSESSOR BANNER -->
+  <div id="assessor-banner" class="assessor-banner" style="display:none;">
+    <i class="fas fa-user-shield" style="color:var(--accent);font-size:13px;"></i>
+    <span>Signed in as: </span>
+    <strong id="banner-name" style="color:var(--accent);"></strong>
+    <button class="auth-signout" data-action="doSignOut"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+    <span style="margin-left:auto;font-size:10px;color:var(--text3);">You can only edit rows you created. Completed rows are locked to you only.</span>
+  </div>
+  <div style="margin-bottom:12px;">
+    <div class="fb-wrap">
+
+      <div class="fb">
+
+        <span class="fl">Month:</span>
+
+        <button class="fb-btn" data-action="filterMonth" data-val="all">All</button>
+
+        <button class="fb-btn" data-action="filterMonth" data-val="6">Jul</button>
+
+        <button class="fb-btn" data-action="filterMonth" data-val="7">Aug</button>
+
+        <button class="fb-btn" data-action="filterMonth" data-val="8">Sep</button>
+
+        <button class="fb-btn" data-action="filterMonth" data-val="9">Oct</button>
+
+        <button class="fb-btn" data-action="filterMonth" data-val="10">Nov</button>
+
+        <button class="fb-btn" data-action="filterMonth" data-val="11">Dec</button>
+
+      </div>
+
+      <div class="fb">
+
+        <span class="fl">Site:</span>
+
+        <button class="fb-btn active" data-action="filterSite" data-val="all">All</button>
+
+        <button class="fb-btn" data-action="filterSite" data-val="DXB60">DXB60</button>
+
+        <button class="fb-btn" data-action="filterSite" data-val="DXB61">DXB61</button>
+
+        <button class="fb-btn" data-action="filterSite" data-val="DXB62">DXB62</button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Column visibility toggle -->
+
+  <div class="col-toggle-bar" id="col-toggle-sticky">
+
+    <div class="col-toggle-inner">
+
+      <span class="col-toggle-label"><i class="fas fa-columns"></i> Columns:</span>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-assor"><i class="fas fa-user-tie"></i> Assessor</label>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-sc-cat"><i class="fas fa-tag"></i> Cat</label>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-sc-sub"><i class="fas fa-tags"></i> Sub-Cat</label>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-fr"><i class="fas fa-user"></i> FR</label>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-ic"><i class="fas fa-user-shield"></i> IC</label>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-seot"><i class="fas fa-user-cog"></i> SEOT</label>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-esc1"><i class="fas fa-arrow-up"></i> 1st Esc</label>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-dept1"><i class="fas fa-building"></i> Dept 1</label>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-dept2"><i class="fas fa-building"></i> Dept 2</label>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-esc2"><i class="fas fa-arrow-up"></i> 2nd Esc</label>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-remarks"><i class="fas fa-comment"></i> Remarks</label>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-gaps"><i class="fas fa-exclamation-circle"></i> Gaps</label>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-result"><i class="fas fa-percent"></i> Result</label>
+
+      <label class="ctog on" data-action="toggleCol" data-col="col-status"><i class="fas fa-check-circle"></i> Status</label>
+
+    </div>
+
+  </div>
+
+  <div class="tw"><div class="tw-scroll">
+
+    <table id="tbl-main">
+
+      <thead><tr>
+
+        <th style="min-width:115px;">Date</th>
+
+        <th style="min-width:55px;">Site</th>
+
+        <th class="col-assor" style="min-width:145px;">Assessor</th>
+
+        <th class="col-sc-cat" style="min-width:148px;">Scenario Category</th>
+
+        <th class="col-sc-sub" style="min-width:158px;">Sub-Category</th>
+
+        <th class="col-fr" style="min-width:120px;">FR</th>
+
+        <th class="col-ic" style="min-width:120px;">IC</th>
+
+        <th class="col-seot" style="min-width:120px;">SEOT</th>
+
+        <th class="col-esc1" style="min-width:130px;">1st Escalation</th>
+
+        <th class="col-dept1" style="min-width:120px;">Support Dept 1</th>
+
+        <th class="col-dept2" style="min-width:120px;">Support Dept 2</th>
+
+        <th class="col-esc2" style="min-width:130px;">2nd Escalation</th>
+
+        <th class="col-remarks" style="min-width:140px;">Remarks</th>
+
+        <th class="col-gaps" style="min-width:140px;">Gaps</th>
+
+        <th class="col-result" style="min-width:85px;">Result</th>
+
+        <th class="col-status" style="min-width:100px;">Status</th>
+
+      </tr></thead>
+
+      <tbody id="body-main"></tbody>
+
+    </table>
+
+  </div></div>
+
+</div>
+
+<!-- ════ TEAM ════ -->
+
+<div id="page-members" class="page">
+
+  <div class="sh" style="margin-top:6px;">
+
+    <div class="st"><i class="fas fa-users"></i> DCEO Team — Individual Performance Tracker</div>
+
+    <div style="font-size:10px;color:var(--text3);">Last 5 drills · P = Pending</div>
+
+  </div>
+
+  <div class="mg" id="member-grid"></div>
+
+  <div class="sh"><div class="st"><i class="fas fa-chart-bar"></i> Drill Assignments by Member</div></div>
+
+  <div class="cc"><div id="ch-members" style="height:370px;"></div></div>
+
+</div>
+
+<!-- ════ GRADING ════ -->
+
+<div id="page-grading" class="page">
+
+  <div class="sh" style="margin-top:6px;"><div class="st"><i class="fas fa-star"></i> DCEO Performance Grading Framework</div></div>
+
+  <div class="gc-grid">
+
+    <div class="gc gc-g"><div class="gc-title"><i class="fas fa-check-circle"></i> GREEN — Proficient</div><ul class="gc-list"><li>Responds within SLA ≤ 5 min</li><li>Identifies fault without prompting</li><li>Follows LOTO / EPO precisely</li><li>Clear structured communication</li><li>Escalates correct dept within 2 min</li><li>Correct MOP/SOP cited and followed</li><li>Zero deviations or safety violations</li></ul><span class="score-pill sp-g">≥ 85%</span></div>
+
+    <div class="gc gc-y"><div class="gc-title"><i class="fas fa-exclamation-circle"></i> YELLOW — Developing</div><ul class="gc-list"><li>Responds with minor hesitation</li><li>Identifies fault with minor prompting</li><li>Follows key steps, misses 1–2 items</li><li>Communication adequate but unstructured</li><li>Escalation delayed 2–5 min</li><li>MOP/SOP referenced, some steps missed</li><li>1–2 minor deviations, no safety risk</li></ul><span class="score-pill sp-y">65–84%</span></div>
+
+    <div class="gc gc-r"><div class="gc-title"><i class="fas fa-times-circle"></i> RED — Needs Improvement</div><ul class="gc-list"><li>Response time exceeds SLA</li><li>Fails to identify fault independently</li><li>Key safety or LOTO steps skipped</li><li>Miscommunication or no escalation</li><li>SOP not followed or not referenced</li><li>Multiple safety violations or deviations</li><li>Re-drill required</li></ul><span class="score-pill sp-r">&lt; 65%</span></div>
+
+  </div>
+
+  <div class="sh"><div class="st"><i class="fas fa-list-ul"></i> Scoring Categories</div></div>
+
+  <div class="tw">
+
+    <table class="score-def-table">
+
+      <thead><tr><th>Category</th><th>Max Pts</th><th>Description</th></tr></thead>
+
+      <tbody>
+
+        <tr><td>Initial Response Time</td><td>10</td><td>Speed and decisiveness of first action</td></tr>
+
+        <tr><td>Fault Identification</td><td>15</td><td>Accuracy and completeness of root cause identification</td></tr>
+
+        <tr><td>Procedure Adherence</td><td>20</td><td>Following MOP/SOP steps in sequence</td></tr>
+
+        <tr><td>Safety Compliance</td><td>20</td><td>LOTO, PPE, EPO compliance — zero tolerance</td></tr>
+
+        <tr><td>Communication &amp; Escalation</td><td>15</td><td>Structured radio/verbal comms and timely escalation</td></tr>
+
+        <tr><td>Equipment Handling</td><td>10</td><td>Correct tool and equipment use throughout drill</td></tr>
+
+        <tr><td>Post-Drill Documentation</td><td>10</td><td>Completeness and accuracy of drill log and handover</td></tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+<!-- ════ SCHEDULE AUTH OVERLAY (top-level, position:fixed) ════ -->
+<div id="auth-overlay" class="auth-overlay" style="display:none;">
+  <div class="auth-box">
+    <!-- STEP 1: Choose role -->
+    <div id="auth-step1">
+      <div class="auth-title"><i class="fas fa-calendar-alt" style="color:var(--accent);margin-right:8px;"></i>Schedule Access</div>
+      <div class="auth-sub">How would you like to access the drill schedule?</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+        <button class="auth-btn" style="background:var(--bg2);color:var(--text);border:1px solid var(--border);" data-action="enterAsViewer">
+          <i class="fas fa-eye" style="margin-right:6px;"></i>View Only
+          <div style="font-size:10px;font-weight:400;margin-top:2px;opacity:.7;">Browse and read all drill data — no editing</div>
+        </button>
+        <button class="auth-btn" data-action="showAssessorLogin">
+          <i class="fas fa-user-shield" style="margin-right:6px;"></i>Sign In as Assessor
+          <div style="font-size:10px;font-weight:400;margin-top:2px;opacity:.85;">Enter and edit drill data for your site</div>
+        </button>
+      </div>
+    </div>
+    <!-- STEP 2: Assessor sign-in -->
+    <div id="auth-step2" style="display:none;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+        <button data-action="backToStep1" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;" title="Back"><i class="fas fa-arrow-left"></i></button>
+        <div class="auth-title" style="margin-bottom:0;">Assessor Sign-In</div>
+      </div>
+      <div class="auth-sub">Select your name and enter your password to sign in.</div>
+      <select id="auth-select" class="auth-sel">
+        <option value="">— Select your name —</option>
+      </select>
+      <input id="auth-pwd" type="password" class="auth-sel" placeholder="Password" style="margin-bottom:12px;" data-action="pwdKeydown">
+      <button class="auth-btn" data-action="doSignIn"><i class="fas fa-sign-in-alt" style="margin-right:6px;"></i>Sign In</button>
+      <div id="auth-err" class="auth-err">Incorrect name or password. Please try again.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ASSESSOR REASSIGN CONFIRMATION -->
+<div id="confirm-overlay" class="confirm-overlay" style="display:none;">
+  <div class="confirm-box">
+    <div class="confirm-title">
+      <i class="fas fa-exclamation-triangle"></i>
+      Transfer Drill Ownership
+    </div>
+    <div class="confirm-body">
+      You are about to assign this drill session to <strong id="confirm-target-name"></strong>.<br><br>
+      Upon confirmation, this record will be <strong>exclusively locked to the assigned assessor</strong>.
+      Only <strong id="confirm-target-name2"></strong> will retain the ability to edit, update, or mark this drill as complete.
+      Your editing access to this session will be permanently revoked.<br><br>
+      <span style="color:var(--orange);font-weight:600;font-size:11px;">
+        <i class="fas fa-lock" style="margin-right:4px;"></i>
+        This transfer cannot be reversed without the involvement of the newly assigned assessor.
+      </span>
+    </div>
+    <div class="confirm-actions">
+      <button class="confirm-btn-cancel" data-action="dismissAssessorConfirm">
+        <i class="fas fa-times" style="margin-right:4px;"></i>Cancel
+      </button>
+      <button class="confirm-btn-proceed" data-action="confirmAssessorAssign">
+        <i class="fas fa-check" style="margin-right:4px;"></i>Confirm &amp; Transfer
+      </button>
+    </div>
+  </div>
+</div>
+</div><!-- /main -->
+
+<script>
+
+/* ════ DATA ════ */
+
+const TEAMS={
+
+  DXB60:{color:'#c96b00',bg:'#fdf3e3',bd:'#f5c882',members:['Noor - @nooaliib','Ali Baghdadi - @alijaalb','Terrance - @tmilazi','Zeyad - @zeyadwq','Jelita - @alsjelit','Mohammad Alebri - @msalebri','Rob - @pingrobt']},
+
+  DXB61:{color:'#1a6bb0',bg:'#e7f2fc',bd:'#a4ceed',members:['Biswajeet - @sahobis','Fathi - @farhud','Shimaa - @hagshima','Manu - @manuaws','Ajit - @ajitns','Abdourahim - @ismaaci','Ayoub - @ayoomari']},
+
+  DXB62:{color:'#6d32cc',bg:'#f2ecfd',bd:'#c5a8f0',members:['Muneera - @munealsh','Ehab Elayat - @abdelbeh','Ehab Moukayes - @ehabmouk','Sami - @samiahmd','Ragavan - @kvragava','Shabas - @shabasmt','Hamad - @hamadgh']},
+
+  DCO:{color:'#0a8f64',bg:'#e4f7f1',bd:'#9dd9c5',members:['Haifa - @enghaifa','Hussam - @bikmhd','Sarafuddin - @kunnoos','Ahmed Al Zaabi - @aalzaabi','Faran - @faranmdq','Jerwin - @jtaduran']},
+
+  Security:{color:'#b07200',bg:'#fdf6e3',bd:'#f0cc7a',members:['Oliver - @oliversp','Beth - @bkanyin','Nikita - @nikiaroa','Pooja - @poojve']},
+
+  Enviro:{color:'#0e7490',bg:'#e0f5f9',bd:'#7dd3e8',members:['Kashif - @kashnad']},
+
+  Safety:{color:'#b83025',bg:'#fdf0ee',bd:'#eaaba2',members:['Dana - @dsawaf']},
+
+  Controls:{color:'#6d32cc',bg:'#f2ecfd',bd:'#c5a8f0',members:['Imad - @imad','Ridwaan - @ridwaanp']},
+
+  ID:{color:'#136a38',bg:'#edfaf3',bd:'#9dd9b8',members:['Shanilkumar - @shanilkm','Aysha - @aytaneem','Fahad - @mbaignam','Sunny - @sunnnaik']},
+
+  Logistics:{color:'#c45000',bg:'#fff0e6',bd:'#f5b97a',members:['Michelle - @michgari','Sarah - @sjmaldo','Rashid - @mmurikin']},
+
+};
+
+const ASSESSORS={
+
+  DXB60:{ce:'Muhammad Waqar - @mwwqr'},
+
+  DXB61:{fm:'Arif Cassime - @arifcas',ce:'Syed Tahmid Hossain - @hsyedtah'},
+
+  DXB62:{ce:'Naveen Payyoor - @payyoorn'},
+
+};
+
+const ALL_ASSESSORS=[
+
+  {name:'Muhammad Waqar - @mwwqr',role:'CE',site:'DXB60',pwdHash:'6569d75dc1da048aca17574be351967d1243f15ed7df6af3bdfa1b6083dd129e'},
+
+  {name:'Arif Cassime - @arifcas',role:'FM',site:'DXB61',pwdHash:'1b129eda28a0a1379d20fefcccff511da20df357c6cc8b23048b6ddaa6051a69'},
+
+  {name:'Syed Tahmid Hossain - @hsyedtah',role:'CE',site:'DXB61',pwdHash:'ab9c5ef99da0d09b438913d663d0d69c434a34010f85f7742c095e008aac9a7f'},
+
+  {name:'Naveen Payyoor - @payyoorn',role:'CE',site:'DXB62',pwdHash:'da44469f2f8b1e0260546898f5e4d7c3a1cf2a7968c999ef422e1a7095fd6349'},
+
+  {name:'Fathi - @farhud',role:'CE',site:'DXB61',pwdHash:'d8acc0dc3503db6714c126f0444369f0c884acb90ec21bc58de6f2ef5df81f11'},
+
+];
+
+/* Department → contacts mapping */
+
+const DEPT_CONTACTS={
+
+  Security:['Oliver - @oliversp','Beth - @bkanyin','Nikita - @nikiaroa','Pooja - @poojve'],
+
+  DCO:['Haifa - @enghaifa','Hussam - @bikmhd','Sarafuddin - @kunnoos','Ahmed Al Zaabi - @aalzaabi','Faran - @faranmdq','Jerwin - @jtaduran'],
+
+  Controls:['Imad - @imad','Ridwaan - @ridwaanp'],
+
+  ID:['Shanilkumar - @shanilkm','Aysha - @aytaneem','Fahad - @mbaignam','Sunny - @sunnnaik'],
+
+  Enviro:['Kashif - @kashnad'],
+
+  Safety:['Dana - @dsawaf'],
+
+  Logistics:['Michelle - @michgari','Sarah - @sjmaldo','Rashid - @mmurikin'],
+
+};
+
+const AV_COLORS=['#1a6bb0','#0a8f64','#b07200','#b83025','#6d32cc','#0e7490','#c96b00','#be185d','#4d7c0f','#0f766e'];
+
+const SCENARIO_CATS={
+
+  Electrical:{icon:'⚡',color:'#b07200',bg:'#fdf6e3',subs:[
+
+    {n:'UPS Failure & Bypass',desc:'UPS fails; team executes controlled bypass to alternate feed.',sup:['Controls']},
+
+    {n:'Generator Start Failure',desc:'Standby generator fails to auto-start on mains outage; manual cranking or load-shedding required.',sup:['DCO']},
+
+    {n:'MV Switchgear Fault',desc:'Medium-voltage switchgear trips unexpectedly; isolation and fault clearance drill.',sup:[]},
+
+    {n:'ATS Transfer Failure',desc:'Automatic Transfer Switch fails to transfer load; manual transfer procedure activated.',sup:['Controls']},
+
+    {n:'PDU Breaker Trip',desc:'Power Distribution Unit breaker trips under load; affected racks go cold, restoration sequence executed.',sup:['Controls','DCO']},
+
+    {n:'Transformer Overtemp Trip',desc:'HV/LV transformer over-temperature relay trips; cooling checked and load redistributed.',sup:['DCO']},
+
+  ]},
+
+  Mechanical:{icon:'⚙️',color:'#1a6bb0',bg:'#e7f2fc',subs:[
+
+    {n:'CRAC Unit Failure',desc:'Computer Room Air Conditioner fails; hot-spot management and redundant unit activation.',sup:['Controls']},
+
+    {n:'Chiller Trip',desc:'Chiller plant trips; switchover to standby chiller, chilled-water loop management.',sup:['Controls','DCO']},
+
+    {n:'HPP Pump Failure',desc:'High-Pressure Pump in cooling loop fails; backup pump starts, flow rates verified.',sup:[]},
+
+    {n:'Cooling Tower Fan Failure',desc:'Cooling tower fan motor fails; reduced capacity operation, thermal margin monitored.',sup:['Controls']},
+
+    {n:'CRAC Compressor Leak',desc:'Refrigerant leak detected in CRAC compressor; isolation, ventilation, and safe standby.',sup:['Security','DCO']},
+
+    {n:'In-Row Cooling Failure',desc:'In-row cooling unit shuts down; adjacent units ramped up and hot-aisle containment verified.',sup:['Controls']},
+
+  ]},
+
+  Controls:{icon:'&#x1F5A5;&#xFE0F;',color:'#6d32cc',bg:'#f2ecfd',subs:[
+
+    {n:'BMS Communication Loss',desc:'Building Management System loses comms with field controllers; manual monitoring activated.',sup:['Controls']},
+
+    {n:'EPMS Alarm Flood',desc:'Electrical Power Monitoring System floods with spurious alarms; triage, inhibit, and root-cause.',sup:['Controls']},
+
+    {n:'DCIM Server Outage',desc:'Data Centre Infrastructure Management server goes offline; manual asset and capacity tracking.',sup:['DCO','Controls']},
+
+    {n:'False EPO Signal',desc:'False Emergency Power Off signal received by BMS; team verifies, isolates trigger, and resets.',sup:['Security','Controls']},
+
+    {n:'Sensor Calibration Drift',desc:'Temperature/humidity sensors report out-of-range values; cross-checking and recalibration.',sup:['Controls']},
+
+    {n:'PLC Firmware Fault',desc:'PLC firmware fault halts automation; fallback manual control activated.',sup:['Controls']},
+
+  ]},
+
+  Safety:{icon:'&#x1F525;',color:'#b83025',bg:'#fdf0ee',subs:[
+
+    {n:'EPO Activation Scenario',desc:'Emergency Power Off button activated (accidental or drill); safe isolation and recovery.',sup:['Security']},
+
+    {n:'Fire Suppression Trigger',desc:'Gaseous fire suppression activates in white space; evacuation, accounting, and reset.',sup:['Security','DCO']},
+
+    {n:'VESDA Pre-Alarm Response',desc:'Very Early Smoke Detection Apparatus triggers pre-alarm; site walk-down and investigation.',sup:['Security','DCO']},
+
+    {n:'Evacuation Drill',desc:'Partial-floor evacuation due to simulated fire; roll-call, accountability, and re-entry.',sup:['Security']},
+
+    {n:'LOTO Violation Scenario',desc:'Lockout/Tagout breach discovered during live work; immediate stop-work, safety review.',sup:['Security','Controls']},
+
+    {n:'Chemical / Battery Spill',desc:'Battery room electrolyte spill; PPE, containment, and hazmat notification.',sup:['Security','DCO']},
+
+  ]},
+
+  Environmental:{icon:'&#x1F321;&#xFE0F;',color:'#0a8f64',bg:'#e4f7f1',subs:[
+
+    {n:'High Temp Alarm Response',desc:'Aisle or rack-level temperature exceeds threshold; cooling uplift, load reduction, escalation.',sup:['DCO']},
+
+    {n:'Water Leak Detection',desc:'Leak detection rope or floor sensor triggers; source identification, isolation, damage mitigation.',sup:['Security']},
+
+    {n:'Smoke / Air Quality Alert',desc:'Smoke detector or air-quality sensor triggers; investigation, ventilation check, escalation.',sup:['Security','DCO']},
+
+    {n:'Humidity Out-of-Range',desc:'Relative humidity drops below 40% or rises above 60%; humidifier/dehumidifier response.',sup:['Controls']},
+
+    {n:'Roof / Slab Water Ingress',desc:'Water ingress detected from roof penetration or mechanical shaft; emergency containment deployed.',sup:['Security','DCO']},
+
+    {n:'External Power Contamination',desc:'Power quality issue (sags, surges, harmonics) detected from utility; UPS and filters verified.',sup:['Controls','DCO']},
+
+  ]},
+
+};
+
+/* Flat SCENARIOS array for session rotation */
+
+var SCENARIOS=[];
+
+Object.keys(SCENARIO_CATS).forEach(function(cat){
+
+  SCENARIO_CATS[cat].subs.forEach(function(s){
+
+    SCENARIOS.push({t:cat,n:s.n,cat:cat,sup:s.sup});
+
+  });
+
+});
+
+const SITE_ORDER=['DXB61','DXB60','DXB62','DXB61','DXB60','DXB62'];
+
+const ROLE_MAP={
+
+  DXB60:{fr:'DXB60',ic:'DXB62',seot:'DXB61'},
+
+  DXB61:{fr:'DXB61',ic:'DXB60',seot:'DXB62'},
+
+  DXB62:{fr:'DXB62',ic:'DXB61',seot:'DXB60'},
+
+};
+
+const SC_ICO={e:'⚡',m:'⚙️',env:'&#x1F321;&#xFE0F;',f:'&#x1F525;',s:'&#x1F6E1;&#xFE0F;',Electrical:'⚡',Mechanical:'⚙️',Controls:'&#x1F5A5;&#xFE0F;',Safety:'&#x1F525;',Environmental:'&#x1F321;&#xFE0F;'};
+
+const SITE_C={DXB60:'c60',DXB61:'c61',DXB62:'c62'};
+
+/* Build full-year sessions: 2 per week, Tue+Thu, starting next week from today */
+
+function buildSessions(){
+
+  const out=[];
+
+  /* Anchor to first Tuesday of 2026 (Jan 6, 2026) */
+
+  const firstTue=new Date(2026,6,7); // Jul 7 2026 is a Tuesday
+
+  let sc_idx=0;
+
+  let site_idx=0;
+
+  /* Generate 52 weeks = 104 sessions */
+
+  for(let w=0;w<26;w++){
+
+    /* Tuesday */
+
+    const tue=new Date(firstTue);
+
+    tue.setDate(firstTue.getDate()+w*7);
+
+    if(tue.getFullYear()>2026) break;
+
+    const sc_t=SCENARIOS[sc_idx%SCENARIOS.length];
+
+    const site_t=SITE_ORDER[site_idx%SITE_ORDER.length];
+
+    out.push(makeSession(out.length+1,tue,site_t,sc_t));
+
+    sc_idx++; site_idx++;
+
+    /* Thursday */
+
+    const thu=new Date(tue);
+
+    thu.setDate(tue.getDate()+2);
+
+    if(thu.getFullYear()>2026) break;
+
+    const sc_h=SCENARIOS[sc_idx%SCENARIOS.length];
+
+    const site_h=SITE_ORDER[site_idx%SITE_ORDER.length];
+
+    out.push(makeSession(out.length+1,thu,site_h,sc_h));
+
+    sc_idx++; site_idx++;
+
+  }
+
+  return out;
+
+}
+
+function makeSession(num,d,site,sc){
+
+  return {num,d,site,sc,
+
+    result:{status:'pending',scenario:sc.n,scenCat:'',scenSub:'',scenCatCustom:'',scenSubCustom:'',dept1:'—',dept1c:'',dept2:'—',dept2c:'',assor:'',esc1:'',esc2:'',fr:'',ic:'',seot:'',remarks:'',gaps:'',pct:''}
+
+  };
+
+}
+
+var STORAGE_KEY = 'dxb_drill_data_v5';
+
+/* ── JSONBin Config (shared live backend — no auth required) ──── */
+var JB_CONFIG = {
+  apiKey: '$2a$10$aq4ad23UjI1U7.C1L4csd.rqaRLjJNEGVQa4NqpX6Nxyqiv4rnAOu',
+  binId:  '6a507162f5f4af5e297acc98',
+  readUrl:  'https://api.jsonbin.io/v3/b/6a507162f5f4af5e297acc98/latest',
+  writeUrl: 'https://api.jsonbin.io/v3/b/6a507162f5f4af5e297acc98'
+};
+
+/* _getSpDigest removed — using JSONBin */
+
+async function _saveToStorageCore() {
+  /* Always keep localStorage as offline fallback */
+  var data = SESSIONS.map(function(s) { return {num: s.num, result: s.result}; });
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+  if (typeof updateKPIs === 'function') updateKPIs();
+
+  /* Save to JSONBin — only when assessor is signed in */
+  if (!currentAssessor) return;
+  try {
+    /* Read current bin first */
+    var rResp = await fetch(JB_CONFIG.readUrl, {
+      headers: { 'X-Master-Key': JB_CONFIG.apiKey }
+    });
+    var rJson = await rResp.json();
+    var drills = (rJson.record && rJson.record.drills) ? rJson.record.drills : [];
+
+    /* Update or insert each changed session */
+    SESSIONS.forEach(function(s) {
+      if (!s.result || s.result.status === 'scheduled') return;
+      var idx = drills.findIndex(function(d){ return d.num === s.num; });
+      var entry = { num: s.num, result: s.result, updatedBy: currentAssessor.name, updatedAt: new Date().toISOString() };
+      if (idx >= 0) drills[idx] = entry;
+      else drills.push(entry);
+    });
+
+    /* Write full updated array back */
+    var wResp = await fetch(JB_CONFIG.writeUrl, {
+      method:  'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JB_CONFIG.apiKey },
+      body:    JSON.stringify({ drills: drills })
+    });
+    var wJson = await wResp.json();
+    if (wJson.record) showSPSyncIndicator(true);
+    else showSPSyncIndicator(false);
+  } catch(e) {
+    console.warn('JSONBin save failed:', e);
+    showSPSyncIndicator(false);
+  }
+}
+
+
+async function loadFromStorage(sessions) {
+  var loadedFromJB = false;
+  try {
+    var resp = await fetch(JB_CONFIG.readUrl, {
+      headers: { 'X-Master-Key': JB_CONFIG.apiKey }
+    });
+    var json = await resp.json();
+    if (json.record && json.record.drills && json.record.drills.length > 0) {
+      json.record.drills.forEach(function(item) {
+        var s = sessions.find(function(x){ return x.num === item.num; });
+        if (s && item.result) {
+          try { s.result = Object.assign(s.result, item.result); } catch(e) {}
+        }
+      });
+      loadedFromJB = true;
+    }
+  } catch(e) { console.warn('JSONBin load failed, using localStorage:', e); }
+
+  /* Fallback to localStorage */
+  if (!loadedFromJB) {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      var saved = JSON.parse(raw);
+      saved.forEach(function(item) {
+        var s = sessions.find(function(x){ return x.num === item.num; });
+        if (s) s.result = Object.assign(s.result, item.result);
+      });
+    } catch(e) {}
+  }
+}
+
+const ESC1_OPTIONS=['Muhammad Waqar - @mwwqr','Syed Tahmid Hossain - @hsyedtah','Arif Cassime - @arifcas','Naveen Payyoor - @payyoorn','Shinoy Stanley - @sshinoy','Abderrahim Taibi - @ataibi'];
+
+const ESC2_OPTIONS=['Hisham - @hishamh','Ali Kh - @alkhash','Haifa - @enghaifa','Oliver - @oliversp','Shanilkumar - @shanilkm'];
+
+const SESSIONS = buildSessions();
+
+loadFromStorage(SESSIONS).then(function() {
+  if (typeof updateKPIs     === 'function') updateKPIs();
+  if (typeof buildMainTable === 'function') buildMainTable();
+  if (typeof buildUpcomingGrid === 'function') buildUpcomingGrid();
+});
+
+let curFilterMonth='6';
+
+let curFilterSite='all';
+
+function isOverdue(s){
+
+  const today=new Date(); today.setHours(0,0,0,0);
+
+  return s.result.status==='pending' && s.d < today;
+
+}
+
+function fmtDate(d){
+
+  const D=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  return `${D[d.getDay()]}, ${d.getDate()} ${M[d.getMonth()]} ${d.getFullYear()}`;
+
+}
+
+function siteTag(site){const n=site.replace('DXB','');return `<span class="stag stag-${n}">${site}</span>`;}
+
+function scIcon(t){return SC_ICO[t]||'&#x1F4CB;';}
+
+function filteredSessions(){
+
+  return SESSIONS.filter(s=>{
+
+    const mok=curFilterMonth==='all'||s.d.getMonth()===parseInt(curFilterMonth);
+
+    const sok=curFilterSite==='all'||s.site===curFilterSite;
+
+    return mok&&sok;
+
+  });
+
+}
+
+/* ── BUILD TABLE ── */
+
+/* --- Helpers hoisted outside forEach (strict-mode safe) --- */
+
+var _CAT_LIST = ['Electrical','Mechanical','Controls','Safety','Environmental'];
+
+var _CAT_CUSTOM = '— custom —';
+
+function _mkSubOpts(cat, saved) {
+
+  if (!cat || cat === _CAT_CUSTOM) return '<option value="">— custom (type below) —</option>';
+
+  var subs = (SCENARIO_CATS[cat] && SCENARIO_CATS[cat].subs) || [];
+
+  var html = '<option value="">— select sub-category —</option>';
+
+  subs.forEach(function(s) {
+
+    html += '<option value="' + s.n + '"' + (s.n === saved ? ' selected' : '') + '>' + s.n + '</option>';
+
+  });
+
+  html += '<option value="' + _CAT_CUSTOM + '"' + (saved === _CAT_CUSTOM ? ' selected' : '') + '>✏️ Custom</option>';
+
+  return html;
+
+}
+
+function _mkEscCell(saved, num, escNum) {
+
+  var fieldName = escNum === 1 ? 'esc1' : 'esc2';
+
+  var opts = (escNum === 1 ? ESC1_OPTIONS : ESC2_OPTIONS);
+
+  var o = '<option value="">— select —</option>';
+
+  opts.forEach(function(name) {
+
+    o += '<option value="' + name + '"' + (name === saved ? ' selected' : '') + '>' + name + '</option>';
+
+  });
+
+  return '<select class="sel sel-esc" data-action="persistField" data-num="' + num + '" data-field="' + fieldName + '" style="min-width:120px;">' + o + '</select>';
+
+}
+
+function _mkDeptCell(deptVal, contactVal, num, dNum) {
+
+  var dOpts = '';
+
+  ['—','Security','DCO','Controls','ID','Enviro','Safety','Logistics'].forEach(function(d) {
+
+    dOpts += '<option value="' + d + '"' + (d === deptVal ? ' selected' : '') + '>' + d + '</option>';
+
+  });
+
+  var contacts = DEPT_CONTACTS[deptVal] || [];
+
+  var cOpts = '';
+
+  if (contacts.length) {
+
+    cOpts = '<option value="">— contact —</option>';
+
+    contacts.forEach(function(c) {
+
+      cOpts += '<option value="' + c + '"' + (c === contactVal ? ' selected' : '') + '>' + c + '</option>';
+
+    });
+
+  } else {
+
+    cOpts = '<option value="">—</option>';
+
+  }
+
+  var dis  = (deptVal === '—' || !deptVal) ? ' disabled' : '';
+
+  var opac = (deptVal === '—' || !deptVal) ? '0.4' : '1';
+
+  return '<div class="dept-cell">'
+
+    + '<select class="sel sel-dept" data-action="persistDept" data-num="' + num + '" data-dnum="' + dNum + '" data-key="dept">'
+
+    + dOpts + '</select>'
+
+    + '<select class="sel sel-contact"' + dis + ' data-action="persistDept" data-num="' + num + '" data-dnum="' + dNum + '" data-key="contact" style="opacity:' + opac + '">'
+
+    + cOpts + '</select>'
+
+    + '</div>';
+
+}
+
+function buildMainTable() {
+
+  var list = filteredSessions();
+
+  var tb = document.getElementById('body-main');
+
+  tb.innerHTML = '';
+
+  list.forEach(function(s) {
+
+    var r  = s.result;
+
+    var rm = ROLE_MAP[s.site];
+
+    var overdue = isOverdue(s);
+
+    var tr = document.createElement('tr');
+
+    if (overdue) tr.className = 'row-overdue';
+
+    /* Category select */
+
+    var savedCat = r.scenCat || '';
+
+    var savedSub = r.scenSub || '';
+
+    var catOpts = '';
+
+    _CAT_LIST.forEach(function(c) {
+
+      catOpts += '<option value="' + c + '"' + (c === savedCat ? ' selected' : '') + '>'
+
+               + SCENARIO_CATS[c].icon + ' ' + c + '</option>';
+
+    });
+
+    catOpts += '<option value="' + _CAT_CUSTOM + '"' + (savedCat === _CAT_CUSTOM ? ' selected' : '') + '>✏️ Custom</option>';
+
+    var catExtra = (savedCat === _CAT_CUSTOM)
+
+      ? '<input type="text" class="inline-text" placeholder="Custom category…" style="margin-top:4px;" value="' + (r.scenCatCustom || '') + '" data-action="persistField" data-num="' + s.num + '" data-field="scenCatCustom">'
+
+      : '';
+
+    var subExtra = (savedCat === _CAT_CUSTOM || savedSub === _CAT_CUSTOM)
+
+      ? '<input type="text" class="inline-text" placeholder="Custom sub-category…" style="margin-top:4px;" value="' + (r.scenSubCustom || '') + '" data-action="persistField" data-num="' + s.num + '" data-field="scenSubCustom">'
+
+      : '';
+
+    /* Member selects */
+
+    var mkM = function(site, saved) {
+
+      var o = '<option value="">— select —</option>';
+
+      TEAMS[site].members.forEach(function(m) {
+
+        o += '<option value="' + m + '"' + (m === saved ? ' selected' : '') + '>' + m + '</option>';
+
+      });
+
+      return o;
+
+    };
+
+    /* Assessor */
+
+    var asOpts = '<option value="">— select —</option>';
+
+    ALL_ASSESSORS.forEach(function(a) {
+
+      asOpts += '<option value="' + a.name + '"' + (a.name === r.assor ? ' selected' : '') + '>' + a.name + ' (' + a.role + ' · ' + a.site + ')</option>';
+
+    });
+
+    /* Status */
+
+    var stCls = r.status === 'completed' ? 'completed' : 'pending';
+
+    var statusSel = '<select class="status-sel ' + stCls + '" data-action="persistStatus" data-num="' + s.num + '">'
+
+      + '<option value="pending"'  + (r.status === 'pending'   ? ' selected' : '') + '>⏳ Pending</option>'
+
+      + '<option value="completed"'+ (r.status === 'completed' ? ' selected' : '') + '>✅ Completed</option>'
+
+      + '</select>';
+
+    /* Overdue badge */
+
+    var overdueBadge = overdue
+
+      ? '<span class="overdue-badge"><i class="fas fa-exclamation-triangle"></i> Overdue</span>'
+
+      : '';
+
+    /* Score */
+
+    var pctVal   = (r.pct !== '' && r.pct !== null && r.pct !== undefined) ? r.pct : '';
+
+    var pctColor = pctVal === '' ? 'var(--text)' : pctVal >= 85 ? 'var(--green)' : pctVal >= 65 ? 'var(--yellow)' : 'var(--red)';
+
+    tr.innerHTML =
+
+        '<td style="white-space:nowrap;font-size:11px;">' + fmtDate(s.d) + overdueBadge
+      + (r.assor && currentAssessor && r.assor !== currentAssessor.name ? '<span class="lock-icon" title="Assigned to ' + r.assor + '"><i class=\'fas fa-lock\'></i></span>' : '')
+      + '</td>'
+
+      + '<td><span class="' + SITE_C[s.site] + '">' + s.site + '</span></td>'
+
+      + '<td class="col-assor"><select class="sel sel-assor" data-action="requestAssessorChange" data-num="' + s.num + '" style="min-width:140px;">' + asOpts + '</select></td>'
+
+      + '<td class="col-sc-cat">'
+
+      +   '<select class="sel sel-sc-cat" data-action="persistScenCat" data-num="' + s.num + '" style="min-width:145px;" data-num="' + s.num + '">' + catOpts + '</select>'
+
+      +   catExtra
+
+      + '</td>'
+
+      + '<td class="col-sc-sub">'
+
+      +   '<div style="display:flex;flex-direction:column;gap:4px;">'
+
+      +   '<select class="sel sel-sc-sub" data-action="persistScenSub" data-num="' + s.num + '" style="min-width:150px;" id="sub-sel-' + s.num + '">' + _mkSubOpts(savedCat, savedSub) + '</select>'
+
+      +   subExtra
+
+      +   '</div>'
+
+      + '</td>'
+
+      + '<td class="col-fr"><div class="role-row">' + siteTag(rm.fr)   + '<select class="sel sel-fr"   data-action="persistField" data-num="' + s.num + '" data-field="fr"   style="flex:1;">' + mkM(rm.fr,   r.fr)   + '</select></div></td>'
+
+      + '<td class="col-ic"><div class="role-row">' + siteTag(rm.ic)   + '<select class="sel sel-ic"   data-action="persistField" data-num="' + s.num + '" data-field="ic"   style="flex:1;">' + mkM(rm.ic,   r.ic)   + '</select></div></td>'
+
+      + '<td class="col-seot"><div class="role-row">' + siteTag(rm.seot) + '<select class="sel sel-seot" data-action="persistField" data-num="' + s.num + '" data-field="seot" style="flex:1;">' + mkM(rm.seot, r.seot) + '</select></div></td>'
+
+      + '<td class="col-esc1">' + _mkEscCell(r.esc1, s.num, 1) + '</td>'
+
+      + '<td class="col-dept1">' + _mkDeptCell(r.dept1, r.dept1c, s.num, 1) + '</td>'
+
+      + '<td class="col-dept2">' + _mkDeptCell(r.dept2, r.dept2c, s.num, 2) + '</td>'
+
+      + '<td class="col-esc2">' + _mkEscCell(r.esc2, s.num, 2) + '</td>'
+
+      + '<td class="col-remarks"><textarea class="inline-text" placeholder="Remarks…" data-action="persistField" data-num="' + s.num + '" data-field="remarks">' + (r.remarks || '') + '</textarea></td>'
+
+      + '<td class="col-gaps"><textarea class="inline-text" placeholder="Gaps identified…" data-action="persistField" data-num="' + s.num + '" data-field="gaps">' + (r.gaps || '') + '</textarea></td>'
+
+      + '<td class="col-result"><div class="result-pct-wrap"><input type="number" class="result-pct" min="0" max="100" value="' + pctVal + '" placeholder="—" style="color:' + pctColor + '" data-action="persistPct" data-num="' + s.num + '"><span class="pct-label">%</span></div></td>'
+
+      + '<td class="col-status">' + statusSel + '</td>';;
+
+    tb.appendChild(tr);
+
+    /* Apply lock/viewer state */
+
+    var _lockState = getRowLockState(s);
+
+    applyRowLock(tr, _lockState, s.num);
+
+  });
+
+  applyColVisibility();
+
+  updateKPIs();
+
+}
+
+function _persistFieldCore(num,field,val){
+
+  const s=SESSIONS.find(x=>x.num===num);if(!s)return;
+
+  s.result[field]=val;
+
+  saveToStorage();
+
+  if(field==='status'){
+
+    updateKPIs();
+
+    var _catSel=document.querySelector('.sel-sc-cat[data-num="'+num+'"]');
+
+    if(_catSel){var _tr=_catSel.closest('tr');if(_tr)applyRowLock(_tr,getRowLockState(s),num);}
+
+  }
+
+}
+
+function _persistScenCatCore(num, val) {
+
+  var s = SESSIONS.find(function(x){return x.num===num;});
+
+  if (!s) return;
+
+  s.result.scenCat = val;
+
+  s.result.scenSub = '';
+
+  s.result.scenSubCustom = '';
+
+  saveToStorage();
+
+  /* rebuild sub-category dropdown */
+
+  var subSel = document.getElementById('sub-sel-' + num);
+
+  if (subSel) subSel.innerHTML = _mkSubOpts(val, '');
+
+  /* show/hide custom cat input */
+
+  var catTd = subSel ? subSel.closest('tr').querySelector('.col-sc-cat') : null;
+
+  if (catTd) {
+
+    var inp = catTd.querySelector('input.inline-text');
+
+    if (val === _CAT_CUSTOM) {
+
+      if (!inp) {
+
+        inp = document.createElement('input');
+
+        inp.type = 'text'; inp.className = 'inline-text';
+
+        inp.placeholder = 'Custom category…'; inp.style.marginTop = '4px';
+
+        inp.oninput = function(){persistField(num,'scenCatCustom',this.value);};
+
+        catTd.appendChild(inp);
+
+      }
+
+    } else { if (inp) inp.remove(); }
+
+  }
+
+  /* show/hide custom sub input */
+
+  var subTd = subSel ? subSel.closest('td') : null;
+
+  if (subTd) {
+
+    var inp2 = subTd.querySelector('input.inline-text');
+
+    if (val === _CAT_CUSTOM) {
+
+      if (!inp2) {
+
+        inp2 = document.createElement('input');
+
+        inp2.type = 'text'; inp2.className = 'inline-text';
+
+        inp2.placeholder = 'Custom sub-category…'; inp2.style.marginTop = '4px';
+
+        inp2.oninput = function(){persistField(num,'scenSubCustom',this.value);};
+
+        subTd.querySelector('div').appendChild(inp2);
+
+      }
+
+    } else { if (inp2) inp2.remove(); }
+
+  }
+
+}
+
+function _persistScenSubCore(num, val) {
+
+  var s = SESSIONS.find(function(x){return x.num===num;});
+
+  if (!s) return;
+
+  s.result.scenSub = val;
+
+  saveToStorage();
+
+  var subSel = document.getElementById('sub-sel-' + num);
+
+  var subTd  = subSel ? subSel.closest('td') : null;
+
+  if (!subTd) return;
+
+  var div = subTd.querySelector('div');
+
+  var inp = subTd.querySelector('input.inline-text');
+
+  if (val === _CAT_CUSTOM) {
+
+    if (!inp) {
+
+      inp = document.createElement('input');
+
+      inp.type = 'text'; inp.className = 'inline-text';
+
+      inp.placeholder = 'Custom sub-category…'; inp.style.marginTop = '4px';
+
+      inp.oninput = function(){persistField(num,'scenSubCustom',this.value);};
+
+      if (div) div.appendChild(inp);
+
+    }
+
+  } else { if (inp) inp.remove(); }
+
+}
+
+function _persistDeptCore(num, dNum, type, val) {
+
+  var s = SESSIONS.find(function(x){return x.num===num;});
+
+  if (!s) return;
+
+  var field = dNum===1 ? (type==='dept'?'dept1':'dept1c') : (type==='dept'?'dept2':'dept2c');
+
+  s.result[field] = val;
+
+  saveToStorage();
+
+  if (type === 'dept') {
+
+    /* Find the row via its category select data-num attribute */
+
+    var catSel = document.querySelector('.sel-sc-cat[data-num="' + num + '"]');
+
+    if (!catSel) return;
+
+    var row = catSel.closest('tr');
+
+    if (!row) return;
+
+    var colClass = '.col-dept' + (dNum === 1 ? '1' : '2');
+
+    var contactSel = row.querySelector(colClass + ' .sel-contact');
+
+    if (contactSel) {
+
+      var contacts = DEPT_CONTACTS[val] || [];
+
+      var cOpts = '';
+
+      if (contacts.length) {
+
+        cOpts = '<option value="">— contact —</option>';
+
+        contacts.forEach(function(c){ cOpts += '<option value="'+c+'">'+c+'</option>'; });
+
+      } else {
+
+        cOpts = '<option value="">—</option>';
+
+      }
+
+      contactSel.innerHTML = cOpts;
+
+      contactSel.disabled = (val==='—'||!val);
+
+      contactSel.style.opacity = (val==='—'||!val) ? '0.4' : '1';
+
+      s.result[dNum===1?'dept1c':'dept2c'] = '';
+
+    }
+
+  }
+
+}
+
+function _persistPctCore(num,val){
+
+  const s=SESSIONS.find(x=>x.num===num);if(!s)return;
+
+  const n=val===''?'':(Math.min(100,Math.max(0,parseInt(val)||0)));
+
+  s.result.pct=n;
+
+  saveToStorage();
+
+  const el=document.querySelector(`#body-main tr td .result-pct`);
+
+  /* Find right input */
+
+  document.querySelectorAll('#body-main tr').forEach(tr=>{
+
+    if(tr.cells[0]&&tr.cells[0].textContent==num){
+
+      const inp=tr.querySelector('.result-pct');
+
+      if(inp){inp.style.color=n===''?'var(--text)':n>=85?'var(--green)':n>=65?'var(--yellow)':'var(--red)';}
+
+    }
+
+  });
+
+  updateKPIs();
+
+}
+
+/* ── KPI + CHARTS UPDATE ── */
+
+function updateKPIs(){
+
+  const today=new Date();today.setHours(0,0,0,0);
+
+  const completed=SESSIONS.filter(s=>s.result.status==='completed');
+
+  const withPct=SESSIONS.filter(s=>s.result.pct!==''&&s.result.pct!==null&&s.result.pct!==undefined&&s.result.pct!=='');
+
+  const g=withPct.filter(s=>s.result.pct>=85).length;
+
+  const y=withPct.filter(s=>s.result.pct>=65&&s.result.pct<85).length;
+
+  const rd=withPct.filter(s=>s.result.pct>0&&s.result.pct<65).length;
+
+  const overdue=SESSIONS.filter(s=>isOverdue(s)).length;
+
+  document.getElementById('ov-done').textContent=completed.length;
+
+  document.getElementById('ov-total').textContent=SESSIONS.length;
+
+  document.getElementById('kpi-total').textContent=SESSIONS.length;
+
+  document.getElementById('ov-green').textContent=g;
+
+  document.getElementById('ov-yellow').textContent=y;
+
+  document.getElementById('ov-red').textContent=rd;
+
+  document.getElementById('ov-overdue').textContent=overdue;
+
+  updateYearChart();
+
+  updateOverdueChart();
+
+}
+
+/* ── YEAR CHART ── */
+
+let yearChartInst=null;
+
+function updateYearChart(){
+
+  if(!window.Highcharts)return;
+
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  const completed=Array(12).fill(0);
+
+  const planned=Array(12).fill(0);
+
+  SESSIONS.forEach(s=>{
+
+    if(s.d.getFullYear()===2026){
+
+      planned[s.d.getMonth()]++;
+
+      if(s.result.status==='completed') completed[s.d.getMonth()]++;
+
+    }
+
+  });
+
+  const HC={chart:{backgroundColor:'transparent',style:{fontFamily:'var(--font)'}},credits:{enabled:false},title:{text:null},legend:{itemStyle:{color:'#3d5a80',fontSize:'11px'}},tooltip:{backgroundColor:'#fff',borderColor:'#d8e3ee',style:{color:'#17294a'},borderRadius:7}};
+
+  if(yearChartInst)yearChartInst.destroy();
+
+  yearChartInst=Highcharts.chart('ch-year',{...HC,
+
+    xAxis:{categories:months,lineColor:'#d8e3ee',tickColor:'#d8e3ee',labels:{style:{color:'#6b87a4',fontSize:'10px'}}},
+
+    yAxis:{title:{text:'Sessions',style:{color:'#6b87a4',fontSize:'10px'}},gridLineColor:'#e2eaf4',labels:{style:{color:'#6b87a4',fontSize:'10px'}},min:0},
+
+    plotOptions:{column:{borderRadius:4,borderWidth:0,groupPadding:.1},line:{marker:{enabled:true,radius:3}}},
+
+    series:[
+
+      {name:'Completed',type:'column',color:'#0a8f64',data:completed,dataLabels:{enabled:true,style:{fontSize:'9px',color:'#0a8f64',textOutline:'none',fontWeight:'700'}}},
+
+      {name:'Planned',type:'line',color:'#a0b5c8',dashStyle:'ShortDash',lineWidth:2,data:planned}
+
+    ]
+
+  });
+
+}
+
+/* ── OVERDUE CHART ── */
+
+let overdueChartInst=null;
+
+function updateOverdueChart(){
+
+  if(!window.Highcharts)return;
+
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  const byMonth=Array(12).fill(0);
+
+  SESSIONS.forEach(s=>{if(isOverdue(s)&&s.d.getFullYear()===2026) byMonth[s.d.getMonth()]++;});
+
+  const HC={chart:{backgroundColor:'transparent',style:{fontFamily:'var(--font)'}},credits:{enabled:false},title:{text:null},legend:{enabled:false},tooltip:{backgroundColor:'#fff',borderColor:'#d8e3ee',style:{color:'#17294a'},borderRadius:7,pointFormat:'<b>{point.y}</b> overdue'}};
+
+  if(overdueChartInst)overdueChartInst.destroy();
+
+  overdueChartInst=Highcharts.chart('ch-overdue',{...HC,
+
+    xAxis:{categories:months,lineColor:'#d8e3ee',tickColor:'#d8e3ee',labels:{style:{color:'#6b87a4',fontSize:'10px'}}},
+
+    yAxis:{title:{text:'Overdue drills',style:{color:'#6b87a4',fontSize:'10px'}},gridLineColor:'#e2eaf4',labels:{style:{color:'#6b87a4',fontSize:'10px'}},min:0,allowDecimals:false},
+
+    plotOptions:{column:{borderRadius:4,borderWidth:0,colorByPoint:false}},
+
+    series:[{name:'Overdue',type:'column',color:'#c45000',data:byMonth,
+
+      dataLabels:{enabled:true,style:{fontSize:'9px',color:'#c45000',textOutline:'none',fontWeight:'700'},formatter:function(){return this.y>0?this.y:'';}}}]
+
+  });
+
+}
+
+/* ── MEMBER GRID ── */
+
+function buildMemberGrid(){
+
+  var grid=document.getElementById('member-grid');
+
+  grid.innerHTML='';
+
+  Object.keys(TEAMS).forEach(function(site){
+
+    var data=TEAMS[site];
+
+    var asr=ASSESSORS[site];
+
+    var el=document.createElement('div');
+
+    el.className='mc';
+
+    var membersHtml='';
+
+    data.members.forEach(function(name,i){
+
+      var init=name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+
+      var c=AV_COLORS[i%AV_COLORS.length];
+
+      var drills=SESSIONS.filter(function(s){return s.result&&s.result.pct!==''&&['fr','ic','seot'].some(function(r){return s.result[r]===name;});});
+
+      var slots='';
+
+      drills.slice(0,5).forEach(function(s){
+
+        var p=s.result.pct;
+
+        var cls=p>=85?'mmg-g':p>=65?'mmg-y':'mmg-r';
+
+        var lbl=p>=85?'G':p>=65?'Y':'R';
+
+        slots+='<div class="mmg '+cls+'">'+lbl+'</div>';
+
+      });
+
+      var pendingCount=Math.max(0,5-drills.length);
+
+      var pending='';
+
+      for(var pi=0;pi<pendingCount;pi++) pending+='<div class="mmg mmg-p">P</div>';
+
+      membersHtml+='<div class="mr" data-member="'+name+'">'
+
+        +'<div class="m-info">'
+
+        +'<div class="av" style="background:'+c+'18;color:'+c+';border:1.5px solid '+c+'38;">'+init+'</div>'
+
+        +'<div><div class="m-name">'+name+'</div><div class="m-stat">'+drills.length+' drill'+(drills.length!==1?'s':'')+' completed</div></div>'
+
+        +'</div>'
+
+        +'<div class="m-mgs">'+slots+pending+'</div>'
+
+        +'</div>';
+
+    });
+
+    var asrHtml='';
+
+    if(asr){
+
+      if(asr.fm) asrHtml+='<div class="mc-asr-item"><span style="font-size:10px;color:var(--text3);font-weight:600;">FM</span><span class="rp rp-fm">'+asr.fm.split(' ')[0]+'</span></div>';
+
+      if(asr.ce) asrHtml+='<div class="mc-asr-item"><span style="font-size:10px;color:var(--text3);font-weight:600;">CE</span><span class="rp rp-ce">'+asr.ce.split(' ')[0]+'</span></div>';
+
+    }
+
+    var iconMap={DXB60:'fa-server',DXB61:'fa-server',DXB62:'fa-server',DCO:'fa-tools',Security:'fa-shield-alt',Enviro:'fa-leaf',Safety:'fa-hard-hat',Controls:'fa-microchip',ID:'fa-drafting-compass',Logistics:'fa-truck'};
+
+    var icon=iconMap[site]||'fa-users';
+
+    el.innerHTML=
+
+        '<div class="mc-hdr" style="background:'+data.bg+';border-bottom-color:'+data.bd+';">'
+
+        +'<div class="mc-title" style="color:'+data.color+';"><i class="fas '+icon+'" style="font-size:10px;"></i> '+site+'</div>'
+
+        +'<span style="font-size:10px;color:var(--text3);">'+data.members.length+' members</span>'
+
+        +'</div>'
+
+        +(asrHtml?'<div class="mc-asrs">'+asrHtml+'</div>':'')
+
+        +'<div>'+membersHtml+'</div>';
+
+    grid.appendChild(el);
+
+  });
+
+}
+
+function renderMemberChart(){
+
+  if(!window.Highcharts)return;
+
+  const cats=[...TEAMS.DXB60.members,...TEAMS.DXB61.members,...TEAMS.DXB62.members,...TEAMS.DCO.members,...TEAMS.Security.members,...TEAMS.Enviro.members,...TEAMS.Safety.members,...TEAMS.Controls.members,...TEAMS.ID.members,...TEAMS.Logistics.members];
+
+  const HC={chart:{backgroundColor:'transparent',style:{fontFamily:'var(--font)'}},credits:{enabled:false},title:{text:null},legend:{itemStyle:{color:'#3d5a80',fontSize:'11px'}},tooltip:{backgroundColor:'#fff',borderColor:'#d8e3ee',style:{color:'#17294a'},borderRadius:7}};
+
+  var memberColors=cats.map(function(name){
+
+    var site=Object.keys(TEAMS).find(function(t){return TEAMS[t].members.indexOf(name)>=0;});
+
+    return TEAMS[site]?TEAMS[site].color:'#6b87a4';
+
+  });
+
+  var memberDrillData=cats.map(function(name){
+
+    return SESSIONS.filter(function(s){
+
+      return s.result&&['fr','ic','seot'].some(function(role){return s.result[role]===name;});
+
+    }).length;
+
+  });
+
+  Highcharts.chart('ch-members',{...HC,chart:{...HC.chart,type:'bar'},
+
+    xAxis:{categories:cats,lineColor:'#d8e3ee',tickColor:'#d8e3ee',labels:{style:{color:'#6b87a4',fontSize:'10px'}}},
+
+    yAxis:{title:{text:'Drills Assigned',style:{color:'#6b87a4',fontSize:'10px'}},gridLineColor:'#e2eaf4',labels:{style:{color:'#6b87a4',fontSize:'10px'}},min:0,tickInterval:2},
+
+    plotOptions:{bar:{dataLabels:{enabled:true,style:{color:'#6b87a4',fontSize:'9px',fontWeight:'600',textOutline:'none'}},borderRadius:4,borderWidth:0,pointWidth:12}},
+
+    series:[{name:'Drills Assigned',colorByPoint:true,colors:memberColors,data:memberDrillData}]
+
+  });
+
+}
+
+/* ── COLUMN VISIBILITY ── */
+
+const colState={};
+
+function toggleCol(cls,el){
+
+  colState[cls]=el.classList.contains('on')?false:true;
+
+  if(colState[cls]) el.classList.add('on'); else el.classList.remove('on');
+
+  applyColVisibility();
+
+}
+
+function applyColVisibility(){
+
+  ['col-sc-cat','col-sc-sub','col-fr','col-ic','col-seot','col-assor','col-dept1','col-dept2','col-status','col-remarks','col-gaps','col-result'].forEach(cls=>{
+
+    const show=colState[cls]!==false;
+
+    document.querySelectorAll('.'+cls).forEach(el=>{el.style.display=show?'':'none';});
+
+  });
+
+}
+
+/* ── FILTERS ── */
+
+function filterMonth(val,btn){
+
+  curFilterMonth=val;
+
+  document.querySelectorAll('.fb .fb-btn').forEach(b=>{if(b.closest('.fb')===btn.closest('.fb'))b.classList.remove('active');});
+
+  btn.classList.add('active');
+
+  buildMainTable();
+
+}
+
+function filterSite(val,btn){
+
+  curFilterSite=val;
+
+  document.querySelectorAll('.fb .fb-btn').forEach(b=>{if(b.closest('.fb')===btn.closest('.fb'))b.classList.remove('active');});
+
+  btn.classList.add('active');
+
+  buildMainTable();
+
+}
+
+/* ── NAV ── */
+
+function goPage(name, btn) {
+  /* Save current data before switching pages */
+  _saveToStorageCore();
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.ntab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('page-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (name === 'overview') {
+    updateKPIs();
+    setTimeout(function(){
+      updateYearChart(); updateOverdueChart(); buildUpcomingGrid();
+      setTimeout(function(){try{buildComplianceTracker();}catch(e){var g=document.getElementById('comp-grid');if(g)g.innerHTML='<div style="grid-column:1/-1;padding:16px;color:var(--red);font-size:11px;">Error: '+e.message+'</div>';}},50);
+    }, 60);
+  }
+  if (name === 'members')   { buildMemberGrid(); setTimeout(renderMemberChart, 60); }
+  if (name === 'schedule')  {
+    /* Reload from localStorage so latest saved data is always shown */
+    loadFromStorage(SESSIONS).then(function(){ buildMainTable(); });
+    checkAuthOverlay();
+  }
+  if (name === 'scenarios') { renderScenarios('all'); }
+}
+
+function filterScenLib(cat, btn) {
+
+  document.querySelectorAll('#page-scenarios .fb-btn').forEach(function(b){b.classList.remove('active');});
+
+  if (btn) btn.classList.add('active');
+
+  renderScenarios(cat);
+
+}
+
+function renderScenarios(filter) {
+
+  var statsEl = document.getElementById('scen-stats');
+
+  var grid    = document.getElementById('scen-grid');
+
+  if (!statsEl || !grid) return;
+
+  /* Stats bar */
+
+  var totalCount = 0;
+
+  var statsHtml  = '';
+
+  Object.keys(SCENARIO_CATS).forEach(function(cat) {
+
+    var data = SCENARIO_CATS[cat];
+
+    totalCount += data.subs.length;
+
+    statsHtml += '<div class="scen-stat-pill">'
+
+      + '<div><div class="scen-stat-num" style="color:' + data.color + '">' + data.subs.length + '</div>'
+
+      + '<div class="scen-stat-lbl">' + data.icon + ' ' + cat + '</div></div>'
+
+      + '</div>';
+
+  });
+
+  statsHtml += '<div class="scen-stat-pill"><div>'
+
+    + '<div class="scen-stat-num" style="color:var(--accent)">' + totalCount + '</div>'
+
+    + '<div class="scen-stat-lbl">Total Scenarios</div>'
+
+    + '</div></div>';
+
+  statsEl.innerHTML = statsHtml;
+
+  /* Cards */
+
+  grid.innerHTML = '';
+
+  Object.keys(SCENARIO_CATS).forEach(function(cat) {
+
+    var data = SCENARIO_CATS[cat];
+
+    if (filter !== 'all' && cat !== filter) return;
+
+    data.subs.forEach(function(sub) {
+
+      var chips = '';
+
+      if (sub.sup.length) {
+
+        sub.sup.forEach(function(d){ chips += '<span class="chip chip-s">' + d + '</span>'; });
+
+      } else {
+
+        chips = '<span class="chip chip-s" style="opacity:.4">—</span>';
+
+      }
+
+      var card = document.createElement('div');
+
+      card.className = 'scen-card';
+
+      card.innerHTML =
+
+          '<div class="scen-card-accent" style="background:' + data.color + '"></div>'
+
+        + '<div class="scen-card-cat" style="color:' + data.color + '">' + data.icon + ' ' + cat + '</div>'
+
+        + '<div class="scen-card-title">' + sub.n + '</div>'
+
+        + '<div class="scen-card-desc">' + sub.desc + '</div>'
+
+        + '<div class="scen-card-chips">' + chips + '</div>';
+
+      grid.appendChild(card);
+
+    });
+
+  });
+
+}
+
+/* ── UPCOMING DRILLS (next 2 weeks) ── */
+
+function buildUpcomingGrid(){
+
+  const grid=document.getElementById('upcoming-grid');
+
+  const rangeEl=document.getElementById('upcoming-range');
+
+  if(!grid)return;
+
+  const today=new Date();today.setHours(0,0,0,0);
+
+  const twoWeeks=new Date(today);twoWeeks.setDate(today.getDate()+28);
+
+  const upcoming=SESSIONS.filter(s=>s.d>=today&&s.d<=twoWeeks).slice(0,4);
+
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  if(rangeEl){
+
+    const fmt=d=>`${d.getDate()} ${months[d.getMonth()]}`;
+
+    rangeEl.textContent=`${fmt(today)} – ${fmt(twoWeeks)}`;
+
+  }
+
+  if(!upcoming.length){grid.innerHTML='<div style="color:var(--text3);font-size:11px;padding:12px;">No drills scheduled in the next 4 weeks.</div>';return;}
+
+  grid.style.gridTemplateColumns=`repeat(${Math.min(upcoming.length,4)},1fr)`;
+
+  grid.innerHTML=upcoming.map(s=>{
+
+    const rm=ROLE_MAP[s.site];
+
+    const asr=ASSESSORS[s.site];
+
+    const siteNum=s.site.replace('DXB','');
+
+    const sc=s.result.scenario||s.sc.n;
+
+    const scType=s.sc.t;
+
+    const od=isOverdue(s)?'<span class="overdue-badge"><i class="fas fa-exclamation-triangle"></i> Overdue</span>':'';
+
+    const asrCeHtml=(asr&&asr.ce)?'<span class="rp rp-ce">'+asr.ce.split(' ')[0]+'</span>':'';
+
+    const asrFmHtml=(asr&&asr.fm)?'<span class="rp rp-fm">'+asr.fm.split(' ')[0]+'</span>':'';
+
+    return '<div class="uc-card u'+siteNum+'">'
+
+      +'<div class="uc-date"><i class="fas fa-calendar-day"></i> '+fmtDate(s.d)+' '+od+'</div>'
+
+      +'<div class="uc-title">'+(SC_ICO[scType]||'&#x1F4CB;')+' '+sc+'</div>'
+
+      +'<div class="uc-site"><span class="'+SITE_C[s.site]+'">'+s.site+'</span> · #'+s.num+'</div>'
+
+      +'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;">'+asrCeHtml+asrFmHtml+'</div>'
+
+      +'<div style="display:flex;gap:3px;flex-wrap:wrap;">'
+
+      +'<span class="chip chip-s">'+siteTag(rm.fr)+' FR</span>'
+
+      +'<span class="chip chip-s">'+siteTag(rm.ic)+' IC</span>'
+
+      +'<span class="chip chip-s">'+siteTag(rm.seot)+' SEOT</span>'
+
+      +'</div>'
+
+      +'</div>';
+
+  }).join('');
+
+}
+
+/* ── COMPLIANCE TRACKER ── */
+function buildComplianceTracker() {
+  var today = new Date(); today.setHours(0,0,0,0);
+  var year = 2026;
+  var h2 = {from:new Date(2026,6,1), to:new Date(2027,0,1)};
+
+  function getCurrentQuarterWindow() {
+    var m = today.getMonth();
+    var qStart, qEnd;
+    if (m < 3)      { qStart=new Date(year,0,1);  qEnd=new Date(year,3,1); }
+    else if (m < 6) { qStart=new Date(year,3,1);  qEnd=new Date(year,6,1); }
+    else if (m < 9) { qStart=new Date(year,6,1);  qEnd=new Date(year,9,1); }
+    else            { qStart=new Date(year,9,1);   qEnd=new Date(year+1,0,1); }
+    return {from:qStart, to:qEnd};
+  }
+  var qWin = getCurrentQuarterWindow();
+  var qLabel = 'Q'+(Math.floor(qWin.from.getMonth()/3)+1)+' '+year;
+
+  function sessionsInWindow(name, from, to) {
+    return SESSIONS.filter(function(s) {
+      var r = s.result;
+      return r && r.status==='completed'
+        && (r.fr===name||r.ic===name||r.seot===name||r.dept1c===name||r.dept2c===name||r.esc1===name||r.esc2===name)
+        && s.d>=from && s.d<to;
+    });
+  }
+  function upcomingInWindow(name, from, to) {
+    return SESSIONS.filter(function(s) {
+      var r = s.result;
+      return r && r.status!=='completed'
+        && (r.fr===name||r.ic===name||r.seot===name||r.dept1c===name||r.dept2c===name||r.esc1===name||r.esc2===name)
+        && s.d>=from && s.d<to;
+    });
+  }
+
+  var groups = [
+    { id:'dco',  title:'DCO Team',       icon:'fa-tools',   color:'#0a8f64',
+      members:['Hussam - @bikmhd','Sarafuddin - @kunnoos','Ahmed Al Zaabi - @aalzaabi','Faran - @faranmdq','Jerwin - @jtaduran'],
+      rule:'Bi-annual — at least once in H2 2026',
+      window:h2,  windowLabel:'H2 2026' },
+    { id:'esc2', title:'2nd Escalation',  icon:'fa-arrow-up', color:'#6d32cc',
+      members:ESC2_OPTIONS,               rule:'Quarterly — at least once per quarter',
+      window:qWin, windowLabel:qLabel },
+    { id:'enviro', title:'Enviro Team',   icon:'fa-leaf',    color:'#0e7490',
+      members:TEAMS.Enviro.members,       rule:'Quarterly — at least once per quarter',
+      window:qWin, windowLabel:qLabel }
+  ];
+
+  var totalMembers=0, totalCompliant=0, totalFlagged=0;
+
+  groups.forEach(function(grp) {
+    var statuses = grp.members.map(function(name) {
+      var attended  = sessionsInWindow(name, grp.window.from, grp.window.to).length;
+      var scheduled = upcomingInWindow(name, grp.window.from, grp.window.to).length;
+      return { name:name, attended:attended, scheduled:scheduled, ok:attended>=1 };
+    });
+    var compliant = statuses.filter(function(s){return s.ok;}).length;
+    var flagged   = grp.members.length - compliant;
+    totalMembers  += grp.members.length;
+    totalCompliant+= compliant;
+    totalFlagged  += flagged;
+    /* Update pre-rendered badge */
+    var badge = document.getElementById('badge-'+grp.id);
+    if (badge) {
+      badge.className = flagged===0 ? 'comp-badge comp-badge-ok' : 'comp-badge comp-badge-warn';
+      badge.textContent = flagged===0 ? '✓ All Clear' : flagged+' Flagged';
+    }
+    /* Update each member row */
+    statuses.forEach(function(st) {
+      var key = st.name.split(' ')[0].toLowerCase();
+      var detailEl = document.getElementById('comp-detail-'+key);
+      var statusEl = document.getElementById('comp-status-'+key);
+      if (detailEl) detailEl.textContent = st.attended+' attended · '+st.scheduled+' upcoming';
+      if (statusEl) {
+        if (st.ok) { statusEl.className='comp-status-ok'; statusEl.textContent='✔ Met'; }
+        else if (st.scheduled>0) { statusEl.className='comp-status-pending'; statusEl.textContent='⏳ Scheduled'; }
+        else { statusEl.className='comp-status-warn'; statusEl.textContent='⚠ Missing'; }
+      }
+    });
+  });
+  var elTotal    = document.getElementById('comp-total-members');
+  var elCompliant= document.getElementById('comp-compliant');
+  var elFlagged  = document.getElementById('comp-flagged');
+  if (elTotal)     elTotal.textContent = totalMembers;
+  if (elCompliant) elCompliant.textContent = totalCompliant;
+  if (elFlagged)   elFlagged.textContent = totalFlagged;
+
+  if (elFlagged) {
+    var kw = elFlagged.parentElement;
+    if (kw) kw.className = 'comp-kpi '+(totalFlagged>0?'comp-kpi-warn':'comp-kpi-ok');
+  }
+  if (elCompliant) {
+    var ko = elCompliant.parentElement;
+    if (ko) ko.className = 'comp-kpi '+(totalCompliant===totalMembers&&totalMembers>0?'comp-kpi-ok':'comp-kpi-neutral');
+  }
+}
+
+/* ════ AUTH & LOCK SYSTEM ════ */
+var AUTH_STORAGE_KEY = 'dxb_assessor_session';
+var currentAssessor = null;
+var scheduleMode = null; // 'viewer' | 'assessor' | null
+
+/* ── Crypto helpers ── */
+async function sha256(message) {
+  var msgBuf = new TextEncoder().encode(message);
+  var hashBuf = await crypto.subtle.digest('SHA-256', msgBuf);
+  return Array.from(new Uint8Array(hashBuf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+}
+
+function initAuth() {
+  /* Populate assessor dropdown */
+  var sel = document.getElementById('auth-select');
+  if (sel && sel.options.length <= 1) {
+    ALL_ASSESSORS.forEach(function(a) {
+      var opt = document.createElement('option');
+      opt.value = a.name;
+      var alias = a.name.match(/@(\w+)/);
+      opt.textContent = a.name + ' (' + a.role + ' \xb7 ' + a.site + ')';
+      sel.appendChild(opt);
+    });
+  }
+  /* Restore saved session */
+  try {
+    var saved = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (saved) {
+      var parsed = JSON.parse(saved);
+      if (parsed.mode === 'viewer') {
+        scheduleMode = 'viewer'; return;
+      }
+      if (parsed.mode === 'assessor' && parsed.name && parsed.hash) {
+        var match = ALL_ASSESSORS.find(function(a){ return a.name === parsed.name; });
+        if (match && match.pwdHash === parsed.hash) {
+          currentAssessor = match;
+          scheduleMode = 'assessor'; return;
+        }
+      }
+    }
+  } catch(e) {}
+}
+
+function showAuthOverlay() {
+  var s1 = document.getElementById('auth-step1');
+  var s2 = document.getElementById('auth-step2');
+  if (s1) s1.style.display = 'block';
+  if (s2) s2.style.display = 'none';
+  var err = document.getElementById('auth-err');
+  if (err) err.style.display = 'none';
+  /* Always re-populate dropdown */
+  var sel = document.getElementById('auth-select');
+  if (sel && sel.options.length <= 1) {
+    ALL_ASSESSORS.forEach(function(a) {
+      var opt = document.createElement('option');
+      opt.value = a.name;
+      opt.textContent = a.name + ' (' + a.role + ' \xb7 ' + a.site + ')';
+      sel.appendChild(opt);
+    });
+  }
+  document.getElementById('auth-overlay').style.display = 'flex';
+}
+
+function showAssessorLogin() {
+  document.getElementById('auth-step1').style.display = 'none';
+  document.getElementById('auth-step2').style.display = 'block';
+  setTimeout(function(){ var p=document.getElementById('auth-pwd'); if(p) p.focus(); }, 100);
+}
+
+function backToStep1() {
+  document.getElementById('auth-step1').style.display = 'block';
+  document.getElementById('auth-step2').style.display = 'none';
+}
+
+function enterAsViewer() {
+  scheduleMode = 'viewer';
+  currentAssessor = null;
+  try { localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({mode:'viewer'})); } catch(e) {}
+  document.getElementById('auth-overlay').style.display = 'none';
+  updateAssessorBanner();
+  buildMainTable();
+}
+
+function doSignIn() {
+  var sel = document.getElementById('auth-select');
+  var pwdEl = document.getElementById('auth-pwd');
+  var err = document.getElementById('auth-err');
+  var name = sel ? sel.value : '';
+  var pwd = pwdEl ? pwdEl.value.trim() : '';
+  if (!name || !pwd) {
+    if (err) { err.textContent = 'Please select your name and enter your password.'; err.style.display = 'block'; }
+    return;
+  }
+  var match = ALL_ASSESSORS.find(function(a){ return a.name === name; });
+  if (!match) return;
+  /* Hash the entered password and compare */
+  sha256(pwd).then(function(hash) {
+    if (hash !== match.pwdHash) {
+      if (err) { err.textContent = 'Incorrect password. Try again.'; err.style.display = 'block'; }
+      if (pwdEl) { pwdEl.value = ''; pwdEl.focus(); }
+      return;
+    }
+    if (err) err.style.display = 'none';
+    currentAssessor = match;
+    scheduleMode = 'assessor';
+    try { localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({mode:'assessor', name:name, hash:hash})); } catch(e) {}
+    document.getElementById('auth-overlay').style.display = 'none';
+    if (pwdEl) pwdEl.value = '';
+    updateAssessorBanner();
+    buildMainTable();
+  });
+}
+
+function doSignOut() {
+  currentAssessor = null;
+  scheduleMode = null;
+  try { localStorage.removeItem(AUTH_STORAGE_KEY); } catch(e) {}
+  updateAssessorBanner();
+  showAuthOverlay();
+  buildMainTable();
+}
+
+function updateAssessorBanner() {
+  var banner = document.getElementById('assessor-banner');
+  if (!banner) return;
+  if (scheduleMode === 'assessor' && currentAssessor) {
+    banner.style.display = 'flex';
+    banner.className = 'assessor-banner';
+    var nameEl = document.getElementById('banner-name');
+    if (nameEl) nameEl.textContent = currentAssessor.name;
+  } else if (scheduleMode === 'viewer') {
+    banner.style.display = 'flex';
+    banner.className = 'assessor-banner viewer-mode';
+    var nameEl = document.getElementById('banner-name');
+    if (nameEl) nameEl.textContent = 'Viewer \u2014 Read Only';
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
+function checkAuthOverlay() {
+  if (!scheduleMode) {
+    showAuthOverlay();
+  } else {
+    document.getElementById('auth-overlay').style.display = 'none';
+    updateAssessorBanner();
+  }
+}
+
+/* ── Auto-save indicator ── */
+var _saveTimeout = null;
+function showSPSyncIndicator(ok) {
+  var el = document.getElementById('sp-sync-indicator');
+  if (!el) return;
+  el.textContent = ok ? '☁ Synced' : '⚠ Offline (local only)';
+  el.style.color  = ok ? 'var(--green)' : 'var(--amber,#c47a00)';
+  el.style.opacity = '1';
+  clearTimeout(window._spSyncTimeout);
+  window._spSyncTimeout = setTimeout(function(){ el.style.opacity = '0'; }, 3000);
+}
+
+function saveToStorage() {
+  _saveToStorageCore();
+  showSaveIndicator();
+}
+function showSaveIndicator() {
+  var el = document.getElementById('autosave-indicator');
+  if (!el) return;
+  el.textContent = '\u2713 Saved';
+  el.style.color = 'var(--green)';
+  el.style.opacity = '1';
+  clearTimeout(_saveTimeout);
+  _saveTimeout = setTimeout(function(){ el.style.opacity = '0'; }, 2000);
+}
+
+/* ── Row lock logic ──
+   Rules:
+   1. No assessor signed in → all rows fully locked (read-only).
+   2. Signed in, row has no assor set → assessor can edit everything.
+   3. Signed in, row assor = currentAssessor.name → owner:
+        - If status=pending → fully editable.
+        - If status=completed → LOCKED (only owner can re-open via unlock btn).
+   4. Signed in, row assor ≠ currentAssessor.name → locked (another assessor's row).
+*/
+function getRowLockState(s) {
+  var r = s.result;
+  if (scheduleMode === 'viewer') return 'viewer';   // viewer: read-only all rows
+  if (scheduleMode !== 'assessor' || !currentAssessor) return 'viewer'; // not chosen yet
+  if (!r.assor) return 'open';                       // unclaimed row — assessor can claim
+  if (r.assor === currentAssessor.name) {
+    return r.status === 'completed' ? 'mine-completed' : 'mine';
+  }
+  return 'locked';                                   // another assessor's row
+}
+
+function applyRowLock(tr, lockState, sessionNum) {
+  tr.classList.remove('row-locked', 'row-mine', 'row-mine-completed', 'row-viewer');
+  if (lockState === 'viewer' || lockState === 'locked') {
+    tr.classList.add('row-locked');
+    /* Disable all interactive elements for true read-only */
+    tr.querySelectorAll('select, input, textarea, button.unlock-btn').forEach(function(el){
+      el.setAttribute('disabled','disabled');
+      el.style.pointerEvents='none';
+    });
+  } else if (lockState === 'mine-completed') {
+    tr.classList.add('row-mine-completed');
+    /* Add an unlock button on the date cell */
+    var dateCell = tr.querySelector('td');
+    if (dateCell && !dateCell.querySelector('.unlock-btn')) {
+      var btn = document.createElement('button');
+      btn.className = 'unlock-btn';
+      btn.title = 'Re-open this drill (assessor only)';
+      btn.style.cssText = 'margin-left:5px;font-size:9px;padding:2px 6px;border:1px solid var(--accent);border-radius:4px;background:var(--accent-bg);color:var(--accent);cursor:pointer;';
+      btn.innerHTML = '<i class="fas fa-lock-open"></i>';
+      btn.onclick = function(e) { e.stopPropagation(); unlockDrill(sessionNum); };
+      dateCell.appendChild(btn);
+    }
+  } else {
+    tr.classList.add('row-mine');
+    /* Re-enable all inputs (in case previously locked) */
+    tr.querySelectorAll('select, input, textarea').forEach(function(el){
+      el.removeAttribute('disabled');
+      el.style.pointerEvents='';
+    });
+  }
+}
+
+function unlockDrill(num) {
+  var s = SESSIONS.find(function(x){ return x.num === num; });
+  if (!s || !currentAssessor) return;
+  if (s.result.assor !== currentAssessor.name) return;
+  /* Scrape current DOM values into SESSIONS before re-render */
+  var catSel = document.querySelector('.sel-sc-cat[data-num="' + num + '"]');
+  if (catSel) {
+    var row = catSel.closest('tr');
+    if (row) {
+      var rt = row.querySelector('.col-remarks textarea');
+      var gt = row.querySelector('.col-gaps textarea');
+      var pi = row.querySelector('.result-pct');
+      if (rt) s.result.remarks = rt.value;
+      if (gt) s.result.gaps    = gt.value;
+      if (pi && pi.value !== '') s.result.pct = Number(pi.value);
+      /* Scrape all selects */
+      var frSel   = row.querySelector('.sel-fr');   if (frSel)   s.result.fr   = frSel.value;
+      var icSel   = row.querySelector('.sel-ic');   if (icSel)   s.result.ic   = icSel.value;
+      var seotSel = row.querySelector('.sel-seot'); if (seotSel) s.result.seot = seotSel.value;
+      var asrSel  = row.querySelector('.sel-assor');if (asrSel)  s.result.assor= asrSel.value;
+      var escSels = row.querySelectorAll('.sel-esc');
+      if (escSels[0]) s.result.esc1 = escSels[0].value;
+      if (escSels[1]) s.result.esc2 = escSels[1].value;
+      var d1Sel   = row.querySelector('.col-dept1 .sel-dept'); if (d1Sel) s.result.dept1 = d1Sel.value;
+      var d2Sel   = row.querySelector('.col-dept2 .sel-dept'); if (d2Sel) s.result.dept2 = d2Sel.value;
+      var c1Sel   = row.querySelector('.col-dept1 .sel-contact'); if (c1Sel) s.result.dept1c = c1Sel.value;
+      var c2Sel   = row.querySelector('.col-dept2 .sel-contact'); if (c2Sel) s.result.dept2c = c2Sel.value;
+    }
+  }
+  /* Do NOT reset status — keep it as-is so assessor can see and change it */
+  saveToStorage();
+  /* Re-render just this row's lock state without full table rebuild */
+  var tr = catSel ? catSel.closest('tr') : null;
+  if (tr) {
+    applyRowLock(tr, 'mine', num);
+    /* Remove the lock icon from date cell if present */
+    var lockIco = tr.querySelector('.lock-icon');
+    if (lockIco) lockIco.remove();
+  } else {
+    buildMainTable();
+  }
+  updateKPIs();
+}
+
+/* Wrap persistField to enforce lock + auto-assign assessor */
+function persistField(num, field, val) {
+  var s = SESSIONS.find(function(x){ return x.num === num; });
+  if (!s) return;
+  /* Auto-assign assessor on first edit if signed in */
+  if (!s.result.assor && currentAssessor && scheduleMode === 'assessor') {
+    s.result.assor = currentAssessor.name;
+    var catSel = document.querySelector('.sel-sc-cat[data-num="' + num + '"]');
+    if (catSel) {
+      var row = catSel.closest('tr');
+      if (row) { var assorSel = row.querySelector('.sel-assor'); if (assorSel) assorSel.value = currentAssessor.name; }
+    }
+  }
+  _persistFieldCore(num, field, val);
+}
+
+/* Also wrap persistScenCat, persistScenSub, persistDept, persistPct */
+function persistScenCat(num, val) {
+  var s = SESSIONS.find(function(x){ return x.num === num; });
+  if (!s) return;
+  if (!s.result.assor && currentAssessor && scheduleMode === 'assessor') s.result.assor = currentAssessor.name;
+  _persistScenCatCore(num, val);
+}
+function persistScenSub(num, val) {
+  var s = SESSIONS.find(function(x){ return x.num === num; });
+  if (!s) return;
+  if (!s.result.assor && currentAssessor && scheduleMode === 'assessor') s.result.assor = currentAssessor.name;
+  _persistScenSubCore(num, val);
+}
+function persistDept(num, dNum, type, val) {
+  var s = SESSIONS.find(function(x){ return x.num === num; });
+  if (!s) return;
+  if (!s.result.assor && currentAssessor && scheduleMode === 'assessor') s.result.assor = currentAssessor.name;
+  _persistDeptCore(num, dNum, type, val);
+}
+function persistPct(num, val) {
+  var s = SESSIONS.find(function(x){ return x.num === num; });
+  if (!s) return;
+  if (!s.result.assor && currentAssessor && scheduleMode === 'assessor') s.result.assor = currentAssessor.name;
+  _persistPctCore(num, val);
+}
+
+/* ── SAVE ON EXIT + INTERVAL ── */
+window.addEventListener('beforeunload', function() { _saveToStorageCore(); });
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden') { _saveToStorageCore(); }
+});
+setInterval(function() { if (currentAssessor) { _saveToStorageCore(); showSaveIndicator(); } }, 10000);
+
+/* ── ASSESSOR REASSIGN CONFIRMATION ── */
+var _pendingAssessorChange = null; // {num, newName, selectEl}
+
+function requestAssessorChange(num, newName, selectEl) {
+  var s = SESSIONS.find(function(x){ return x.num === num; });
+  if (!s) return;
+
+  var currentName = s.result.assor || '';
+
+  /* Clearing the assessor — just save directly */
+  if (!newName) {
+    _persistFieldCore(num, 'assor', newName);
+    return;
+  }
+
+  /* Assigning to yourself — save directly, no confirmation needed */
+  if (currentAssessor && newName === currentAssessor.name) {
+    _persistFieldCore(num, 'assor', newName);
+    return;
+  }
+
+  /* Assigning to ANY other assessor (whether row was owned or not) — show confirmation */
+  _pendingAssessorChange = { num: num, newName: newName, selectEl: selectEl, prevName: currentName };
+  var el1 = document.getElementById('confirm-target-name');
+  var el2 = document.getElementById('confirm-target-name2');
+  if (el1) el1.textContent = newName;
+  if (el2) el2.textContent = newName;
+  document.getElementById('confirm-overlay').style.display = 'flex';
+}
+
+function confirmAssessorAssign() {
+  if (!_pendingAssessorChange) return;
+  var num = _pendingAssessorChange.num;
+  var newName = _pendingAssessorChange.newName;
+  _persistFieldCore(num, 'assor', newName);
+  /* Re-apply lock state — this row now belongs to someone else */
+  var s = SESSIONS.find(function(x){ return x.num === num; });
+  var catSel = document.querySelector('.sel-sc-cat[data-num="' + num + '"]');
+  if (catSel && s) {
+    var tr = catSel.closest('tr');
+    if (tr) applyRowLock(tr, getRowLockState(s), num);
+  }
+  _pendingAssessorChange = null;
+  document.getElementById('confirm-overlay').style.display = 'none';
+}
+
+function dismissAssessorConfirm() {
+  if (_pendingAssessorChange && _pendingAssessorChange.selectEl) {
+    /* Revert the select back to the previous value */
+    _pendingAssessorChange.selectEl.value = _pendingAssessorChange.prevName;
+  }
+  _pendingAssessorChange = null;
+  document.getElementById('confirm-overlay').style.display = 'none';
+}
+
+/* ── INIT ── */
+
+buildMainTable();
+
+buildUpcomingGrid();
+
+setTimeout(function(){try{buildComplianceTracker();}catch(e){var g=document.getElementById("comp-grid");if(g)g.innerHTML='<div style="grid-column:1/-1;padding:18px;color:var(--red);font-size:11px;">Error loading tracker: '+e.message+'</div>';}},200);
+
+const awHC=()=>window.Highcharts?(updateYearChart(),updateOverdueChart()):setTimeout(awHC,150);
+
+awHC();
+
+initAuth();
+
+/* ── Live-sync: reload from SharePoint every 30 seconds ─────── */
+setInterval(function() {
+  loadFromStorage(SESSIONS).then(function() {
+    if (typeof updateKPIs     === 'function') updateKPIs();
+    if (typeof buildMainTable === 'function') buildMainTable();
+    if (typeof buildUpcomingGrid === 'function') buildUpcomingGrid();
+    if (typeof buildMembersGrid  === 'function') buildMembersGrid();
+  });
+}, 30000);
+
+/* ═══════════════════════════════════════════════════════════════
+   EVENT DELEGATION — CSP-safe replacement for all inline handlers
+   ═══════════════════════════════════════════════════════════════ */
+document.addEventListener('click', function(e) {
+  var el = e.target.closest('[data-action]');
+  if (!el) return;
+  var action = el.dataset.action;
+  switch (action) {
+    case 'goPage':            goPage(el.dataset.page, el); break;
+    case 'filterMonth':       filterMonth(el.dataset.val, el); break;
+    case 'filterSite':        filterSite(el.dataset.val, el); break;
+    case 'toggleCol':         toggleCol(el.dataset.col, el); break;
+    case 'filterScenLib':     filterScenLib(el.dataset.val, el); break;
+    case 'doSignOut':         doSignOut(); break;
+    case 'enterAsViewer':     enterAsViewer(); break;
+    case 'showAssessorLogin': showAssessorLogin(); break;
+    case 'backToStep1':       backToStep1(); break;
+    case 'doSignIn':          doSignIn(); break;
+    case 'dismissAssessorConfirm': dismissAssessorConfirm(); break;
+    case 'confirmAssessorAssign':  confirmAssessorAssign(); break;
+  }
+});
+
+document.addEventListener('change', function(e) {
+  var el = e.target.closest('[data-action]') || e.target;
+  if (!el.dataset.action) return;
+  var action = el.dataset.action;
+  var num    = el.dataset.num ? parseInt(el.dataset.num, 10) : null;
+  switch (action) {
+    case 'persistField':
+      persistField(num, el.dataset.field, el.value); break;
+    case 'persistStatus':
+      persistField(num, 'status', el.value);
+      el.className = 'status-sel ' + (el.value === 'completed' ? 'completed' : 'pending'); break;
+    case 'persistDept':
+      persistDept(num, parseInt(el.dataset.dnum, 10), el.dataset.key, el.value); break;
+    case 'requestAssessorChange':
+      requestAssessorChange(num, el.value, el); break;
+    case 'persistScenCat':
+      persistScenCat(num, el.value); break;
+    case 'persistScenSub':
+      persistScenSub(num, el.value); break;
+  }
+});
+
+document.addEventListener('input', function(e) {
+  var el = e.target.closest('[data-action]') || e.target;
+  if (!el.dataset.action) return;
+  var num = el.dataset.num ? parseInt(el.dataset.num, 10) : null;
+  switch (el.dataset.action) {
+    case 'persistField': persistField(num, el.dataset.field, el.value); break;
+    case 'persistPct':   persistPct(num, el.value); break;
+  }
+});
+
+document.addEventListener('keydown', function(e) {
+  var el = e.target;
+  if (el.dataset.action === 'pwdKeydown' && e.key === 'Enter') doSignIn();
+});
+
+</script>
+
+<!-- ════ SCENARIOS LIBRARY PAGE ════ -->
+
+<div id="page-scenarios" class="page">
+
+  <div class="sh" style="margin-top:6px;">
+
+    <div class="st"><i class="fas fa-list-alt"></i> Drill Scenarios Library — DXB Cluster</div>
+
+    <div style="font-size:10px;color:var(--text3);">Browse all available scenarios by category before planning your next drill</div>
+
+  </div>
+
+  <div style="margin-bottom:14px;">
+
+    <div class="fb-wrap"><div class="fb">
+
+      <span class="fl">Filter:</span>
+
+      <button class="fb-btn active" data-action="filterScenLib" data-val="all">All</button>
+
+      <button class="fb-btn" data-action="filterScenLib" data-val="Electrical">⚡ Electrical</button>
+
+      <button class="fb-btn" data-action="filterScenLib" data-val="Mechanical">⚙️ Mechanical</button>
+
+      <button class="fb-btn" data-action="filterScenLib" data-val="Controls">🖥️ Controls</button>
+
+      <button class="fb-btn" data-action="filterScenLib" data-val="Safety">🔥 Safety</button>
+
+      <button class="fb-btn" data-action="filterScenLib" data-val="Environmental">🌡️ Environmental</button>
+
+    </div></div>
+
+  </div>
+
+  <div id="scen-stats" style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;"></div>
+
+  <div id="scen-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;"></div>
+
+</div>
+
+</body></html>
