@@ -2476,21 +2476,29 @@ function buildMemberGrid(){
 
       var drills=SESSIONS.filter(function(s){return s.result&&s.result.pct!==''&&['fr','ic','seot'].some(function(r){return s.result[r]===name;});});
 
+      var isDCEO = ['DXB60','DXB61','DXB62'].indexOf(site) !== -1;
+
       var slots='';
 
-      drills.slice(0,5).forEach(function(s){
+      if (isDCEO) {
 
-        var p=s.result.pct;
+        drills.slice(0,5).forEach(function(s){
 
-        var cls=p>=85?'mmg-g':p>=65?'mmg-y':'mmg-r';
+          var p=s.result.pct;
 
-        var lbl=p>=85?'G':p>=65?'Y':'R';
+          var cls=p>=85?'mmg-g':p>=65?'mmg-y':'mmg-r';
 
-        slots+='<div class="mmg '+cls+'">'+lbl+'</div>';
+          var lbl=p>=85?'C':p>=65?'Y':'R';
 
-      });
+          slots+='<div class="mmg '+cls+'">'+lbl+'</div>';
 
-      var pendingCount=Math.max(0,5-drills.length);
+        });
+
+      }
+
+      /* Pending slots: DCEO teams only */
+
+      var pendingCount = isDCEO ? Math.max(0,5-drills.length) : 0;
 
       var pending='';
 
@@ -2502,7 +2510,7 @@ function buildMemberGrid(){
 
         +'<div class="av" style="background:'+c+'18;color:'+c+';border:1.5px solid '+c+'38;">'+init+'</div>'
 
-        +'<div><div class="m-name">'+name+'</div><div class="m-stat">'+drills.length+' drill'+(drills.length!==1?'s':'')+' completed</div></div>'
+        +'<div><div class="m-name">'+name+'</div>'+(isDCEO?'<div class="m-stat">'+drills.length+' drill'+(drills.length!==1?'s':'')+' completed</div>':'')+'</div>'
 
         +'</div>'
 
