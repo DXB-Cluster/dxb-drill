@@ -1702,10 +1702,16 @@ async function loadFromStorage(sessions) {
 
   /* ── Step 1: Try JSONBin first — cloud is authoritative ── */
   try {
-    /* Cache-busted raw read — no auth needed for public raw URLs */
-    var resp = await fetch(GH_CONFIG.rawUrl + '?t=' + Date.now());
+    /* Read via authenticated API — no CDN cache, always fresh */
+    var resp = await fetch(GH_CONFIG.apiUrl, {
+      headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Accept': 'application/vnd.github.v3+json' }
+    });
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    var json = await resp.json();
+    var respJson = await resp.json();
+    var json = null;
+    if (respJson.content) {
+      try { json = JSON.parse(atob(respJson.content.replace(/\n/g, ''))); } catch(e) {}
+    }
     if (json) {
       loadedFromJB = true; /* successfully reached GitHub */
     }
