@@ -1646,9 +1646,7 @@ async function _saveToStorageCore() {
       || r.remarks !== '' || r.gaps !== '' || r.scenCat !== '' || r.dateOverride !== '');
   }).map(function(s) { return {num: s.num, result: s.result}; });
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
-  if (typeof updateKPIs === 'function') updateKPIs();
-
-  /* Save to JSONBin — only when assessor is signed in */
+  /* Save to GitHub — only when assessor is signed in */
   if (!currentAssessor) return;
   try {
     /* Read current file from GitHub to get SHA */
@@ -2683,12 +2681,14 @@ function goPage(name, btn) {
   var _siBtn = document.getElementById('topbar-signin-btn');
   if (_siBtn) _siBtn.style.display = (name === 'overview' && !scheduleMode) ? 'inline-block' : 'none';
   if (name === 'overview') {
-    /* Re-render from in-memory SESSIONS — already loaded at boot */
-    updateKPIs();
-    setTimeout(function(){
-      updateYearChart(); updateOverdueChart(); buildUpcomingGrid();
-      setTimeout(function(){try{buildComplianceTracker();}catch(e){var g=document.getElementById('comp-grid');if(g)g.innerHTML='<div style="grid-column:1/-1;padding:16px;color:var(--red);font-size:11px;">Error: '+e.message+'</div>';}},50);
-    }, 60);
+    /* Reload from GitHub API then re-render — always fresh */
+    loadFromStorage(SESSIONS).then(function() {
+      updateKPIs();
+      setTimeout(function(){
+        updateYearChart(); updateOverdueChart(); buildUpcomingGrid();
+        setTimeout(function(){try{buildComplianceTracker();}catch(e){var g=document.getElementById('comp-grid');if(g)g.innerHTML='<div style="grid-column:1/-1;padding:16px;color:var(--red);font-size:11px;">Error: '+e.message+'</div>';}},50);
+      }, 60);
+    }).catch(function(){ updateKPIs(); setTimeout(function(){ updateYearChart(); updateOverdueChart(); buildUpcomingGrid(); }, 60); });
   }
   if (name === 'members')   { buildMemberGrid(); setTimeout(renderMemberChart, 60); }
   if (name === 'schedule')  {
