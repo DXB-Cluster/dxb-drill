@@ -830,21 +830,7 @@ tr.row-overdue:hover td{background:#fdeee8 !important}
 
 <body>
 
-<div id="browser-warning" style="display:none;background:#c47a00;color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:600;position:sticky;top:0;z-index:9999;">
-  ⚠️ This dashboard must be opened in a browser — not the desktop app.
-  <a href="?web=1" style="color:#fff;text-decoration:underline;margin-left:12px;">Click here to open in browser →</a>
-</div>
-<script>
-  /* Detect if running inside Office desktop app / electron shell */
-  (function() {
-    var ua = navigator.userAgent || '';
-    var isOfficeApp = /MSOffice|microsoft office|electron/i.test(ua);
-    var isFilePath  = location.protocol === 'file:';
-    if (isOfficeApp || isFilePath) {
-      document.getElementById('browser-warning').style.display = 'block';
-    }
-  })();
-</script>
+
 
 <div class="topbar">
 
@@ -882,7 +868,21 @@ tr.row-overdue:hover td{background:#fdeee8 !important}
 
     </div>
 
-    <div class="topbar-meta"><span id="autosave-indicator" style="font-size:10px;font-weight:600;opacity:0;transition:opacity 1s;margin-right:10px;"></span> <span id="sp-sync-indicator" style="font-size:11px;opacity:0;transition:opacity 0.3s;margin-left:8px;"></span><div class="live-dot"></div> Live · 2026</div>
+    <div class="topbar-meta">
+      <span id="autosave-indicator" style="font-size:10px;font-weight:600;opacity:0;transition:opacity 1s;margin-right:6px;"></span>
+      <span id="sp-sync-indicator" style="font-size:11px;opacity:1;transition:opacity 0.3s;margin-right:8px;color:var(--amber,#c47a00);">&#x26A0; Connecting...</span>
+      <div class="live-dot" style="margin-right:6px;"></div>
+      <!-- Topbar auth widget -->
+      <div id="topbar-auth-widget" style="display:flex;align-items:center;gap:6px;">
+        <!-- Shown when signed out -->
+        <button id="topbar-signin-btn" onclick="showAuthOverlay()" style="display:none;padding:5px 12px;border-radius:6px;border:1px solid var(--accent-lt);background:var(--accent-bg);color:var(--accent);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;"><i class="fas fa-user-shield" style="margin-right:5px;"></i>Sign In</button>
+        <!-- Shown when in viewer mode -->
+        <span id="topbar-viewer-chip" style="display:none;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-size:11px;font-weight:500;"><i class="fas fa-eye" style="margin-right:4px;opacity:.6;"></i>Viewer</span>
+        <!-- Shown when signed in as assessor -->
+        <span id="topbar-assessor-chip" style="display:none;padding:4px 10px;border-radius:6px;border:1px solid var(--accent-lt);background:var(--accent-bg);color:var(--accent);font-size:11px;font-weight:600;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><i class="fas fa-user-shield" style="margin-right:4px;"></i><span id="topbar-assessor-name"></span></span>
+        <button id="topbar-signout-btn" onclick="doSignOut()" style="display:none;padding:4px 9px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text3);font-size:11px;cursor:pointer;" title="Sign out"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </div>
 
   </div>
 
@@ -1618,13 +1618,13 @@ function makeSession(num,d,site,sc){
 
   return {num,d,site,sc,
 
-    result:{status:'pending',scenario:sc.n,scenCat:'',scenSub:'',scenCatCustom:'',scenSubCustom:'',dept1:'—',dept1c:'',dept2:'—',dept2c:'',assor:'',esc1:'',esc2:'',fr:'',ic:'',seot:'',remarks:'',gaps:'',pct:''}
+    result:{status:'pending',scenario:sc.n,scenCat:'',scenSub:'',scenCatCustom:'',scenSubCustom:'',dept1:'—',dept1c:'',dept2:'—',dept2c:'',assor:'',esc1:'',esc2:'',fr:'',ic:'',seot:'',remarks:'',gaps:'',pct:'',dateOverride:''}
 
   };
 
 }
 
-var STORAGE_KEY = 'dxb_drill_data_v5';
+var STORAGE_KEY = 'dxb_drill_data_v6'; /* bumped v6 — clears old test data */
 
 /* ── JSONBin Config (shared live backend — no auth required) ──── */
 var JB_CONFIG = {
@@ -1638,7 +1638,13 @@ var JB_CONFIG = {
 
 async function _saveToStorageCore() {
   /* Always keep localStorage as offline fallback */
-  var data = SESSIONS.map(function(s) { return {num: s.num, result: s.result}; });
+  /* Only store sessions with real data to avoid blanks overwriting JSONBin data */
+  var data = SESSIONS.filter(function(s) {
+    var r = s.result;
+    return r && (r.status === 'completed' || r.pct !== '' || r.assor !== ''
+      || r.fr !== '' || r.ic !== '' || r.seot !== '' || r.esc1 !== ''
+      || r.remarks !== '' || r.gaps !== '' || r.scenCat !== '' || r.dateOverride !== '');
+  }).map(function(s) { return {num: s.num, result: s.result}; });
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
   if (typeof updateKPIs === 'function') updateKPIs();
 
@@ -1652,11 +1658,18 @@ async function _saveToStorageCore() {
     var rJson = await rResp.json();
     var drills = (rJson.record && rJson.record.drills) ? rJson.record.drills : [];
 
-    /* Update or insert each changed session */
+    /* Update or insert sessions that have real data */
     SESSIONS.forEach(function(s) {
-      if (!s.result || s.result.status === 'scheduled') return;
+      if (!s.result) return;
+      var r = s.result;
+      /* Only persist if at least one meaningful field is filled */
+      var hasData = r.status === 'completed'
+        || r.pct !== '' || r.assor !== '' || r.fr !== '' || r.ic !== ''
+        || r.seot !== '' || r.esc1 !== '' || r.remarks !== '' || r.gaps !== ''
+        || r.scenCat !== '' || r.dateOverride !== '';
+      if (!hasData) return;
       var idx = drills.findIndex(function(d){ return d.num === s.num; });
-      var entry = { num: s.num, result: s.result, updatedBy: currentAssessor.name, updatedAt: new Date().toISOString() };
+      var entry = { num: s.num, result: r, updatedBy: currentAssessor.name, updatedAt: new Date().toISOString() };
       if (idx >= 0) drills[idx] = entry;
       else drills.push(entry);
     });
@@ -1679,34 +1692,57 @@ async function _saveToStorageCore() {
 
 async function loadFromStorage(sessions) {
   var loadedFromJB = false;
+
+  /* ── Step 1: Always apply localStorage first (fast, offline baseline) ── */
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      var lsSaved = JSON.parse(raw);
+      lsSaved.forEach(function(item) {
+        var s = sessions.find(function(x){ return x.num === item.num; });
+        if (s && item.result) {
+          s.result = Object.assign(s.result, item.result);
+          if (s.result.dateOverride) { s.d = new Date(s.result.dateOverride); }
+        }
+      });
+    }
+  } catch(e) {}
+
+  /* ── Step 2: Overlay JSONBin data (cloud wins over local for same session) ── */
   try {
     var resp = await fetch(JB_CONFIG.readUrl, {
       headers: { 'X-Master-Key': JB_CONFIG.apiKey }
     });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
     var json = await resp.json();
+    if (json.record) {
+      loadedFromJB = true; /* successfully reached JSONBin */
+    }
     if (json.record && json.record.drills && json.record.drills.length > 0) {
       json.record.drills.forEach(function(item) {
         var s = sessions.find(function(x){ return x.num === item.num; });
         if (s && item.result) {
-          try { s.result = Object.assign(s.result, item.result); } catch(e) {}
+          try {
+            s.result = Object.assign(s.result, item.result);
+            if (s.result.dateOverride) { s.d = new Date(s.result.dateOverride); }
+          } catch(e) {}
         }
       });
-      loadedFromJB = true;
     }
-  } catch(e) { console.warn('JSONBin load failed, using localStorage:', e); }
+  } catch(e) { console.warn('JSONBin load failed, using localStorage only:', e); }
 
-  /* Fallback to localStorage */
-  if (!loadedFromJB) {
-    try {
-      var raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      var saved = JSON.parse(raw);
-      saved.forEach(function(item) {
-        var s = sessions.find(function(x){ return x.num === item.num; });
-        if (s) s.result = Object.assign(s.result, item.result);
-      });
-    } catch(e) {}
+  /* ── Step 3: Update sync indicator ── */
+  var _syncEl = document.getElementById('sp-sync-indicator');
+  if (_syncEl) {
+    /* If localStorage has data, a previous save succeeded — show Synced */
+    var _lsHasData = false;
+    try { _lsHasData = !!localStorage.getItem(STORAGE_KEY); } catch(e) {}
+    var _isOnline = loadedFromJB || _lsHasData;
+    _syncEl.textContent  = _isOnline ? '☁ Synced' : '⚠ Offline';
+    _syncEl.style.color  = _isOnline ? '#0a8f64' : '#c47a00';
+    _syncEl.style.opacity = '1';
   }
+  return loadedFromJB;
 }
 
 const ESC1_OPTIONS=['Muhammad Waqar - @mwwqr','Syed Tahmid Hossain - @hsyedtah','Arif Cassime - @arifcas','Naveen Payyoor - @payyoorn','Shinoy Stanley - @sshinoy','Abderrahim Taibi - @ataibi'];
@@ -1715,11 +1751,18 @@ const ESC2_OPTIONS=['Hisham - @hishamh','Ali Kh - @alkhash','Haifa - @enghaifa',
 
 const SESSIONS = buildSessions();
 
-loadFromStorage(SESSIONS).then(function() {
+loadFromStorage(SESSIONS).then(async function() {
   if (typeof updateKPIs     === 'function') updateKPIs();
+  setTimeout(function() {
+    if (typeof updateYearChart    === 'function') updateYearChart();
+    if (typeof updateOverdueChart === 'function') updateOverdueChart();
+    if (typeof buildUpcomingGrid  === 'function') buildUpcomingGrid();
+    setTimeout(function() {
+      if (typeof buildComplianceTracker === 'function') buildComplianceTracker();
+    }, 50);
+  }, 60);
   if (typeof buildMainTable === 'function') buildMainTable();
-  if (typeof buildUpcomingGrid === 'function') buildUpcomingGrid();
-});
+}).catch(function(e){ console.warn('Initial load failed:', e); });
 
 let curFilterMonth='6';
 
@@ -1957,9 +2000,22 @@ function buildMainTable() {
 
     tr.innerHTML =
 
-        '<td style="white-space:nowrap;font-size:11px;">' + fmtDate(s.d) + overdueBadge
-      + (r.assor && currentAssessor && r.assor !== currentAssessor.name ? '<span class="lock-icon" title="Assigned to ' + r.assor + '"><i class=\'fas fa-lock\'></i></span>' : '')
-      + '</td>'
+        (function() {
+          var _eff = (r.dateOverride) ? new Date(r.dateOverride) : s.d;
+          var _iso = _eff.toISOString().split('T')[0];
+          var _disp = '<span class="date-display">' + fmtDate(_eff) + '</span>';
+          var _editBtn = currentAssessor
+            ? ' <span class="date-edit-btn" title="Change date" style="cursor:pointer;font-size:10px;color:var(--accent);opacity:.75;user-select:none;" onclick="(function(el){var td=el.closest(\'td\');td.querySelector(\'.date-display\').style.display=\'none\';el.style.display=\'none\';td.querySelector(\'.date-input-wrap\').style.display=\'flex\';})(this)">&#x270F;&#xFE0F;</span>'
+            : '';
+          var _inputWrap = '<span class="date-input-wrap" style="display:none;align-items:center;gap:4px;margin-top:2px;">'
+            + '<input type="date" class="inline-text" style="font-size:11px;padding:2px 4px;width:128px;" value="' + _iso + '" data-action="persistDateOverride" data-num="' + s.num + '">'
+            + '<span style="cursor:pointer;font-size:11px;color:var(--text-muted);" onclick="(function(el){var td=el.closest(\'td\');td.querySelector(\'.date-display\').style.display=\'\';td.querySelector(\'.date-edit-btn\').style.display=\'\';td.querySelector(\'.date-input-wrap\').style.display=\'none\';})(this)">&#x2715;</span>'
+            + '</span>';
+          return '<td style="white-space:nowrap;font-size:11px;">'
+            + _disp + _editBtn + _inputWrap + overdueBadge
+            + (r.assor && currentAssessor && r.assor !== currentAssessor.name ? '<span class=\"lock-icon\" title=\"Assigned to ' + r.assor + '\"><i class=\'fas fa-lock\'></i></span>' : '')
+            + '</td>';
+        })()
 
       + '<td><span class="' + SITE_C[s.site] + '">' + s.site + '</span></td>'
 
@@ -2021,6 +2077,25 @@ function buildMainTable() {
 
   updateKPIs();
 
+}
+
+function persistDateOverride(num, isoVal, inputEl) {
+  var s = SESSIONS.find(function(x){ return x.num === num; });
+  if (!s) return;
+  s.result.dateOverride = isoVal;
+  s.d = new Date(isoVal);
+  if (inputEl) {
+    var td = inputEl.closest('td');
+    if (td) {
+      var dispEl = td.querySelector('.date-display');
+      if (dispEl) { dispEl.textContent = fmtDate(new Date(isoVal)); dispEl.style.display = ''; }
+      var editBtn = td.querySelector('.date-edit-btn');
+      if (editBtn) editBtn.style.display = '';
+      var wrap = td.querySelector('.date-input-wrap');
+      if (wrap) wrap.style.display = 'none';
+    }
+  }
+  saveToStorage();
 }
 
 function _persistFieldCore(num,field,val){
@@ -2572,7 +2647,11 @@ function goPage(name, btn) {
   document.querySelectorAll('.ntab').forEach(function(t){t.classList.remove('active');});
   document.getElementById('page-' + name).classList.add('active');
   if (btn) btn.classList.add('active');
+  /* Sign-in button only visible on Overview (when not signed in) */
+  var _siBtn = document.getElementById('topbar-signin-btn');
+  if (_siBtn) _siBtn.style.display = (name === 'overview' && !scheduleMode) ? 'inline-block' : 'none';
   if (name === 'overview') {
+    /* Re-render from in-memory SESSIONS — already loaded at boot */
     updateKPIs();
     setTimeout(function(){
       updateYearChart(); updateOverdueChart(); buildUpcomingGrid();
@@ -2581,11 +2660,32 @@ function goPage(name, btn) {
   }
   if (name === 'members')   { buildMemberGrid(); setTimeout(renderMemberChart, 60); }
   if (name === 'schedule')  {
-    /* Reload from localStorage so latest saved data is always shown */
-    loadFromStorage(SESSIONS).then(function(){ buildMainTable(); });
-    checkAuthOverlay();
+    /* Reload from storage so latest saved data is always shown */
+    loadFromStorage(SESSIONS).then(function(){ buildMainTable(); }).catch(function(e){ console.warn('Schedule reload failed:', e); buildMainTable(); });
   }
-  if (name === 'scenarios') { renderScenarios('all'); }
+  if (name === 'grading' || name === 'scenarios') {
+    if (!currentAssessor) {
+      /* Redirect non-assessors back to overview */
+      document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+      document.querySelectorAll('.ntab').forEach(function(t){ t.classList.remove('active'); });
+      document.getElementById('page-overview').classList.add('active');
+      var _overBtn = document.querySelector('[data-page="overview"]');
+      if (_overBtn) _overBtn.classList.add('active');
+      var _toast = document.getElementById('assessor-only-toast');
+      if (_toast) {
+        _toast.style.opacity = '1';
+        clearTimeout(window._toastTimeout);
+        window._toastTimeout = setTimeout(function(){ _toast.style.opacity = '0'; }, 3000);
+      }
+      /* Re-render overview with current data */
+      loadFromStorage(SESSIONS).then(function() {
+        updateKPIs();
+        setTimeout(function(){ updateYearChart(); updateOverdueChart(); buildUpcomingGrid(); }, 60);
+      });
+      return;
+    }
+    if (name === 'scenarios') renderScenarios('all');
+  }
 }
 
 function filterScenLib(cat, btn) {
@@ -2887,17 +2987,17 @@ function initAuth() {
     if (saved) {
       var parsed = JSON.parse(saved);
       if (parsed.mode === 'viewer') {
-        scheduleMode = 'viewer'; return;
-      }
-      if (parsed.mode === 'assessor' && parsed.name && parsed.hash) {
+        scheduleMode = 'viewer';
+      } else if (parsed.mode === 'assessor' && parsed.name && parsed.hash) {
         var match = ALL_ASSESSORS.find(function(a){ return a.name === parsed.name; });
         if (match && match.pwdHash === parsed.hash) {
           currentAssessor = match;
-          scheduleMode = 'assessor'; return;
+          scheduleMode = 'assessor';
         }
       }
     }
   } catch(e) {}
+  updateAssessorBanner(); /* always update topbar widget regardless of auth state */
 }
 
 function showAuthOverlay() {
@@ -2974,26 +3074,44 @@ function doSignOut() {
   currentAssessor = null;
   scheduleMode = null;
   try { localStorage.removeItem(AUTH_STORAGE_KEY); } catch(e) {}
-  updateAssessorBanner();
-  showAuthOverlay();
+  updateAssessorBanner(); /* restores Sign In btn on topbar */
   buildMainTable();
 }
 
 function updateAssessorBanner() {
+  /* ── Schedule page banner ── */
   var banner = document.getElementById('assessor-banner');
-  if (!banner) return;
+  if (banner) {
+    if (scheduleMode === 'assessor' && currentAssessor) {
+      banner.style.display = 'flex'; banner.className = 'assessor-banner';
+      var ne = document.getElementById('banner-name'); if (ne) ne.textContent = currentAssessor.name;
+    } else if (scheduleMode === 'viewer') {
+      banner.style.display = 'flex'; banner.className = 'assessor-banner viewer-mode';
+      var ne2 = document.getElementById('banner-name'); if (ne2) ne2.textContent = 'Viewer — Read Only';
+    } else { banner.style.display = 'none'; }
+  }
+  /* ── Topbar auth widget ── */
+  var _sb = document.getElementById('topbar-signin-btn');
+  var _vc = document.getElementById('topbar-viewer-chip');
+  var _ac = document.getElementById('topbar-assessor-chip');
+  var _an = document.getElementById('topbar-assessor-name');
+  var _so = document.getElementById('topbar-signout-btn');
   if (scheduleMode === 'assessor' && currentAssessor) {
-    banner.style.display = 'flex';
-    banner.className = 'assessor-banner';
-    var nameEl = document.getElementById('banner-name');
-    if (nameEl) nameEl.textContent = currentAssessor.name;
+    if (_sb) _sb.style.display = 'none';
+    if (_vc) _vc.style.display = 'none';
+    if (_ac) _ac.style.display = 'inline-flex';
+    if (_an) _an.textContent   = currentAssessor.name.split(' - ')[0];
+    if (_so) _so.style.display = 'inline-block';
   } else if (scheduleMode === 'viewer') {
-    banner.style.display = 'flex';
-    banner.className = 'assessor-banner viewer-mode';
-    var nameEl = document.getElementById('banner-name');
-    if (nameEl) nameEl.textContent = 'Viewer \u2014 Read Only';
+    if (_sb) _sb.style.display = 'none';
+    if (_vc) _vc.style.display = 'inline-flex';
+    if (_ac) _ac.style.display = 'none';
+    if (_so) _so.style.display = 'inline-block';
   } else {
-    banner.style.display = 'none';
+    if (_sb) _sb.style.display = 'inline-block';
+    if (_vc) _vc.style.display = 'none';
+    if (_ac) _ac.style.display = 'none';
+    if (_so) _so.style.display = 'none';
   }
 }
 
@@ -3011,11 +3129,9 @@ var _saveTimeout = null;
 function showSPSyncIndicator(ok) {
   var el = document.getElementById('sp-sync-indicator');
   if (!el) return;
-  el.textContent = ok ? '☁ Synced' : '⚠ Offline (local only)';
-  el.style.color  = ok ? 'var(--green)' : 'var(--amber,#c47a00)';
+  el.textContent   = ok ? '☁ Synced' : '⚠ Offline (local only)';
+  el.style.color   = ok ? '#0a8f64' : '#c47a00';
   el.style.opacity = '1';
-  clearTimeout(window._spSyncTimeout);
-  window._spSyncTimeout = setTimeout(function(){ el.style.opacity = '0'; }, 3000);
 }
 
 function saveToStorage() {
@@ -3285,6 +3401,8 @@ document.addEventListener('change', function(e) {
   var action = el.dataset.action;
   var num    = el.dataset.num ? parseInt(el.dataset.num, 10) : null;
   switch (action) {
+    case 'persistDateOverride':
+      persistDateOverride(num, el.value, el); break;
     case 'persistField':
       persistField(num, el.dataset.field, el.value); break;
     case 'persistStatus':
@@ -3316,6 +3434,12 @@ document.addEventListener('keydown', function(e) {
   if (el.dataset.action === 'pwdKeydown' && e.key === 'Enter') doSignIn();
 });
 
+
+/* ── Global unhandled promise rejection safety net ── */
+window.addEventListener('unhandledrejection', function(e) {
+  console.warn('Unhandled promise rejection:', e.reason);
+  e.preventDefault(); /* suppress browser error overlay */
+});
 </script>
 
 <!-- ════ SCENARIOS LIBRARY PAGE ════ -->
@@ -3358,4 +3482,5 @@ document.addEventListener('keydown', function(e) {
 
 </div>
 
+<div id="assessor-only-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,.9);color:#fff;padding:9px 22px;border-radius:8px;font-size:12px;font-weight:600;z-index:9999;opacity:0;transition:opacity .4s;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.25);"><i class="fas fa-lock" style="margin-right:8px;"></i>Assessor sign-in required to view this page</div>
 </body></html>
