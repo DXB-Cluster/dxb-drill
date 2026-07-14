@@ -1616,7 +1616,7 @@ function buildSessions(){
 
 function makeSession(num,d,site,sc){
 
-  return {num,d,site,sc,
+  return {num,d,site,sc,_origD:new Date(d), /* store original date for resets */
 
     result:{status:'pending',scenario:sc.n,scenCat:'',scenSub:'',scenCatCustom:'',scenSubCustom:'',dept1:'—',dept1c:'',dept2:'—',dept2c:'',assor:'',esc1:'',esc2:'',fr:'',ic:'',seot:'',remarks:'',gaps:'',pct:'',dateOverride:''}
 
@@ -1658,18 +1658,14 @@ async function _saveToStorageCore() {
     var rJson = await rResp.json();
     var drills = (rJson.record && rJson.record.drills) ? rJson.record.drills : [];
 
-    /* Update or insert sessions that have real data */
+    /* Only write sessions that were LOCALLY modified (have a localUpdatedAt stamp) */
     SESSIONS.forEach(function(s) {
-      if (!s.result) return;
+      if (!s.result || !s.result._localUpdatedAt) return;
       var r = s.result;
-      /* Only persist if at least one meaningful field is filled */
-      var hasData = r.status === 'completed'
-        || r.pct !== '' || r.assor !== '' || r.fr !== '' || r.ic !== ''
-        || r.seot !== '' || r.esc1 !== '' || r.remarks !== '' || r.gaps !== ''
-        || r.scenCat !== '' || r.dateOverride !== '';
-      if (!hasData) return;
       var idx = drills.findIndex(function(d){ return d.num === s.num; });
-      var entry = { num: s.num, result: r, updatedBy: currentAssessor.name, updatedAt: new Date().toISOString() };
+      /* Skip if remote version is newer than our local edit */
+      if (idx >= 0 && drills[idx].updatedAt && drills[idx].updatedAt > r._localUpdatedAt) return;
+      var entry = { num: s.num, result: r, updatedBy: currentAssessor.name, updatedAt: r._localUpdatedAt };
       if (idx >= 0) drills[idx] = entry;
       else drills.push(entry);
     });
@@ -1693,22 +1689,7 @@ async function _saveToStorageCore() {
 async function loadFromStorage(sessions) {
   var loadedFromJB = false;
 
-  /* ── Step 1: Always apply localStorage first (fast, offline baseline) ── */
-  try {
-    var raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      var lsSaved = JSON.parse(raw);
-      lsSaved.forEach(function(item) {
-        var s = sessions.find(function(x){ return x.num === item.num; });
-        if (s && item.result) {
-          s.result = Object.assign(s.result, item.result);
-          if (s.result.dateOverride) { s.d = new Date(s.result.dateOverride); }
-        }
-      });
-    }
-  } catch(e) {}
-
-  /* ── Step 2: Overlay JSONBin data (cloud wins over local for same session) ── */
+  /* ── Step 1: Try JSONBin first — cloud is authoritative ── */
   try {
     var resp = await fetch(JB_CONFIG.readUrl, {
       headers: { 'X-Master-Key': JB_CONFIG.apiKey }
@@ -1719,6 +1700,13 @@ async function loadFromStorage(sessions) {
       loadedFromJB = true; /* successfully reached JSONBin */
     }
     if (json.record && json.record.drills && json.record.drills.length > 0) {
+      /* Reset all sessions first so stale local data doesn't persist */
+      sessions.forEach(function(s) {
+        s.result = {status:'pending',scenario:s.sc.n,scenCat:'',scenSub:'',
+          scenCatCustom:'',scenSubCustom:'',dept1:'—',dept1c:'',dept2:'—',dept2c:'',
+          assor:'',esc1:'',esc2:'',fr:'',ic:'',seot:'',remarks:'',gaps:'',pct:'',dateOverride:''};
+        s.d = new Date(s._origD || s.d); /* restore original date */
+      });
       json.record.drills.forEach(function(item) {
         var s = sessions.find(function(x){ return x.num === item.num; });
         if (s && item.result) {
@@ -1729,7 +1717,24 @@ async function loadFromStorage(sessions) {
         }
       });
     }
-  } catch(e) { console.warn('JSONBin load failed, using localStorage only:', e); }
+  } catch(e) { console.warn('JSONBin load failed, falling back to localStorage:', e); }
+
+  /* ── Step 2: Fallback to localStorage ONLY if JSONBin failed ── */
+  if (!loadedFromJB) {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        var lsSaved = JSON.parse(raw);
+        lsSaved.forEach(function(item) {
+          var s = sessions.find(function(x){ return x.num === item.num; });
+          if (s && item.result) {
+            s.result = Object.assign(s.result, item.result);
+            if (s.result.dateOverride) { s.d = new Date(s.result.dateOverride); }
+          }
+        });
+      }
+    } catch(e) {}
+  }
 
   /* ── Step 3: Update sync indicator ── */
   var _syncEl = document.getElementById('sp-sync-indicator');
@@ -2083,6 +2088,7 @@ function persistDateOverride(num, isoVal, inputEl) {
   var s = SESSIONS.find(function(x){ return x.num === num; });
   if (!s) return;
   s.result.dateOverride = isoVal;
+  s.result._localUpdatedAt = new Date().toISOString();
   s.d = new Date(isoVal);
   if (inputEl) {
     var td = inputEl.closest('td');
@@ -2103,6 +2109,8 @@ function _persistFieldCore(num,field,val){
   const s=SESSIONS.find(x=>x.num===num);if(!s)return;
 
   s.result[field]=val;
+
+  s.result._localUpdatedAt = new Date().toISOString(); /* stamp local edit time */
 
   saveToStorage();
 
@@ -3371,14 +3379,23 @@ awHC();
 initAuth();
 
 /* ── Live-sync: reload from SharePoint every 30 seconds ─────── */
+/* Track last user interaction to avoid rebuilding table mid-edit */
+var _lastUserAction = Date.now();
+document.addEventListener('mousedown', function(){ _lastUserAction = Date.now(); });
+document.addEventListener('keydown',   function(){ _lastUserAction = Date.now(); });
+
 setInterval(function() {
   loadFromStorage(SESSIONS).then(function() {
-    if (typeof updateKPIs     === 'function') updateKPIs();
-    if (typeof buildMainTable === 'function') buildMainTable();
-    if (typeof buildUpcomingGrid === 'function') buildUpcomingGrid();
-    if (typeof buildMembersGrid  === 'function') buildMembersGrid();
-  });
-}, 30000);
+    updateKPIs();
+    updateYearChart(); updateOverdueChart(); buildUpcomingGrid();
+    /* Only rebuild schedule table if user hasn't touched anything in last 5s */
+    var idleMs = Date.now() - _lastUserAction;
+    if (idleMs > 5000) {
+      if (typeof buildMainTable === 'function') buildMainTable();
+    }
+    if (typeof buildMemberGrid === 'function') buildMemberGrid();
+  }).catch(function(e){ console.warn('Live-sync failed:', e); });
+}, 10000); /* every 10 seconds */
 
 /* ═══════════════════════════════════════════════════════════════
    EVENT DELEGATION — CSP-safe replacement for all inline handlers
