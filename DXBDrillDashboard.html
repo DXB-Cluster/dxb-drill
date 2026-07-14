@@ -1662,14 +1662,17 @@ async function _saveToStorageCore() {
       try { drills = JSON.parse(atob(rJson.content.replace(/\n/g,''))).drills || []; } catch(e) { drills = []; }
     }
 
-    /* Only write sessions that were LOCALLY modified (have a localUpdatedAt stamp) */
+    /* Write all sessions that have real data */
     SESSIONS.forEach(function(s) {
-      if (!s.result || !s.result._localUpdatedAt) return;
+      if (!s.result) return;
       var r = s.result;
+      var hasData = r.status === 'completed' || r.pct !== '' || r.assor !== ''
+        || r.fr !== '' || r.ic !== '' || r.seot !== '' || r.esc1 !== ''
+        || r.remarks !== '' || r.gaps !== '' || r.scenCat !== '' || r.dateOverride !== '';
+      if (!hasData) return;
+      var now = new Date().toISOString();
       var idx = drills.findIndex(function(d){ return d.num === s.num; });
-      /* Skip if remote version is newer than our local edit */
-      if (idx >= 0 && drills[idx].updatedAt && drills[idx].updatedAt > r._localUpdatedAt) return;
-      var entry = { num: s.num, result: r, updatedBy: currentAssessor.name, updatedAt: r._localUpdatedAt };
+      var entry = { num: s.num, result: r, updatedBy: currentAssessor.name, updatedAt: r._localUpdatedAt || now };
       if (idx >= 0) drills[idx] = entry;
       else drills.push(entry);
     });
