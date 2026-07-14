@@ -1721,7 +1721,7 @@ async function loadFromStorage(sessions) {
           assor:'',esc1:'',esc2:'',fr:'',ic:'',seot:'',remarks:'',gaps:'',pct:'',dateOverride:''};
         s.d = new Date(s._origD || s.d); /* restore original date */
       });
-      json.record.drills.forEach(function(item) {
+      json.drills.forEach(function(item) {
         var s = sessions.find(function(x){ return x.num === item.num; });
         if (s && item.result) {
           try {
