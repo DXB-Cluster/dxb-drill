@@ -1626,12 +1626,11 @@ function makeSession(num,d,site,sc){
 
 var STORAGE_KEY = 'dxb_drill_data_v6'; /* bumped v6 — clears old test data */
 
-/* ── JSONBin Config (shared live backend — no auth required) ──── */
+/* ── npoint.io Config (free, no auth, no quota limits) ──────── */
 var JB_CONFIG = {
-  apiKey: '$2a$10$h6F8k0pQTvqNw75eMc3p/OttwCqdzTPhd6B/U2FsOCplE9nF.LZEK',
-  binId:  '6a507162f5f4af5e297acc98',
-  readUrl:  'https://api.jsonbin.io/v3/b/6a507162f5f4af5e297acc98/latest',
-  writeUrl: 'https://api.jsonbin.io/v3/b/6a507162f5f4af5e297acc98'
+  binId:    'c07c23172dde4cd011dd',
+  readUrl:  'https://api.npoint.io/c07c23172dde4cd011dd',
+  writeUrl: 'https://api.npoint.io/c07c23172dde4cd011dd'
 };
 
 /* _getSpDigest removed — using JSONBin */
@@ -1652,11 +1651,9 @@ async function _saveToStorageCore() {
   if (!currentAssessor) return;
   try {
     /* Read current bin first */
-    var rResp = await fetch(JB_CONFIG.readUrl, {
-      headers: { 'X-Master-Key': JB_CONFIG.apiKey }
-    });
+    var rResp = await fetch(JB_CONFIG.readUrl);
     var rJson = await rResp.json();
-    var drills = (rJson.record && rJson.record.drills) ? rJson.record.drills : [];
+    var drills = (rJson && rJson.drills) ? rJson.drills : [];
 
     /* Only write sessions that were LOCALLY modified (have a localUpdatedAt stamp) */
     SESSIONS.forEach(function(s) {
@@ -1672,13 +1669,12 @@ async function _saveToStorageCore() {
 
     /* Write full updated array back */
     var wResp = await fetch(JB_CONFIG.writeUrl, {
-      method:  'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JB_CONFIG.apiKey },
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({ drills: drills })
     });
     var wJson = await wResp.json();
-    if (wJson.record) showSPSyncIndicator(true);
-    else showSPSyncIndicator(false);
+    showSPSyncIndicator(wResp.ok);
   } catch(e) {
     console.warn('JSONBin save failed:', e);
     showSPSyncIndicator(false);
@@ -1691,15 +1687,13 @@ async function loadFromStorage(sessions) {
 
   /* ── Step 1: Try JSONBin first — cloud is authoritative ── */
   try {
-    var resp = await fetch(JB_CONFIG.readUrl, {
-      headers: { 'X-Master-Key': JB_CONFIG.apiKey }
-    });
+    var resp = await fetch(JB_CONFIG.readUrl);
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     var json = await resp.json();
-    if (json.record) {
-      loadedFromJB = true; /* successfully reached JSONBin */
+    if (json) {
+      loadedFromJB = true; /* successfully reached npoint */
     }
-    if (json.record && json.record.drills && json.record.drills.length > 0) {
+    if (json && json.drills && json.drills.length > 0) {
       /* Reset all sessions first so stale local data doesn't persist */
       sessions.forEach(function(s) {
         s.result = {status:'pending',scenario:s.sc.n,scenCat:'',scenSub:'',
