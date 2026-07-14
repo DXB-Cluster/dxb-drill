@@ -1764,11 +1764,11 @@ async function loadFromStorage(sessions) {
   return loadedFromJB;
 }
 
-const ESC1_OPTIONS=['Muhammad Waqar - @mwwqr','Syed Tahmid Hossain - @hsyedtah','Arif Cassime - @arifcas','Naveen Payyoor - @payyoorn','Shinoy Stanley - @sshinoy','Abderrahim Taibi - @ataibi'];
+var ESC1_OPTIONS=['Muhammad Waqar - @mwwqr','Syed Tahmid Hossain - @hsyedtah','Arif Cassime - @arifcas','Naveen Payyoor - @payyoorn','Shinoy Stanley - @sshinoy','Abderrahim Taibi - @ataibi'];
 
-const ESC2_OPTIONS=['Hisham - @hishamh','Ali Kh - @alkhash','Haifa - @enghaifa','Oliver - @oliversp','Shanilkumar - @shanilkm'];
+var ESC2_OPTIONS=['Hisham - @hishamh','Ali Kh - @alkhash','Haifa - @enghaifa','Oliver - @oliversp','Shanilkumar - @shanilkm'];
 
-const SESSIONS = buildSessions();
+var SESSIONS = buildSessions();
 
 loadFromStorage(SESSIONS).then(async function() {
   if (typeof updateKPIs     === 'function') updateKPIs();
