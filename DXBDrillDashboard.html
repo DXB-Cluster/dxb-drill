@@ -1664,6 +1664,7 @@ async function _saveToStorageCore() {
 
   /* Save to GitHub — only when assessor is signed in */
   if (!currentAssessor) return;
+  _saveInFlight = true;
   var GH_TOKEN = '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';
   var GH_API = 'https://api.github.com/repos/DXB-Cluster/dxb-drill/contents/drills.json';
   var headers = { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
@@ -1699,11 +1700,12 @@ async function _saveToStorageCore() {
 
     var putResp = await fetch(GH_API, { method: 'PUT', headers: headers, body: JSON.stringify(putBody) });
     var putData = await putResp.json();
-    if (putResp.ok) { showSPSyncIndicator(true); console.log('Saved to GitHub: ' + putData.commit.sha.substring(0,7)); }
-    else { console.warn('GitHub save failed:', putData.message); showSPSyncIndicator(false); }
+    if (putResp.ok) { showSPSyncIndicator(true); console.log('Saved to GitHub: ' + putData.commit.sha.substring(0,7)); _saveInFlight = false; }
+    else { console.warn('GitHub save failed:', putData.message); showSPSyncIndicator(false); _saveInFlight = false; }
   } catch(e) {
     console.warn('GitHub save error:', e);
     showSPSyncIndicator(false);
+    _saveInFlight = false;
   }
 }
 
@@ -2637,7 +2639,7 @@ function goPage(name, btn) {
   if (name === 'members')   { buildMemberGrid(); setTimeout(renderMemberChart, 60); }
   if (name === 'schedule')  {
     /* Reload from localStorage so latest saved data is always shown */
-    loadFromStorage(SESSIONS).then(function(){ buildMainTable(); });
+    buildMainTable();
     checkAuthOverlay();
   }
   if (name === 'scenarios') { renderScenarios('all'); }
@@ -3115,8 +3117,7 @@ function doManualSave() {
     var el = document.getElementById('autosave-indicator');
     if (el) { el.textContent = '\u2713 Saved'; el.style.color = 'var(--green)'; el.style.opacity = '1'; clearTimeout(_saveTimeout); _saveTimeout = setTimeout(function(){ el.style.opacity = '0'; }, 3000); }
     showSPSyncIndicator(true);
-    /* After saving, reload from cloud so other assessors' data appears */
-    setTimeout(function(){ loadFromStorage(SESSIONS).catch(function(){}); }, 1000);
+    /* Data is already in memory — no need to reload from cloud */
   }).catch(function(e) {
     console.warn('Manual save failed:', e);
     if (btn) { btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Retry Save'; btn.disabled = false; btn.classList.add('has-changes'); }
@@ -3351,6 +3352,8 @@ initAuth();
 
 /* ── Live-sync: reload from SharePoint every 30 seconds ─────── */
 setInterval(function() {
+  /* Skip sync if user has unsaved local changes or save is in progress */
+  if (_isDirty || _saveInFlight) return;
   loadFromStorage(SESSIONS).then(function() {
     if (typeof updateKPIs     === 'function') updateKPIs();
     if (typeof buildMainTable === 'function') buildMainTable();
