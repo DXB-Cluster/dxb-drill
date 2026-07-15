@@ -23,7 +23,7 @@
       "pct": 50
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 2,
@@ -49,19 +49,19 @@
       "pct": 70
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 3,
     "result": {
-      "status": "pending",
+      "status": "completed",
       "scenario": "MV Switchgear Fault",
       "scenCat": "Safety",
       "scenSub": "",
       "scenCatCustom": "",
       "scenSubCustom": "",
-      "dept1": "—",
-      "dept1c": "",
+      "dept1": "DCO",
+      "dept1c": "Hussam - @bikmhd",
       "dept2": "—",
       "dept2c": "",
       "assor": "Fathi - @farhud",
@@ -75,7 +75,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 4,
@@ -101,7 +101,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 5,
@@ -127,7 +127,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 6,
@@ -153,7 +153,7 @@
       "pct": 90
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 7,
@@ -179,7 +179,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 8,
@@ -205,7 +205,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 9,
@@ -231,7 +231,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 10,
@@ -257,7 +257,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 11,
@@ -283,7 +283,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 12,
@@ -309,7 +309,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 13,
@@ -335,7 +335,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 14,
@@ -361,7 +361,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 15,
@@ -387,7 +387,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 16,
@@ -413,7 +413,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 17,
@@ -439,7 +439,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 18,
@@ -465,7 +465,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 19,
@@ -491,7 +491,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 20,
@@ -517,7 +517,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 21,
@@ -543,7 +543,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 22,
@@ -569,7 +569,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 23,
@@ -595,7 +595,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 24,
@@ -621,7 +621,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 25,
@@ -647,7 +647,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 26,
@@ -673,7 +673,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 27,
@@ -699,7 +699,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 28,
@@ -725,7 +725,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 29,
@@ -751,7 +751,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 30,
@@ -777,7 +777,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 31,
@@ -803,7 +803,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.133Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 32,
@@ -829,7 +829,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 33,
@@ -855,7 +855,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 34,
@@ -881,7 +881,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 35,
@@ -907,7 +907,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 36,
@@ -933,7 +933,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 37,
@@ -959,7 +959,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 38,
@@ -985,7 +985,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 39,
@@ -1011,7 +1011,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 40,
@@ -1037,7 +1037,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 41,
@@ -1063,7 +1063,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 42,
@@ -1089,7 +1089,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 43,
@@ -1115,7 +1115,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 44,
@@ -1141,7 +1141,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 45,
@@ -1167,7 +1167,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 46,
@@ -1193,7 +1193,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 47,
@@ -1219,7 +1219,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 48,
@@ -1245,7 +1245,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 49,
@@ -1271,7 +1271,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 50,
@@ -1297,7 +1297,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 51,
@@ -1323,7 +1323,7 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   },
   {
     "num": 52,
@@ -1349,6 +1349,6 @@
       "pct": ""
     },
     "updatedBy": "Fathi - @farhud",
-    "updatedAt": "2026-07-15T11:31:44.134Z"
+    "updatedAt": "2026-07-15T11:33:21.293Z"
   }
 ]
