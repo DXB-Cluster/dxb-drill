@@ -1685,21 +1685,45 @@ async function _saveToStorageCore() {
       if (idx >= 0) drills[idx] = entry; else drills.push(entry);
     });
 
-    /* Write back */
-    var wBody = {
-      message: 'drill update by ' + currentAssessor.name,
-      content: btoa(unescape(encodeURIComponent(JSON.stringify({ drills: drills })))),
-      branch:  GH_CONFIG.branch
-    };
-    if (fileSHA) wBody.sha = fileSHA;
-    var wResp = await fetch(GH_CONFIG.apiUrl, {
-      method: 'PUT',
-      headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
-      body: JSON.stringify(wBody)
-    });
+    /* Write back — retry up to 3 times on 409 SHA conflict */
+    var wResp = null;
+    var encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify({ drills: drills }))));
+    for (var attempt = 0; attempt < 3; attempt++) {
+      if (attempt > 0) {
+        /* Re-fetch fresh SHA before retry */
+        var retryRead = await fetch(GH_CONFIG.apiUrl, { headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Accept': 'application/vnd.github.v3+json' } });
+        var retryJson = await retryRead.json();
+        fileSHA = retryJson.sha || '';
+        /* Re-merge in case cloud changed */
+        if (retryJson.content) {
+          try {
+            var freshDrills = JSON.parse(atob(retryJson.content.replace(/\n/g,''))).drills || [];
+            SESSIONS.forEach(function(s) {
+              if (!s.result) return;
+              var r = s.result;
+              var hasData = r.status==='completed'||r.pct!==''||r.assor!==''||r.fr!==''||r.ic!==''||r.seot!==''||r.esc1!==''||r.esc2!==''||r.remarks!==''||r.gaps!==''||r.scenCat!==''||r.scenSub!==''||r.dept1c!==''||r.dept2c!==''||r.dateOverride!=='';
+              if (!hasData) return;
+              var idx = freshDrills.findIndex(function(d){return d.num===s.num;});
+              var entry = {num:s.num,result:r,updatedBy:currentAssessor.name,updatedAt:r._localUpdatedAt||new Date().toISOString()};
+              if (idx>=0) freshDrills[idx]=entry; else freshDrills.push(entry);
+            });
+            encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify({drills:freshDrills}))));
+          } catch(e2) {}
+        }
+        await new Promise(function(res){setTimeout(res, 500 * attempt);});
+      }
+      var wBody = { message: 'drill update by ' + currentAssessor.name, content: encodedContent, branch: GH_CONFIG.branch };
+      if (fileSHA) wBody.sha = fileSHA;
+      wResp = await fetch(GH_CONFIG.apiUrl, {
+        method: 'PUT',
+        headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
+        body: JSON.stringify(wBody)
+      });
+      if (wResp.ok || wResp.status !== 409) break; /* success or non-409 error — stop retrying */
+    }
     _saveInFlight = false;
     _lastSaveAt = Date.now();
-    showSPSyncIndicator(wResp.ok);
+    showSPSyncIndicator(wResp && wResp.ok);
 
     /* If another save was queued while we were writing, run it now */
     if (_pendingSave) { _pendingSave = false; _saveToStorageCore(); }
