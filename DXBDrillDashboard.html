@@ -824,13 +824,38 @@ tr.row-overdue:hover td{background:#fdeee8 !important}
 .confirm-btn-cancel:hover{border-color:var(--accent);color:var(--accent);}
 .confirm-btn-proceed{padding:8px 18px;border:none;border-radius:var(--r-sm);background:var(--orange);color:#fff;font-size:12px;font-weight:700;cursor:pointer;}
 .confirm-btn-proceed:hover{filter:brightness(.9);}
+
+/* ── SAVE BAR ── */
+.save-bar{position:sticky;top:0;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:8px 16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.save-bar-inner{display:flex;align-items:center;justify-content:space-between;}
+.save-bar-status{font-size:11px;color:var(--text3);font-weight:500;}
+.save-bar-status i{margin-right:4px;}
+.save-btn{padding:7px 18px;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:#e0e0e0;color:#888;}
+.save-btn:disabled{cursor:default;opacity:.7;}
+.save-btn.has-changes{background:var(--accent,#232f3e);color:#fff;box-shadow:0 2px 8px rgba(35,47,62,.25);animation:pulse-save 2s infinite;}
+.save-btn.has-changes:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(35,47,62,.35);}
+@keyframes pulse-save{0%,100%{box-shadow:0 2px 8px rgba(35,47,62,.25);}50%{box-shadow:0 2px 16px rgba(35,47,62,.45);}}
 </style>
 
 </head>
 
 <body>
 
-
+<div id="browser-warning" style="display:none;background:#c47a00;color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:600;position:sticky;top:0;z-index:9999;">
+  ⚠️ This dashboard must be opened in a browser — not the desktop app.
+  <a href="?web=1" style="color:#fff;text-decoration:underline;margin-left:12px;">Click here to open in browser →</a>
+</div>
+<script>
+  /* Detect if running inside Office desktop app / electron shell */
+  (function() {
+    var ua = navigator.userAgent || '';
+    var isOfficeApp = /MSOffice|microsoft office|electron/i.test(ua);
+    var isFilePath  = location.protocol === 'file:';
+    if (isOfficeApp || isFilePath) {
+      document.getElementById('browser-warning').style.display = 'block';
+    }
+  })();
+</script>
 
 <div class="topbar">
 
@@ -868,21 +893,7 @@ tr.row-overdue:hover td{background:#fdeee8 !important}
 
     </div>
 
-    <div class="topbar-meta">
-      <span id="autosave-indicator" style="font-size:10px;font-weight:600;opacity:0;transition:opacity 1s;margin-right:6px;"></span>
-      <span id="sp-sync-indicator" style="font-size:11px;opacity:1;transition:opacity 0.3s;margin-right:8px;color:var(--amber,#c47a00);">&#x26A0; Connecting...</span>
-      <div class="live-dot" style="margin-right:6px;"></div>
-      <!-- Topbar auth widget -->
-      <div id="topbar-auth-widget" style="display:flex;align-items:center;gap:6px;">
-        <!-- Shown when signed out -->
-        <button id="topbar-signin-btn" onclick="showAuthOverlay()" style="display:none;padding:5px 12px;border-radius:6px;border:1px solid var(--accent-lt);background:var(--accent-bg);color:var(--accent);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;"><i class="fas fa-user-shield" style="margin-right:5px;"></i>Sign In</button>
-        <!-- Shown when in viewer mode -->
-        <span id="topbar-viewer-chip" style="display:none;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-size:11px;font-weight:500;"><i class="fas fa-eye" style="margin-right:4px;opacity:.6;"></i>Viewer</span>
-        <!-- Shown when signed in as assessor -->
-        <span id="topbar-assessor-chip" style="display:none;padding:4px 10px;border-radius:6px;border:1px solid var(--accent-lt);background:var(--accent-bg);color:var(--accent);font-size:11px;font-weight:600;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><i class="fas fa-user-shield" style="margin-right:4px;"></i><span id="topbar-assessor-name"></span></span>
-        <button id="topbar-signout-btn" onclick="doSignOut()" style="display:none;padding:4px 9px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text3);font-size:11px;cursor:pointer;" title="Sign out"><i class="fas fa-sign-out-alt"></i></button>
-      </div>
-    </div>
+    <div class="topbar-meta"><span id="autosave-indicator" style="font-size:10px;font-weight:600;opacity:0;transition:opacity 1s;margin-right:10px;"></span> <span id="sp-sync-indicator" style="font-size:11px;opacity:0;transition:opacity 0.3s;margin-left:8px;"></span><div class="live-dot"></div> Live · 2026</div>
 
   </div>
 
@@ -1148,6 +1159,15 @@ tr.row-overdue:hover td{background:#fdeee8 !important}
 
     </div>
 
+  </div>
+
+
+  <!-- SAVE BAR (sticky) -->
+  <div id="save-bar" class="save-bar" style="display:none;">
+    <div class="save-bar-inner">
+      <span id="save-bar-status" class="save-bar-status"><i class="fas fa-check-circle"></i> All changes saved</span>
+      <button id="save-btn" class="save-btn" disabled onclick="doManualSave()"><i class="fas fa-check"></i> Saved</button>
+    </div>
   </div>
 
   <!-- Column visibility toggle -->
@@ -1616,235 +1636,110 @@ function buildSessions(){
 
 function makeSession(num,d,site,sc){
 
-  return {num,d,site,sc,_origD:new Date(d), /* store original date for resets */
+  return {num,d,site,sc,
 
-    result:{status:'pending',scenario:sc.n,scenCat:'Electrical',scenSub:'',scenCatCustom:'',scenSubCustom:'',dept1:'—',dept1c:'',dept2:'—',dept2c:'',assor:'',esc1:'',esc2:'',fr:'',ic:'',seot:'',remarks:'',gaps:'',pct:'',dateOverride:''}
+    result:{status:'pending',scenario:sc.n,scenCat:'',scenSub:'',scenCatCustom:'',scenSubCustom:'',dept1:'—',dept1c:'',dept2:'—',dept2c:'',assor:'',esc1:'',esc2:'',fr:'',ic:'',seot:'',remarks:'',gaps:'',pct:''}
 
   };
 
 }
 
-var STORAGE_KEY = 'dxb_drill_data_v6'; /* bumped v6 — clears old test data */
+var STORAGE_KEY = 'dxb_drill_data_v5';
 
-/* ── GitHub Data Store ──────────────────────────────────────── */
-var GH_CONFIG = {
-  rawUrl:  'https://raw.githubusercontent.com/DXB-Cluster/dxb-drill/main/drills.json',
-  apiUrl:  'https://api.github.com/repos/DXB-Cluster/dxb-drill/contents/drills.json',
-  branch:  'main',
-  token:   ['ghp_','rltQNenBan7Ku7fi','SCngGs7S3w8Iya0llpU3'].join('')
+/* ── JSONBin Config (shared live backend — no auth required) ──── */
+var JB_CONFIG = {
+  apiKey: '$2a$10$h6F8k0pQTvqNw75eMc3p/OttwCqdzTPhd6B/U2FsOCplE9nF.LZEK',
+  binId:  '6a507162f5f4af5e297acc98',
+  readUrl:  'https://api.jsonbin.io/v3/b/6a507162f5f4af5e297acc98/latest',
+  writeUrl: 'https://api.jsonbin.io/v3/b/6a507162f5f4af5e297acc98'
 };
 
 /* _getSpDigest removed — using JSONBin */
 
-var _saveInFlight = false;
-var _lastSaveAt   = 0;
-var _pendingSave  = false;  /* queued save waiting for in-flight to finish */
-
 async function _saveToStorageCore() {
-  /* If a save is already in flight, queue one more and return */
-  if (_saveInFlight) { _pendingSave = true; return; }
-
   /* Always keep localStorage as offline fallback */
-  var data = SESSIONS.filter(function(s) {
-    var r = s.result;
-    return r && (r.status === 'completed' || r.pct !== '' || r.assor !== ''
-      || r.fr !== '' || r.ic !== '' || r.seot !== '' || r.esc1 !== '' || r.esc2 !== ''
-      || r.remarks !== '' || r.gaps !== '' || r.scenSub !== ''
-      || r.dept1c !== '' || r.dept2c !== '' || r.dateOverride !== '');
-  }).map(function(s) { return {num: s.num, result: s.result}; });
+  var data = SESSIONS.map(function(s) { return {num: s.num, result: s.result}; });
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+  if (typeof updateKPIs === 'function') updateKPIs();
 
+  /* Save to JSONBin — only when assessor is signed in */
   if (!currentAssessor) return;
-
-  _saveInFlight = true;
   try {
-    /* Read current file SHA — always fresh to avoid 409 conflicts */
-    var rResp = await fetch(GH_CONFIG.apiUrl, {
-      headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Accept': 'application/vnd.github.v3+json' }
+    /* Read current bin first */
+    var rResp = await fetch(JB_CONFIG.readUrl, {
+      headers: { 'X-Master-Key': JB_CONFIG.apiKey }
     });
     var rJson = await rResp.json();
-    var fileSHA = rJson.sha || '';
-    /* Start from cloud drills, overlay our local data on top */
-    var drills = [];
-    if (rJson.content) {
-      try { drills = JSON.parse(atob(rJson.content.replace(/\n/g,''))).drills || []; } catch(e) { drills = []; }
-    }
+    var drills = (rJson.record && rJson.record.drills) ? rJson.record.drills : [];
 
-    /* Merge: our local sessions overwrite cloud entries */
+    /* Update or insert each changed session */
     SESSIONS.forEach(function(s) {
-      if (!s.result) return;
-      var r = s.result;
-      /* scenCat excluded — defaults to 'Electrical' for display, not real user data */
-      var hasData = r.status === 'completed' || r.pct !== '' || r.assor !== ''
-        || r.fr !== '' || r.ic !== '' || r.seot !== '' || r.esc1 !== '' || r.esc2 !== ''
-        || r.remarks !== '' || r.gaps !== '' || r.scenSub !== ''
-        || r.dept1c !== '' || r.dept2c !== '' || r.dateOverride !== '';
-      if (!hasData) return;
-      var now = new Date().toISOString();
+      if (!s.result || s.result.status === 'scheduled') return;
       var idx = drills.findIndex(function(d){ return d.num === s.num; });
-      var entry = { num: s.num, result: r, updatedBy: currentAssessor.name, updatedAt: r._localUpdatedAt || now };
-      if (idx >= 0) drills[idx] = entry; else drills.push(entry);
+      var entry = { num: s.num, result: s.result, updatedBy: currentAssessor.name, updatedAt: new Date().toISOString() };
+      if (idx >= 0) drills[idx] = entry;
+      else drills.push(entry);
     });
 
-    /* Write back — retry up to 3 times on 409 SHA conflict */
-    var wResp = null;
-    var _enc=function(s){var b=new TextEncoder().encode(s);var bin='';b.forEach(function(x){bin+=String.fromCharCode(x);});return btoa(bin);}; var encodedContent = _enc(JSON.stringify({ drills: drills }));
-    for (var attempt = 0; attempt < 3; attempt++) {
-      if (attempt > 0) {
-        /* Re-fetch fresh SHA before retry */
-        var retryRead = await fetch(GH_CONFIG.apiUrl, { headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Accept': 'application/vnd.github.v3+json' } });
-        var retryJson = await retryRead.json();
-        fileSHA = retryJson.sha || '';
-        /* Re-merge in case cloud changed */
-        if (retryJson.content) {
-          try {
-            var freshDrills = JSON.parse(atob(retryJson.content.replace(/\n/g,''))).drills || [];
-            SESSIONS.forEach(function(s) {
-              if (!s.result) return;
-              var r = s.result;
-              var hasData = r.status==='completed'||r.pct!==''||r.assor!==''||r.fr!==''||r.ic!==''||r.seot!==''||r.esc1!==''||r.esc2!==''||r.remarks!==''||r.gaps!==''||r.scenSub!==''||r.dept1c!==''||r.dept2c!==''||r.dateOverride!=='';
-              if (!hasData) return;
-              var idx = freshDrills.findIndex(function(d){return d.num===s.num;});
-              var entry = {num:s.num,result:r,updatedBy:currentAssessor.name,updatedAt:r._localUpdatedAt||new Date().toISOString()};
-              if (idx>=0) freshDrills[idx]=entry; else freshDrills.push(entry);
-            });
-            encodedContent = (function(s){var b=new TextEncoder().encode(s);var bin='';b.forEach(function(x){bin+=String.fromCharCode(x);});return btoa(bin);})(JSON.stringify({drills:freshDrills}));
-          } catch(e2) {}
-        }
-        await new Promise(function(res){setTimeout(res, 500 * attempt);});
-      }
-      var wBody = { message: 'drill update by ' + currentAssessor.name, content: encodedContent, branch: GH_CONFIG.branch };
-      if (fileSHA) wBody.sha = fileSHA;
-      wResp = await fetch(GH_CONFIG.apiUrl, {
-        method: 'PUT',
-        headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
-        body: JSON.stringify(wBody)
-      });
-      if (wResp.ok || wResp.status !== 409) break; /* success or non-409 error — stop retrying */
-    }
-    _saveInFlight = false;
-    _lastSaveAt = Date.now();
-    showSPSyncIndicator(wResp && wResp.ok);
-
-    /* If another save was queued while we were writing, run it now */
-    if (_pendingSave) { _pendingSave = false; _saveToStorageCore(); }
-
+    /* Write full updated array back */
+    var wResp = await fetch(JB_CONFIG.writeUrl, {
+      method:  'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JB_CONFIG.apiKey },
+      body:    JSON.stringify({ drills: drills })
+    });
+    var wJson = await wResp.json();
+    if (wJson.record) showSPSyncIndicator(true);
+    else showSPSyncIndicator(false);
   } catch(e) {
-    console.warn('Save failed:', e);
-    _saveInFlight = false;
+    console.warn('JSONBin save failed:', e);
     showSPSyncIndicator(false);
-    /* Retry queued save */
-    if (_pendingSave) { _pendingSave = false; setTimeout(_saveToStorageCore, 2000); }
   }
 }
 
 
 async function loadFromStorage(sessions) {
   var loadedFromJB = false;
-
-  /* ── Step 1: Try JSONBin first — cloud is authoritative ── */
   try {
-    /* Read via authenticated API — handles large files via blob API */
-    var resp = await fetch(GH_CONFIG.apiUrl, {
-      headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Accept': 'application/vnd.github.v3+json' }
+    var resp = await fetch(JB_CONFIG.readUrl, {
+      headers: { 'X-Master-Key': JB_CONFIG.apiKey }
     });
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    var respJson = await resp.json();
-    var json = null;
-    if (respJson.content) {
-      /* File small enough for inline content */
-      try {
-        var raw = atob(respJson.content.replace(/\n/g, ''));
-        var bytes = new Uint8Array(raw.length);
-        for (var i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
-        json = JSON.parse(new TextDecoder('utf-8').decode(bytes));
-      } catch(e) {}
-    } else if (respJson.git_url) {
-      /* File >1MB — GitHub omits content, use git blob API instead */
-      try {
-        var blobResp = await fetch(respJson.git_url, {
-          headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Accept': 'application/vnd.github.v3+json' }
-        });
-        var blobJson = await blobResp.json();
-        if (blobJson.content) {
-          var raw2 = atob(blobJson.content.replace(/\n/g,''));
-          var bytes2 = new Uint8Array(raw2.length);
-          for (var i2=0;i2<raw2.length;i2++) bytes2[i2]=raw2.charCodeAt(i2);
-          json = JSON.parse(new TextDecoder('utf-8').decode(bytes2));
-        }
-      } catch(e2) {}
-    }
-    if (json) {
-      loadedFromJB = true; /* successfully reached GitHub */
-    }
-    if (json && json.drills && json.drills.length > 0) {
-      /* Merge cloud data into sessions — keep in-memory data as fallback */
-      json.drills.forEach(function(item) {
+    var json = await resp.json();
+    if (json.record && json.record.drills && json.record.drills.length > 0) {
+      json.record.drills.forEach(function(item) {
         var s = sessions.find(function(x){ return x.num === item.num; });
         if (s && item.result) {
-          try {
-            /* Cloud wins for fields that have actual values */
-            Object.keys(item.result).forEach(function(k) {
-              if (item.result[k] !== '' && item.result[k] !== null && item.result[k] !== undefined) {
-                s.result[k] = item.result[k];
-              }
-            });
-            if (s.result.dateOverride) { s.d = new Date(s.result.dateOverride); }
-          } catch(e) {}
+          try { s.result = Object.assign(s.result, item.result); } catch(e) {}
         }
       });
+      loadedFromJB = true;
     }
-  } catch(e) { console.warn('JSONBin load failed, falling back to localStorage:', e); }
+  } catch(e) { console.warn('JSONBin load failed, using localStorage:', e); }
 
-  /* ── Step 2: Fallback to localStorage ONLY if JSONBin failed ── */
+  /* Fallback to localStorage */
   if (!loadedFromJB) {
     try {
       var raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        var lsSaved = JSON.parse(raw);
-        lsSaved.forEach(function(item) {
-          var s = sessions.find(function(x){ return x.num === item.num; });
-          if (s && item.result) {
-            s.result = Object.assign(s.result, item.result);
-            if (s.result.dateOverride) { s.d = new Date(s.result.dateOverride); }
-          }
-        });
-      }
+      if (!raw) return;
+      var saved = JSON.parse(raw);
+      saved.forEach(function(item) {
+        var s = sessions.find(function(x){ return x.num === item.num; });
+        if (s) s.result = Object.assign(s.result, item.result);
+      });
     } catch(e) {}
   }
-
-  /* ── Step 3: Update sync indicator ── */
-  var _syncEl = document.getElementById('sp-sync-indicator');
-  if (_syncEl) {
-    /* If localStorage has data, a previous save succeeded — show Synced */
-    var _lsHasData = false;
-    try { _lsHasData = !!localStorage.getItem(STORAGE_KEY); } catch(e) {}
-    var _isOnline = loadedFromJB || _lsHasData;
-    _syncEl.textContent  = _isOnline ? '☁ Synced' : '⚠ Offline';
-    _syncEl.style.color  = _isOnline ? '#0a8f64' : '#c47a00';
-    _syncEl.style.opacity = '1';
-  }
-  return loadedFromJB;
 }
 
-var ESC1_OPTIONS=['Muhammad Waqar - @mwwqr','Syed Tahmid Hossain - @hsyedtah','Arif Cassime - @arifcas','Naveen Payyoor - @payyoorn','Shinoy Stanley - @sshinoy','Abderrahim Taibi - @ataibi'];
+const ESC1_OPTIONS=['Muhammad Waqar - @mwwqr','Syed Tahmid Hossain - @hsyedtah','Arif Cassime - @arifcas','Naveen Payyoor - @payyoorn','Shinoy Stanley - @sshinoy','Abderrahim Taibi - @ataibi'];
 
-var ESC2_OPTIONS=['Hisham - @hishamh','Ali Kh - @alkhash','Haifa - @enghaifa','Oliver - @oliversp','Shanilkumar - @shanilkm'];
+const ESC2_OPTIONS=['Hisham - @hishamh','Ali Kh - @alkhash','Haifa - @enghaifa','Oliver - @oliversp','Shanilkumar - @shanilkm'];
 
-var SESSIONS = buildSessions();
+const SESSIONS = buildSessions();
 
-loadFromStorage(SESSIONS).then(async function() {
+loadFromStorage(SESSIONS).then(function() {
   if (typeof updateKPIs     === 'function') updateKPIs();
-  setTimeout(function() {
-    if (typeof updateYearChart    === 'function') updateYearChart();
-    if (typeof updateOverdueChart === 'function') updateOverdueChart();
-    if (typeof buildUpcomingGrid  === 'function') buildUpcomingGrid();
-    setTimeout(function() {
-      if (typeof buildComplianceTracker === 'function') buildComplianceTracker();
-    }, 50);
-  }, 60);
   if (typeof buildMainTable === 'function') buildMainTable();
-}).catch(function(e){ console.warn('Initial load failed:', e); });
+  if (typeof buildUpcomingGrid === 'function') buildUpcomingGrid();
+});
 
 let curFilterMonth='6';
 
@@ -2000,7 +1895,7 @@ function buildMainTable() {
 
     /* Category select */
 
-    var savedCat = r.scenCat || 'Electrical'; /* default to Electrical so sub-category list is always visible */
+    var savedCat = r.scenCat || '';
 
     var savedSub = r.scenSub || '';
 
@@ -2082,22 +1977,9 @@ function buildMainTable() {
 
     tr.innerHTML =
 
-        (function() {
-          var _eff = (r.dateOverride) ? new Date(r.dateOverride) : s.d;
-          var _iso = _eff.toISOString().split('T')[0];
-          var _disp = '<span class="date-display">' + fmtDate(_eff) + '</span>';
-          var _editBtn = currentAssessor
-            ? ' <span class="date-edit-btn" title="Change date" style="cursor:pointer;font-size:10px;color:var(--accent);opacity:.75;user-select:none;" onclick="(function(el){var td=el.closest(\'td\');td.querySelector(\'.date-display\').style.display=\'none\';el.style.display=\'none\';td.querySelector(\'.date-input-wrap\').style.display=\'flex\';})(this)">&#x270F;&#xFE0F;</span>'
-            : '';
-          var _inputWrap = '<span class="date-input-wrap" style="display:none;align-items:center;gap:4px;margin-top:2px;">'
-            + '<input type="date" class="inline-text" style="font-size:11px;padding:2px 4px;width:128px;" value="' + _iso + '" data-action="persistDateOverride" data-num="' + s.num + '">'
-            + '<span style="cursor:pointer;font-size:11px;color:var(--text-muted);" onclick="(function(el){var td=el.closest(\'td\');td.querySelector(\'.date-display\').style.display=\'\';td.querySelector(\'.date-edit-btn\').style.display=\'\';td.querySelector(\'.date-input-wrap\').style.display=\'none\';})(this)">&#x2715;</span>'
-            + '</span>';
-          return '<td style="white-space:nowrap;font-size:11px;">'
-            + _disp + _editBtn + _inputWrap + overdueBadge
-            + (r.assor && currentAssessor && r.assor !== currentAssessor.name ? '<span class=\"lock-icon\" title=\"Assigned to ' + r.assor + '\"><i class=\'fas fa-lock\'></i></span>' : '')
-            + '</td>';
-        })()
+        '<td style="white-space:nowrap;font-size:11px;">' + fmtDate(s.d) + overdueBadge
+      + (r.assor && currentAssessor && r.assor !== currentAssessor.name ? '<span class="lock-icon" title="Assigned to ' + r.assor + '"><i class=\'fas fa-lock\'></i></span>' : '')
+      + '</td>'
 
       + '<td><span class="' + SITE_C[s.site] + '">' + s.site + '</span></td>'
 
@@ -2161,35 +2043,13 @@ function buildMainTable() {
 
 }
 
-function persistDateOverride(num, isoVal, inputEl) {
-  var s = SESSIONS.find(function(x){ return x.num === num; });
-  if (!s) return;
-  s.result.dateOverride = isoVal;
-  s.result._localUpdatedAt = new Date().toISOString();
-  s.d = new Date(isoVal);
-  if (inputEl) {
-    var td = inputEl.closest('td');
-    if (td) {
-      var dispEl = td.querySelector('.date-display');
-      if (dispEl) { dispEl.textContent = fmtDate(new Date(isoVal)); dispEl.style.display = ''; }
-      var editBtn = td.querySelector('.date-edit-btn');
-      if (editBtn) editBtn.style.display = '';
-      var wrap = td.querySelector('.date-input-wrap');
-      if (wrap) wrap.style.display = 'none';
-    }
-  }
-  saveToStorage();
-}
-
 function _persistFieldCore(num,field,val){
 
   const s=SESSIONS.find(x=>x.num===num);if(!s)return;
 
   s.result[field]=val;
 
-  s.result._localUpdatedAt = new Date().toISOString(); /* stamp local edit time */
-
-  saveToStorage();
+  markDirty();
 
   if(field==='status'){
 
@@ -2215,7 +2075,7 @@ function _persistScenCatCore(num, val) {
 
   s.result.scenSubCustom = '';
 
-  saveToStorage();
+  markDirty();
 
   /* rebuild sub-category dropdown */
 
@@ -2289,7 +2149,7 @@ function _persistScenSubCore(num, val) {
 
   s.result.scenSub = val;
 
-  saveToStorage();
+  markDirty();
 
   var subSel = document.getElementById('sub-sel-' + num);
 
@@ -2331,7 +2191,7 @@ function _persistDeptCore(num, dNum, type, val) {
 
   s.result[field] = val;
 
-  saveToStorage();
+  markDirty();
 
   if (type === 'dept') {
 
@@ -2389,7 +2249,7 @@ function _persistPctCore(num,val){
 
   s.result.pct=n;
 
-  saveToStorage();
+  markDirty();
 
   const el=document.querySelector(`#body-main tr td .result-pct`);
 
@@ -2561,29 +2421,21 @@ function buildMemberGrid(){
 
       var drills=SESSIONS.filter(function(s){return s.result&&s.result.pct!==''&&['fr','ic','seot'].some(function(r){return s.result[r]===name;});});
 
-      var isDCEO = ['DXB60','DXB61','DXB62'].indexOf(site) !== -1;
-
       var slots='';
 
-      if (isDCEO) {
+      drills.slice(0,5).forEach(function(s){
 
-        drills.slice(0,5).forEach(function(s){
+        var p=s.result.pct;
 
-          var p=s.result.pct;
+        var cls=p>=85?'mmg-g':p>=65?'mmg-y':'mmg-r';
 
-          var cls=p>=85?'mmg-g':p>=65?'mmg-y':'mmg-r';
+        var lbl=p>=85?'G':p>=65?'Y':'R';
 
-          var lbl=p>=85?'G':p>=65?'Y':'R';
+        slots+='<div class="mmg '+cls+'">'+lbl+'</div>';
 
-          slots+='<div class="mmg '+cls+'">'+lbl+'</div>';
+      });
 
-        });
-
-      }
-
-      /* Pending slots: DCEO teams only */
-
-      var pendingCount = isDCEO ? Math.max(0,5-drills.length) : 0;
+      var pendingCount=Math.max(0,5-drills.length);
 
       var pending='';
 
@@ -2595,7 +2447,7 @@ function buildMemberGrid(){
 
         +'<div class="av" style="background:'+c+'18;color:'+c+';border:1.5px solid '+c+'38;">'+init+'</div>'
 
-        +'<div><div class="m-name">'+name+'</div>'+(isDCEO?'<div class="m-stat">'+drills.length+' drill'+(drills.length!==1?'s':'')+' completed</div>':'')+'</div>'
+        +'<div><div class="m-name">'+name+'</div><div class="m-stat">'+drills.length+' drill'+(drills.length!==1?'s':'')+' completed</div></div>'
 
         +'</div>'
 
@@ -2734,63 +2586,26 @@ function filterSite(val,btn){
 /* ── NAV ── */
 
 function goPage(name, btn) {
-  /* Switch page INSTANTLY — no waiting */
+  /* Save if there are unsaved changes before switching pages */
+  if (_isDirty) { _saveToStorageCore(); _isDirty = false; var _btn2 = document.getElementById('save-btn'); if(_btn2){_btn2.classList.remove('has-changes');_btn2.innerHTML='<i class="fas fa-check"></i> Saved';_btn2.disabled=true;} }
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.querySelectorAll('.ntab').forEach(function(t){t.classList.remove('active');});
   document.getElementById('page-' + name).classList.add('active');
   if (btn) btn.classList.add('active');
-
-  /* Sign-in button only visible on Overview (when not signed in) */
-  var _siBtn = document.getElementById('topbar-signin-btn');
-  if (_siBtn) _siBtn.style.display = (name === 'overview' && !scheduleMode) ? 'inline-block' : 'none';
-
-  /* Save in background (fire-and-forget) then refresh the new page */
-  var savePromise = _saveToStorageCore().catch(function(e){ console.warn('bg save failed:', e); });
-
   if (name === 'overview') {
-    /* Render from memory immediately, then reload from cloud after save lands */
     updateKPIs();
-    setTimeout(function(){ updateYearChart(); updateOverdueChart(); buildUpcomingGrid();
+    setTimeout(function(){
+      updateYearChart(); updateOverdueChart(); buildUpcomingGrid();
       setTimeout(function(){try{buildComplianceTracker();}catch(e){var g=document.getElementById('comp-grid');if(g)g.innerHTML='<div style="grid-column:1/-1;padding:16px;color:var(--red);font-size:11px;">Error: '+e.message+'</div>';}},50);
     }, 60);
-    /* After save completes, reload from cloud to show latest from all assessors */
-    savePromise.then(function(){
-      return loadFromStorage(SESSIONS).catch(function(){});
-    }).then(function(){
-      updateKPIs();
-      setTimeout(function(){ updateYearChart(); updateOverdueChart(); buildUpcomingGrid(); }, 60);
-    });
   }
-
-  if (name === 'members') { buildMemberGrid(); setTimeout(renderMemberChart, 60); }
-
-  if (name === 'schedule') {
-    /* Render from memory immediately */
-    buildMainTable();
-    /* Then reload cloud data after save lands */
-    savePromise.then(function(){
-      return loadFromStorage(SESSIONS).catch(function(){});
-    }).then(function(){ buildMainTable(); });
+  if (name === 'members')   { buildMemberGrid(); setTimeout(renderMemberChart, 60); }
+  if (name === 'schedule')  {
+    /* Reload from localStorage so latest saved data is always shown */
+    loadFromStorage(SESSIONS).then(function(){ buildMainTable(); });
+    checkAuthOverlay();
   }
-
-  if (name === 'grading' || name === 'scenarios') {
-    if (!currentAssessor) {
-      document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
-      document.querySelectorAll('.ntab').forEach(function(t){ t.classList.remove('active'); });
-      document.getElementById('page-overview').classList.add('active');
-      var _overBtn = document.querySelector('[data-page="overview"]');
-      if (_overBtn) _overBtn.classList.add('active');
-      var _toast = document.getElementById('assessor-only-toast');
-      if (_toast) {
-        _toast.style.opacity = '1';
-        clearTimeout(window._toastTimeout);
-        window._toastTimeout = setTimeout(function(){ _toast.style.opacity = '0'; }, 3000);
-      }
-      updateKPIs();
-      return;
-    }
-    if (name === 'scenarios') renderScenarios('all');
-  }
+  if (name === 'scenarios') { renderScenarios('all'); }
 }
 
 function filterScenLib(cat, btn) {
@@ -3092,17 +2907,17 @@ function initAuth() {
     if (saved) {
       var parsed = JSON.parse(saved);
       if (parsed.mode === 'viewer') {
-        scheduleMode = 'viewer';
-      } else if (parsed.mode === 'assessor' && parsed.name && parsed.hash) {
+        scheduleMode = 'viewer'; return;
+      }
+      if (parsed.mode === 'assessor' && parsed.name && parsed.hash) {
         var match = ALL_ASSESSORS.find(function(a){ return a.name === parsed.name; });
         if (match && match.pwdHash === parsed.hash) {
           currentAssessor = match;
-          scheduleMode = 'assessor';
+          scheduleMode = 'assessor'; return;
         }
       }
     }
   } catch(e) {}
-  updateAssessorBanner(); /* always update topbar widget regardless of auth state */
 }
 
 function showAuthOverlay() {
@@ -3179,44 +2994,31 @@ function doSignOut() {
   currentAssessor = null;
   scheduleMode = null;
   try { localStorage.removeItem(AUTH_STORAGE_KEY); } catch(e) {}
-  updateAssessorBanner(); /* restores Sign In btn on topbar */
+  updateAssessorBanner();
+  showAuthOverlay();
   buildMainTable();
 }
 
 function updateAssessorBanner() {
-  /* ── Schedule page banner ── */
   var banner = document.getElementById('assessor-banner');
-  if (banner) {
-    if (scheduleMode === 'assessor' && currentAssessor) {
-      banner.style.display = 'flex'; banner.className = 'assessor-banner';
-      var ne = document.getElementById('banner-name'); if (ne) ne.textContent = currentAssessor.name;
-    } else if (scheduleMode === 'viewer') {
-      banner.style.display = 'flex'; banner.className = 'assessor-banner viewer-mode';
-      var ne2 = document.getElementById('banner-name'); if (ne2) ne2.textContent = 'Viewer — Read Only';
-    } else { banner.style.display = 'none'; }
-  }
-  /* ── Topbar auth widget ── */
-  var _sb = document.getElementById('topbar-signin-btn');
-  var _vc = document.getElementById('topbar-viewer-chip');
-  var _ac = document.getElementById('topbar-assessor-chip');
-  var _an = document.getElementById('topbar-assessor-name');
-  var _so = document.getElementById('topbar-signout-btn');
+  if (!banner) return;
   if (scheduleMode === 'assessor' && currentAssessor) {
-    if (_sb) _sb.style.display = 'none';
-    if (_vc) _vc.style.display = 'none';
-    if (_ac) _ac.style.display = 'inline-flex';
-    if (_an) _an.textContent   = currentAssessor.name.split(' - ')[0];
-    if (_so) _so.style.display = 'inline-block';
+    banner.style.display = 'flex';
+    banner.className = 'assessor-banner';
+    var nameEl = document.getElementById('banner-name');
+    if (nameEl) nameEl.textContent = currentAssessor.name;
   } else if (scheduleMode === 'viewer') {
-    if (_sb) _sb.style.display = 'none';
-    if (_vc) _vc.style.display = 'inline-flex';
-    if (_ac) _ac.style.display = 'none';
-    if (_so) _so.style.display = 'inline-block';
+    banner.style.display = 'flex';
+    banner.className = 'assessor-banner viewer-mode';
+    var nameEl = document.getElementById('banner-name');
+    if (nameEl) nameEl.textContent = 'Viewer \u2014 Read Only';
   } else {
-    if (_sb) _sb.style.display = 'inline-block';
-    if (_vc) _vc.style.display = 'none';
-    if (_ac) _ac.style.display = 'none';
-    if (_so) _so.style.display = 'none';
+    banner.style.display = 'none';
+  }
+  /* ── Save bar visibility ── */
+  var _saveBar = document.getElementById('save-bar');
+  if (_saveBar) {
+    _saveBar.style.display = (scheduleMode === 'assessor' && currentAssessor) ? '' : 'none';
   }
 }
 
@@ -3234,23 +3036,61 @@ var _saveTimeout = null;
 function showSPSyncIndicator(ok) {
   var el = document.getElementById('sp-sync-indicator');
   if (!el) return;
-  el.textContent   = ok ? '☁ Synced' : '⚠ Offline (local only)';
-  el.style.color   = ok ? '#0a8f64' : '#c47a00';
+  el.textContent = ok ? '☁ Synced' : '⚠ Offline (local only)';
+  el.style.color  = ok ? 'var(--green)' : 'var(--amber,#c47a00)';
   el.style.opacity = '1';
+  clearTimeout(window._spSyncTimeout);
+  window._spSyncTimeout = setTimeout(function(){ el.style.opacity = '0'; }, 3000);
 }
 
-function saveToStorage() {
-  _saveToStorageCore();
-  showSaveIndicator();
-}
-function showSaveIndicator() {
+/* ── DIRTY STATE & MANUAL SAVE ── */
+var _isDirty = false;
+
+function markDirty() {
+  _isDirty = true;
+  var btn = document.getElementById('save-btn');
+  if (btn) {
+    btn.classList.add('has-changes');
+    btn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+    btn.disabled = false;
+  }
+  /* Update indicator */
   var el = document.getElementById('autosave-indicator');
-  if (!el) return;
-  el.textContent = '\u2713 Saved';
-  el.style.color = 'var(--green)';
-  el.style.opacity = '1';
-  clearTimeout(_saveTimeout);
-  _saveTimeout = setTimeout(function(){ el.style.opacity = '0'; }, 2000);
+  if (el) { el.textContent = '\u25CF Unsaved changes'; el.style.color = 'var(--amber,#c47a00)'; el.style.opacity = '1'; }
+  /* Always save to localStorage immediately (offline buffer — no API call) */
+  try {
+    var data = SESSIONS.filter(function(s) {
+      var r = s.result;
+      return r && (r.status === 'completed' || r.pct !== '' || r.assor !== ''
+        || r.fr !== '' || r.ic !== '' || r.seot !== '' || r.esc1 !== '' || r.esc2 !== ''
+        || r.remarks !== '' || r.gaps !== '' || r.scenSub !== ''
+        || r.dept1c !== '' || r.dept2c !== '' || r.dateOverride !== '');
+    }).map(function(s) { return {num: s.num, result: s.result}; });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
+
+function doManualSave() {
+  if (!_isDirty && !_saveInFlight) return;
+  var btn = document.getElementById('save-btn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...'; }
+  _saveToStorageCore().then(function() {
+    _isDirty = false;
+    if (btn) { btn.classList.remove('has-changes'); btn.innerHTML = '<i class="fas fa-check"></i> Saved'; btn.disabled = true; }
+    var el = document.getElementById('autosave-indicator');
+    if (el) { el.textContent = '\u2713 Saved'; el.style.color = 'var(--green)'; el.style.opacity = '1'; clearTimeout(_saveTimeout); _saveTimeout = setTimeout(function(){ el.style.opacity = '0'; }, 3000); }
+    showSPSyncIndicator(true);
+    /* After saving, reload from cloud so other assessors' data appears */
+    setTimeout(function(){ loadFromStorage(SESSIONS).catch(function(){}); }, 1000);
+  }).catch(function(e) {
+    console.warn('Manual save failed:', e);
+    if (btn) { btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Retry Save'; btn.disabled = false; btn.classList.add('has-changes'); }
+    showSPSyncIndicator(false);
+  });
+}
+
+function showSaveIndicator() {
+  /* Legacy — no-op, replaced by markDirty/doManualSave flow */
 }
 
 /* ── Row lock logic ──
@@ -3335,7 +3175,7 @@ function unlockDrill(num) {
     }
   }
   /* Do NOT reset status — keep it as-is so assessor can see and change it */
-  saveToStorage();
+  markDirty();
   /* Re-render just this row's lock state without full table rebuild */
   var tr = catSel ? catSel.closest('tr') : null;
   if (tr) {
@@ -3392,12 +3232,18 @@ function persistPct(num, val) {
 }
 
 /* ── SAVE ON EXIT + INTERVAL ── */
-window.addEventListener('beforeunload', function() { _saveToStorageCore(); });
-document.addEventListener('visibilitychange', function() {
-  if (document.visibilityState === 'hidden') { _saveToStorageCore(); }
+window.addEventListener('beforeunload', function() { if (_isDirty) { _saveToStorageCore(); } });
+/* Ctrl+S / Cmd+S keyboard shortcut for save */
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    if (_isDirty) doManualSave();
+  }
 });
-/* Auto-save interval removed — data saves immediately on every field change */
-/* Keeping: beforeunload + visibilitychange + page navigation saves */
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden' && _isDirty) { _saveToStorageCore(); _isDirty = false; }
+});
+/* Auto-save interval removed — use Save button instead */
 
 /* ── ASSESSOR REASSIGN CONFIRMATION ── */
 var _pendingAssessorChange = null; // {num, newName, selectEl}
@@ -3469,25 +3315,14 @@ awHC();
 initAuth();
 
 /* ── Live-sync: reload from SharePoint every 30 seconds ─────── */
-/* Track last user interaction to avoid rebuilding table mid-edit */
-var _lastUserAction = Date.now();
-document.addEventListener('mousedown', function(){ _lastUserAction = Date.now(); });
-document.addEventListener('keydown',   function(){ _lastUserAction = Date.now(); });
-
 setInterval(function() {
-  /* Skip reload if a save is in flight or just completed (avoid overwriting fresh data) */
-  if (_saveInFlight || (Date.now() - _lastSaveAt) < 15000) return;
   loadFromStorage(SESSIONS).then(function() {
-    updateKPIs();
-    updateYearChart(); updateOverdueChart(); buildUpcomingGrid();
-    /* Only rebuild schedule table if user hasn't touched anything in last 5s */
-    var idleMs = Date.now() - _lastUserAction;
-    if (idleMs > 5000) {
-      if (typeof buildMainTable === 'function') buildMainTable();
-    }
-    if (typeof buildMemberGrid === 'function') buildMemberGrid();
-  }).catch(function(e){ console.warn('Live-sync failed:', e); });
-}, 30000); /* every 30 seconds */
+    if (typeof updateKPIs     === 'function') updateKPIs();
+    if (typeof buildMainTable === 'function') buildMainTable();
+    if (typeof buildUpcomingGrid === 'function') buildUpcomingGrid();
+    if (typeof buildMembersGrid  === 'function') buildMembersGrid();
+  });
+}, 30000);
 
 /* ═══════════════════════════════════════════════════════════════
    EVENT DELEGATION — CSP-safe replacement for all inline handlers
@@ -3518,8 +3353,6 @@ document.addEventListener('change', function(e) {
   var action = el.dataset.action;
   var num    = el.dataset.num ? parseInt(el.dataset.num, 10) : null;
   switch (action) {
-    case 'persistDateOverride':
-      persistDateOverride(num, el.value, el); break;
     case 'persistField':
       persistField(num, el.dataset.field, el.value); break;
     case 'persistStatus':
@@ -3551,12 +3384,6 @@ document.addEventListener('keydown', function(e) {
   if (el.dataset.action === 'pwdKeydown' && e.key === 'Enter') doSignIn();
 });
 
-
-/* ── Global unhandled promise rejection safety net ── */
-window.addEventListener('unhandledrejection', function(e) {
-  console.warn('Unhandled promise rejection:', e.reason);
-  e.preventDefault(); /* suppress browser error overlay */
-});
 </script>
 
 <!-- ════ SCENARIOS LIBRARY PAGE ════ -->
@@ -3599,5 +3426,4 @@ window.addEventListener('unhandledrejection', function(e) {
 
 </div>
 
-<div id="assessor-only-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,.9);color:#fff;padding:9px 22px;border-radius:8px;font-size:12px;font-weight:600;z-index:9999;opacity:0;transition:opacity .4s;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.25);"><i class="fas fa-lock" style="margin-right:8px;"></i>Assessor sign-in required to view this page</div>
 </body></html>
