@@ -1166,7 +1166,7 @@ tr.row-overdue:hover td{background:#fdeee8 !important}
   <div id="save-bar" class="save-bar" style="display:none;">
     <div class="save-bar-inner">
       <span id="save-bar-status" class="save-bar-status"><i class="fas fa-check-circle"></i> All changes saved</span>
-      <button id="save-btn" class="save-btn" disabled onclick="doManualSave()"><i class="fas fa-check"></i> Saved</button>
+      <button id="save-btn" class="save-btn" disabled="" onclick="doManualSave()"><i class="fas fa-check"></i> Saved</button>
     </div>
   </div>
 
@@ -1662,17 +1662,25 @@ async function _saveToStorageCore() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
   if (typeof updateKPIs === 'function') updateKPIs();
 
-  /* Save to JSONBin — only when assessor is signed in */
+  /* Save to GitHub — only when assessor is signed in */
   if (!currentAssessor) return;
-  try {
-    /* Read current bin first */
-    var rResp = await fetch(JB_CONFIG.readUrl, {
-      headers: { 'X-Master-Key': JB_CONFIG.apiKey }
-    });
-    var rJson = await rResp.json();
-    var drills = (rJson.record && rJson.record.drills) ? rJson.record.drills : [];
+  var GH_TOKEN = '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';
+  var GH_API = 'https://api.github.com/repos/DXB-Cluster/dxb-drill/contents/drills.json';
+  var headers = { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
 
-    /* Update or insert each changed session */
+  try {
+    /* Read current drills.json to get SHA */
+    var getResp = await fetch(GH_API, { headers: headers });
+    var getMeta = await getResp.json();
+    var sha = getMeta.sha || '';
+    var drills = [];
+
+    /* Try to decode existing content */
+    if (getMeta.content) {
+      try { drills = JSON.parse(atob(getMeta.content.replace(/\n/g, ''))); } catch(e) { drills = []; }
+    }
+
+    /* Merge current session data */
     SESSIONS.forEach(function(s) {
       if (!s.result || s.result.status === 'scheduled') return;
       var idx = drills.findIndex(function(d){ return d.num === s.num; });
@@ -1681,42 +1689,68 @@ async function _saveToStorageCore() {
       else drills.push(entry);
     });
 
-    /* Write full updated array back */
-    var wResp = await fetch(JB_CONFIG.writeUrl, {
-      method:  'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JB_CONFIG.apiKey },
-      body:    JSON.stringify({ drills: drills })
-    });
-    var wJson = await wResp.json();
-    if (wJson.record) showSPSyncIndicator(true);
-    else showSPSyncIndicator(false);
+    /* Push updated drills.json */
+    var putBody = {
+      message: 'Update drills — ' + currentAssessor.name + ' @ ' + new Date().toLocaleString(),
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(drills, null, 2)))),
+      sha: sha,
+      branch: 'main'
+    };
+
+    var putResp = await fetch(GH_API, { method: 'PUT', headers: headers, body: JSON.stringify(putBody) });
+    var putData = await putResp.json();
+    if (putResp.ok) { showSPSyncIndicator(true); console.log('Saved to GitHub: ' + putData.commit.sha.substring(0,7)); }
+    else { console.warn('GitHub save failed:', putData.message); showSPSyncIndicator(false); }
   } catch(e) {
-    console.warn('JSONBin save failed:', e);
+    console.warn('GitHub save error:', e);
     showSPSyncIndicator(false);
   }
 }
 
 
 async function loadFromStorage(sessions) {
-  var loadedFromJB = false;
+  var loaded = false;
   try {
-    var resp = await fetch(JB_CONFIG.readUrl, {
-      headers: { 'X-Master-Key': JB_CONFIG.apiKey }
-    });
-    var json = await resp.json();
-    if (json.record && json.record.drills && json.record.drills.length > 0) {
-      json.record.drills.forEach(function(item) {
+    /* Load from GitHub — try Pages first, then API */
+    var url = 'https://dxb-cluster.github.io/dxb-drill/drills.json?_t=' + Date.now();
+    var resp = await fetch(url);
+    var drills = null;
+    
+    if (resp.ok) {
+      var json = await resp.json();
+      /* Handle both formats: flat array or {drills:[...]} wrapper */
+      if (Array.isArray(json)) drills = json;
+      else if (json && json.drills && Array.isArray(json.drills)) drills = json.drills;
+      else if (json && json.record && json.record.drills) drills = json.record.drills;
+    }
+    
+    /* Fallback to GitHub API if Pages failed */
+    if (!drills) {
+      var GH_TOKEN = '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';
+      var apiResp = await fetch('https://api.github.com/repos/DXB-Cluster/dxb-drill/contents/drills.json', {
+        headers: { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3.raw' }
+      });
+      if (apiResp.ok) {
+        var apiJson = await apiResp.json();
+        if (Array.isArray(apiJson)) drills = apiJson;
+        else if (apiJson && apiJson.drills) drills = apiJson.drills;
+      }
+    }
+    
+    if (drills && drills.length > 0) {
+      drills.forEach(function(item) {
         var s = sessions.find(function(x){ return x.num === item.num; });
         if (s && item.result) {
           try { s.result = Object.assign(s.result, item.result); } catch(e) {}
         }
       });
-      loadedFromJB = true;
+      loaded = true;
+      console.log('Loaded ' + drills.length + ' drills from GitHub');
     }
-  } catch(e) { console.warn('JSONBin load failed, using localStorage:', e); }
+  } catch(e) { console.warn('GitHub load failed:', e); }
 
   /* Fallback to localStorage */
-  if (!loadedFromJB) {
+  if (!loaded) {
     try {
       var raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
@@ -1725,6 +1759,7 @@ async function loadFromStorage(sessions) {
         var s = sessions.find(function(x){ return x.num === item.num; });
         if (s) s.result = Object.assign(s.result, item.result);
       });
+      console.log('Loaded from localStorage (offline fallback)');
     } catch(e) {}
   }
 }
