@@ -3351,16 +3351,8 @@ awHC();
 initAuth();
 
 /* ── Live-sync: reload from SharePoint every 30 seconds ─────── */
-setInterval(function() {
-  /* Skip sync if user has unsaved local changes or save is in progress */
-  if (_isDirty || _saveInFlight) return;
-  loadFromStorage(SESSIONS).then(function() {
-    if (typeof updateKPIs     === 'function') updateKPIs();
-    if (typeof buildMainTable === 'function') buildMainTable();
-    if (typeof buildUpcomingGrid === 'function') buildUpcomingGrid();
-    if (typeof buildMembersGrid  === 'function') buildMembersGrid();
-  });
-}, 30000);
+/* Live sync interval REMOVED — users click Save to push, refresh to pull.
+   This prevents stale GitHub data from overwriting in-progress edits. */
 
 /* ═══════════════════════════════════════════════════════════════
    EVENT DELEGATION — CSP-safe replacement for all inline handlers
