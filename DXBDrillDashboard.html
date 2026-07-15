@@ -1712,33 +1712,19 @@ async function _saveToStorageCore() {
 
 async function loadFromStorage(sessions) {
   var loaded = false;
+  var GH_TOKEN = 'ghp_rVyUid0wRQ' + 'bD5xUaWxkAh13T' + 'si75qp1hXzLq';
   try {
-    /* Load from GitHub — try Pages first, then API */
-    var url = 'https://dxb-cluster.github.io/dxb-drill/drills.json?_t=' + Date.now();
-    var resp = await fetch(url);
+    /* Load from GitHub API directly (always fresh — no CDN cache) */
+    var apiResp = await fetch('https://api.github.com/repos/DXB-Cluster/dxb-drill/contents/drills.json', {
+      headers: { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3.raw' }
+    });
     var drills = null;
-    
-    if (resp.ok) {
-      var json = await resp.json();
-      /* Handle both formats: flat array or {drills:[...]} wrapper */
+    if (apiResp.ok) {
+      var json = await apiResp.json();
       if (Array.isArray(json)) drills = json;
       else if (json && json.drills && Array.isArray(json.drills)) drills = json.drills;
       else if (json && json.record && json.record.drills) drills = json.record.drills;
     }
-    
-    /* Fallback to GitHub API if Pages failed */
-    if (!drills) {
-      var GH_TOKEN = 'ghp_rVyUid0wRQ' + 'bD5xUaWxkAh13T' + 'si75qp1hXzLq';
-      var apiResp = await fetch('https://api.github.com/repos/DXB-Cluster/dxb-drill/contents/drills.json', {
-        headers: { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3.raw' }
-      });
-      if (apiResp.ok) {
-        var apiJson = await apiResp.json();
-        if (Array.isArray(apiJson)) drills = apiJson;
-        else if (apiJson && apiJson.drills) drills = apiJson.drills;
-      }
-    }
-    
     if (drills && drills.length > 0) {
       drills.forEach(function(item) {
         var s = sessions.find(function(x){ return x.num === item.num; });
@@ -1747,9 +1733,9 @@ async function loadFromStorage(sessions) {
         }
       });
       loaded = true;
-      console.log('Loaded ' + drills.length + ' drills from GitHub');
+      console.log('Loaded ' + drills.length + ' drills from GitHub API');
     }
-  } catch(e) { console.warn('GitHub load failed:', e); }
+  } catch(e) { console.warn('GitHub API load failed:', e); }
 
   /* Fallback to localStorage */
   if (!loaded) {
