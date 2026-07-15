@@ -1636,6 +1636,9 @@ var GH_CONFIG = {
 
 /* _getSpDigest removed — using JSONBin */
 
+var _saveInFlight = false;   /* true while GitHub write is in progress */
+var _lastSaveAt  = 0;         /* timestamp of last completed save */
+
 async function _saveToStorageCore() {
   /* Always keep localStorage as offline fallback */
   /* Only store sessions with real data to avoid blanks overwriting JSONBin data */
@@ -1677,6 +1680,7 @@ async function _saveToStorageCore() {
       else drills.push(entry);
     });
 
+    _saveInFlight = true;
     /* Write back via GitHub Contents API */
     var wBody = {
       message: 'drill update by ' + (currentAssessor ? currentAssessor.name : 'system'),
@@ -1689,9 +1693,12 @@ async function _saveToStorageCore() {
       headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
       body:    JSON.stringify(wBody)
     });
+    _saveInFlight = false;
+    _lastSaveAt = Date.now();
     showSPSyncIndicator(wResp.ok);
   } catch(e) {
     console.warn('JSONBin save failed:', e);
+    _saveInFlight = false;
     showSPSyncIndicator(false);
   }
 }
@@ -3400,6 +3407,8 @@ document.addEventListener('mousedown', function(){ _lastUserAction = Date.now();
 document.addEventListener('keydown',   function(){ _lastUserAction = Date.now(); });
 
 setInterval(function() {
+  /* Skip reload if a save is in flight or just completed (avoid overwriting fresh data) */
+  if (_saveInFlight || (Date.now() - _lastSaveAt) < 15000) return;
   loadFromStorage(SESSIONS).then(function() {
     updateKPIs();
     updateYearChart(); updateOverdueChart(); buildUpcomingGrid();
