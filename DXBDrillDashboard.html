@@ -3375,7 +3375,7 @@ window.addEventListener('beforeunload', function() { _saveToStorageCore(); });
 document.addEventListener('visibilitychange', function() {
   if (document.visibilityState === 'hidden') { _saveToStorageCore(); }
 });
-setInterval(function() { if (currentAssessor) { _saveToStorageCore(); showSaveIndicator(); } }, 10000);
+setInterval(function() { if (currentAssessor && !_saveInFlight) { _saveToStorageCore(); showSaveIndicator(); } }, 60000); /* 60s — field changes already save immediately */
 
 /* ── ASSESSOR REASSIGN CONFIRMATION ── */
 var _pendingAssessorChange = null; // {num, newName, selectEl}
@@ -3465,7 +3465,7 @@ setInterval(function() {
     }
     if (typeof buildMemberGrid === 'function') buildMemberGrid();
   }).catch(function(e){ console.warn('Live-sync failed:', e); });
-}, 10000); /* every 10 seconds */
+}, 30000); /* every 30 seconds */
 
 /* ═══════════════════════════════════════════════════════════════
    EVENT DELEGATION — CSP-safe replacement for all inline handlers
