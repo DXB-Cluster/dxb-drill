@@ -3375,7 +3375,8 @@ window.addEventListener('beforeunload', function() { _saveToStorageCore(); });
 document.addEventListener('visibilitychange', function() {
   if (document.visibilityState === 'hidden') { _saveToStorageCore(); }
 });
-setInterval(function() { if (currentAssessor && !_saveInFlight) { _saveToStorageCore(); showSaveIndicator(); } }, 60000); /* 60s — field changes already save immediately */
+/* Auto-save interval removed — data saves immediately on every field change */
+/* Keeping: beforeunload + visibilitychange + page navigation saves */
 
 /* ── ASSESSOR REASSIGN CONFIRMATION ── */
 var _pendingAssessorChange = null; // {num, newName, selectEl}
