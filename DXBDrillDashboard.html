@@ -2670,9 +2670,10 @@ function filterSite(val,btn){
 
 /* ── NAV ── */
 
-function goPage(name, btn) {
-  /* Save current data before switching pages */
-  _saveToStorageCore();
+async function goPage(name, btn) {
+  /* Save current data FIRST and wait for it to complete before loading new page */
+  try { await _saveToStorageCore(); } catch(e) { console.warn('Save before page switch failed:', e); }
+
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.querySelectorAll('.ntab').forEach(function(t){t.classList.remove('active');});
   document.getElementById('page-' + name).classList.add('active');
@@ -2681,23 +2682,24 @@ function goPage(name, btn) {
   var _siBtn = document.getElementById('topbar-signin-btn');
   if (_siBtn) _siBtn.style.display = (name === 'overview' && !scheduleMode) ? 'inline-block' : 'none';
   if (name === 'overview') {
-    /* Reload from GitHub API then re-render — always fresh */
-    loadFromStorage(SESSIONS).then(function() {
-      updateKPIs();
-      setTimeout(function(){
-        updateYearChart(); updateOverdueChart(); buildUpcomingGrid();
-        setTimeout(function(){try{buildComplianceTracker();}catch(e){var g=document.getElementById('comp-grid');if(g)g.innerHTML='<div style="grid-column:1/-1;padding:16px;color:var(--red);font-size:11px;">Error: '+e.message+'</div>';}},50);
-      }, 60);
-    }).catch(function(){ updateKPIs(); setTimeout(function(){ updateYearChart(); updateOverdueChart(); buildUpcomingGrid(); }, 60); });
+    /* Reload from GitHub API AFTER save completes — now shows latest data */
+    try {
+      await loadFromStorage(SESSIONS);
+    } catch(e) { console.warn('Overview load failed:', e); }
+    updateKPIs();
+    setTimeout(function(){
+      updateYearChart(); updateOverdueChart(); buildUpcomingGrid();
+      setTimeout(function(){try{buildComplianceTracker();}catch(e){var g=document.getElementById('comp-grid');if(g)g.innerHTML='<div style="grid-column:1/-1;padding:16px;color:var(--red);font-size:11px;">Error: '+e.message+'</div>';}},50);
+    }, 60);
   }
   if (name === 'members')   { buildMemberGrid(); setTimeout(renderMemberChart, 60); }
   if (name === 'schedule')  {
-    /* Reload from storage so latest saved data is always shown */
-    loadFromStorage(SESSIONS).then(function(){ buildMainTable(); }).catch(function(e){ console.warn('Schedule reload failed:', e); buildMainTable(); });
+    /* Reload from cloud so latest data from other assessors is shown */
+    try { await loadFromStorage(SESSIONS); } catch(e) { console.warn('Schedule reload failed:', e); }
+    buildMainTable();
   }
   if (name === 'grading' || name === 'scenarios') {
     if (!currentAssessor) {
-      /* Redirect non-assessors back to overview */
       document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
       document.querySelectorAll('.ntab').forEach(function(t){ t.classList.remove('active'); });
       document.getElementById('page-overview').classList.add('active');
@@ -2709,11 +2711,7 @@ function goPage(name, btn) {
         clearTimeout(window._toastTimeout);
         window._toastTimeout = setTimeout(function(){ _toast.style.opacity = '0'; }, 3000);
       }
-      /* Re-render overview with current data */
-      loadFromStorage(SESSIONS).then(function() {
-        updateKPIs();
-        setTimeout(function(){ updateYearChart(); updateOverdueChart(); buildUpcomingGrid(); }, 60);
-      });
+      updateKPIs();
       return;
     }
     if (name === 'scenarios') renderScenarios('all');
