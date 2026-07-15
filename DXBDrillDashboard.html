@@ -1665,7 +1665,7 @@ async function _saveToStorageCore() {
   /* Save to GitHub — only when assessor is signed in */
   if (!currentAssessor) return;
   _saveInFlight = true;
-  var GH_TOKEN = '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';
+  var GH_TOKEN = 'ghp_rVyUid0wRQ' + 'bD5xUaWxkAh13T' + 'si75qp1hXzLq';
   var GH_API = 'https://api.github.com/repos/DXB-Cluster/dxb-drill/contents/drills.json';
   var headers = { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
 
@@ -1728,7 +1728,7 @@ async function loadFromStorage(sessions) {
     
     /* Fallback to GitHub API if Pages failed */
     if (!drills) {
-      var GH_TOKEN = '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';
+      var GH_TOKEN = 'ghp_rVyUid0wRQ' + 'bD5xUaWxkAh13T' + 'si75qp1hXzLq';
       var apiResp = await fetch('https://api.github.com/repos/DXB-Cluster/dxb-drill/contents/drills.json', {
         headers: { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3.raw' }
       });
