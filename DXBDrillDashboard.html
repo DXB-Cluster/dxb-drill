@@ -1649,7 +1649,7 @@ async function _saveToStorageCore() {
     var r = s.result;
     return r && (r.status === 'completed' || r.pct !== '' || r.assor !== ''
       || r.fr !== '' || r.ic !== '' || r.seot !== '' || r.esc1 !== '' || r.esc2 !== ''
-      || r.remarks !== '' || r.gaps !== '' || r.scenCat !== '' || r.scenSub !== ''
+      || r.remarks !== '' || r.gaps !== '' || r.scenSub !== ''
       || r.dept1c !== '' || r.dept2c !== '' || r.dateOverride !== '');
   }).map(function(s) { return {num: s.num, result: s.result}; });
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
@@ -1674,9 +1674,10 @@ async function _saveToStorageCore() {
     SESSIONS.forEach(function(s) {
       if (!s.result) return;
       var r = s.result;
+      /* scenCat excluded — defaults to 'Electrical' for display, not real user data */
       var hasData = r.status === 'completed' || r.pct !== '' || r.assor !== ''
         || r.fr !== '' || r.ic !== '' || r.seot !== '' || r.esc1 !== '' || r.esc2 !== ''
-        || r.remarks !== '' || r.gaps !== '' || r.scenCat !== '' || r.scenSub !== ''
+        || r.remarks !== '' || r.gaps !== '' || r.scenSub !== ''
         || r.dept1c !== '' || r.dept2c !== '' || r.dateOverride !== '';
       if (!hasData) return;
       var now = new Date().toISOString();
@@ -1701,7 +1702,7 @@ async function _saveToStorageCore() {
             SESSIONS.forEach(function(s) {
               if (!s.result) return;
               var r = s.result;
-              var hasData = r.status==='completed'||r.pct!==''||r.assor!==''||r.fr!==''||r.ic!==''||r.seot!==''||r.esc1!==''||r.esc2!==''||r.remarks!==''||r.gaps!==''||r.scenCat!==''||r.scenSub!==''||r.dept1c!==''||r.dept2c!==''||r.dateOverride!=='';
+              var hasData = r.status==='completed'||r.pct!==''||r.assor!==''||r.fr!==''||r.ic!==''||r.seot!==''||r.esc1!==''||r.esc2!==''||r.remarks!==''||r.gaps!==''||r.scenSub!==''||r.dept1c!==''||r.dept2c!==''||r.dateOverride!=='';
               if (!hasData) return;
               var idx = freshDrills.findIndex(function(d){return d.num===s.num;});
               var entry = {num:s.num,result:r,updatedBy:currentAssessor.name,updatedAt:r._localUpdatedAt||new Date().toISOString()};
