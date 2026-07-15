@@ -1716,18 +1716,17 @@ async function loadFromStorage(sessions) {
       loadedFromJB = true; /* successfully reached GitHub */
     }
     if (json && json.drills && json.drills.length > 0) {
-      /* Reset all sessions first so stale local data doesn't persist */
-      sessions.forEach(function(s) {
-        s.result = {status:'pending',scenario:s.sc.n,scenCat:'',scenSub:'',
-          scenCatCustom:'',scenSubCustom:'',dept1:'—',dept1c:'',dept2:'—',dept2c:'',
-          assor:'',esc1:'',esc2:'',fr:'',ic:'',seot:'',remarks:'',gaps:'',pct:'',dateOverride:''};
-        s.d = new Date(s._origD || s.d); /* restore original date */
-      });
+      /* Merge cloud data into sessions — keep in-memory data as fallback */
       json.drills.forEach(function(item) {
         var s = sessions.find(function(x){ return x.num === item.num; });
         if (s && item.result) {
           try {
-            s.result = Object.assign(s.result, item.result);
+            /* Cloud wins for fields that have actual values */
+            Object.keys(item.result).forEach(function(k) {
+              if (item.result[k] !== '' && item.result[k] !== null && item.result[k] !== undefined) {
+                s.result[k] = item.result[k];
+              }
+            });
             if (s.result.dateOverride) { s.d = new Date(s.result.dateOverride); }
           } catch(e) {}
         }
