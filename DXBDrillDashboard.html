@@ -1712,38 +1712,33 @@ async function _saveToStorageCore() {
 
 async function loadFromStorage(sessions) {
   var loaded = false;
-  var GH_TOKEN = 'ghp_rVyUid0wRQ' + 'bD5xUaWxkAh13T' + 'si75qp1hXzLq';
   try {
-    /* Load from GitHub raw (with auth to bypass CDN cache for private-like access) */
-    var apiResp = await fetch('https://raw.githubusercontent.com/DXB-Cluster/dxb-drill/main/drills.json', {
-      headers: { 'Authorization': 'token ' + GH_TOKEN },
-      cache: 'no-store'
-    });
+    /* Load from GitHub — try Pages first, then API */
+    var url = 'https://dxb-cluster.github.io/dxb-drill/drills.json?_t=' + Date.now();
+    var resp = await fetch(url);
     var drills = null;
-    if (apiResp.ok) {
-      var json = await apiResp.json();
+    
+    if (resp.ok) {
+      var json = await resp.json();
+      /* Handle both formats: flat array or {drills:[...]} wrapper */
       if (Array.isArray(json)) drills = json;
       else if (json && json.drills && Array.isArray(json.drills)) drills = json.drills;
       else if (json && json.record && json.record.drills) drills = json.record.drills;
-    } else {
-      /* Fallback: use Git Blob API for files >1MB */
-      var metaResp = await fetch('https://api.github.com/repos/DXB-Cluster/dxb-drill/contents/drills.json', {
-        headers: { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3+json' }
+    }
+    
+    /* Fallback to GitHub API if Pages failed */
+    if (!drills) {
+      var GH_TOKEN = 'ghp_rVyUid0wRQ' + 'bD5xUaWxkAh13T' + 'si75qp1hXzLq';
+      var apiResp = await fetch('https://api.github.com/repos/DXB-Cluster/dxb-drill/contents/drills.json', {
+        headers: { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3.raw' }
       });
-      if (metaResp.ok) {
-        var meta = await metaResp.json();
-        if (meta.git_url) {
-          var blobResp = await fetch(meta.git_url, {
-            headers: { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.raw' }
-          });
-          if (blobResp.ok) {
-            var blobJson = await blobResp.json();
-            if (Array.isArray(blobJson)) drills = blobJson;
-            else if (blobJson && blobJson.drills) drills = blobJson.drills;
-          }
-        }
+      if (apiResp.ok) {
+        var apiJson = await apiResp.json();
+        if (Array.isArray(apiJson)) drills = apiJson;
+        else if (apiJson && apiJson.drills) drills = apiJson.drills;
       }
     }
+    
     if (drills && drills.length > 0) {
       drills.forEach(function(item) {
         var s = sessions.find(function(x){ return x.num === item.num; });
