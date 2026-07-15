@@ -1714,9 +1714,10 @@ async function loadFromStorage(sessions) {
   var loaded = false;
   var GH_TOKEN = 'ghp_rVyUid0wRQ' + 'bD5xUaWxkAh13T' + 'si75qp1hXzLq';
   try {
-    /* Load from GitHub API directly (always fresh — no CDN cache) */
-    var apiResp = await fetch('https://api.github.com/repos/DXB-Cluster/dxb-drill/contents/drills.json', {
-      headers: { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3.raw' }
+    /* Load from GitHub raw (with auth to bypass CDN cache for private-like access) */
+    var apiResp = await fetch('https://raw.githubusercontent.com/DXB-Cluster/dxb-drill/main/drills.json', {
+      headers: { 'Authorization': 'token ' + GH_TOKEN },
+      cache: 'no-store'
     });
     var drills = null;
     if (apiResp.ok) {
@@ -1724,6 +1725,24 @@ async function loadFromStorage(sessions) {
       if (Array.isArray(json)) drills = json;
       else if (json && json.drills && Array.isArray(json.drills)) drills = json.drills;
       else if (json && json.record && json.record.drills) drills = json.record.drills;
+    } else {
+      /* Fallback: use Git Blob API for files >1MB */
+      var metaResp = await fetch('https://api.github.com/repos/DXB-Cluster/dxb-drill/contents/drills.json', {
+        headers: { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (metaResp.ok) {
+        var meta = await metaResp.json();
+        if (meta.git_url) {
+          var blobResp = await fetch(meta.git_url, {
+            headers: { 'Authorization': 'token ' + GH_TOKEN, 'Accept': 'application/vnd.github.raw' }
+          });
+          if (blobResp.ok) {
+            var blobJson = await blobResp.json();
+            if (Array.isArray(blobJson)) drills = blobJson;
+            else if (blobJson && blobJson.drills) drills = blobJson.drills;
+          }
+        }
+      }
     }
     if (drills && drills.length > 0) {
       drills.forEach(function(item) {
@@ -1733,9 +1752,9 @@ async function loadFromStorage(sessions) {
         }
       });
       loaded = true;
-      console.log('Loaded ' + drills.length + ' drills from GitHub API');
+      console.log('Loaded ' + drills.length + ' drills from GitHub');
     }
-  } catch(e) { console.warn('GitHub API load failed:', e); }
+  } catch(e) { console.warn('GitHub load failed:', e); }
 
   /* Fallback to localStorage */
   if (!loaded) {
