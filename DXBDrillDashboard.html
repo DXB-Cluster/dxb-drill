@@ -1631,7 +1631,7 @@ var GH_CONFIG = {
   rawUrl:  'https://raw.githubusercontent.com/DXB-Cluster/dxb-drill/main/drills.json',
   apiUrl:  'https://api.github.com/repos/DXB-Cluster/dxb-drill/contents/drills.json',
   branch:  'main',
-  token:   ['ghp_','GDlUtbo6jFEFxoHG','ZCRqGU1nu1nPPO0y5ToJ'].join('')
+  token:   ['ghp_','rltQNenBan7Ku7fi','SCngGs7S3w8Iya0llpU3'].join('')
 };
 
 /* _getSpDigest removed — using JSONBin */
@@ -1688,7 +1688,7 @@ async function _saveToStorageCore() {
 
     /* Write back — retry up to 3 times on 409 SHA conflict */
     var wResp = null;
-    var encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify({ drills: drills }))));
+    var _enc=function(s){var b=new TextEncoder().encode(s);var bin='';b.forEach(function(x){bin+=String.fromCharCode(x);});return btoa(bin);}; var encodedContent = _enc(JSON.stringify({ drills: drills }));
     for (var attempt = 0; attempt < 3; attempt++) {
       if (attempt > 0) {
         /* Re-fetch fresh SHA before retry */
@@ -1708,7 +1708,7 @@ async function _saveToStorageCore() {
               var entry = {num:s.num,result:r,updatedBy:currentAssessor.name,updatedAt:r._localUpdatedAt||new Date().toISOString()};
               if (idx>=0) freshDrills[idx]=entry; else freshDrills.push(entry);
             });
-            encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify({drills:freshDrills}))));
+            encodedContent = (function(s){var b=new TextEncoder().encode(s);var bin='';b.forEach(function(x){bin+=String.fromCharCode(x);});return btoa(bin);})(JSON.stringify({drills:freshDrills}));
           } catch(e2) {}
         }
         await new Promise(function(res){setTimeout(res, 500 * attempt);});
@@ -1744,7 +1744,7 @@ async function loadFromStorage(sessions) {
 
   /* ── Step 1: Try JSONBin first — cloud is authoritative ── */
   try {
-    /* Read via authenticated API — no CDN cache, always fresh */
+    /* Read via authenticated API — handles large files via blob API */
     var resp = await fetch(GH_CONFIG.apiUrl, {
       headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Accept': 'application/vnd.github.v3+json' }
     });
@@ -1752,7 +1752,27 @@ async function loadFromStorage(sessions) {
     var respJson = await resp.json();
     var json = null;
     if (respJson.content) {
-      try { json = JSON.parse(atob(respJson.content.replace(/\n/g, ''))); } catch(e) {}
+      /* File small enough for inline content */
+      try {
+        var raw = atob(respJson.content.replace(/\n/g, ''));
+        var bytes = new Uint8Array(raw.length);
+        for (var i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
+        json = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+      } catch(e) {}
+    } else if (respJson.git_url) {
+      /* File >1MB — GitHub omits content, use git blob API instead */
+      try {
+        var blobResp = await fetch(respJson.git_url, {
+          headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        var blobJson = await blobResp.json();
+        if (blobJson.content) {
+          var raw2 = atob(blobJson.content.replace(/\n/g,''));
+          var bytes2 = new Uint8Array(raw2.length);
+          for (var i2=0;i2<raw2.length;i2++) bytes2[i2]=raw2.charCodeAt(i2);
+          json = JSON.parse(new TextDecoder('utf-8').decode(bytes2));
+        }
+      } catch(e2) {}
     }
     if (json) {
       loadedFromJB = true; /* successfully reached GitHub */
