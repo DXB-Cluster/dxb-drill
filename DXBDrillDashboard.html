@@ -1636,12 +1636,15 @@ var GH_CONFIG = {
 
 /* _getSpDigest removed — using JSONBin */
 
-var _saveInFlight = false;   /* true while GitHub write is in progress */
-var _lastSaveAt  = 0;         /* timestamp of last completed save */
+var _saveInFlight = false;
+var _lastSaveAt   = 0;
+var _pendingSave  = false;  /* queued save waiting for in-flight to finish */
 
 async function _saveToStorageCore() {
+  /* If a save is already in flight, queue one more and return */
+  if (_saveInFlight) { _pendingSave = true; return; }
+
   /* Always keep localStorage as offline fallback */
-  /* Only store sessions with real data to avoid blanks overwriting JSONBin data */
   var data = SESSIONS.filter(function(s) {
     var r = s.result;
     return r && (r.status === 'completed' || r.pct !== '' || r.assor !== ''
@@ -1650,21 +1653,24 @@ async function _saveToStorageCore() {
       || r.dept1c !== '' || r.dept2c !== '' || r.dateOverride !== '');
   }).map(function(s) { return {num: s.num, result: s.result}; });
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
-  /* Save to GitHub — only when assessor is signed in */
+
   if (!currentAssessor) return;
+
+  _saveInFlight = true;
   try {
-    /* Read current file from GitHub to get SHA */
+    /* Read current file SHA — always fresh to avoid 409 conflicts */
     var rResp = await fetch(GH_CONFIG.apiUrl, {
       headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Accept': 'application/vnd.github.v3+json' }
     });
     var rJson = await rResp.json();
     var fileSHA = rJson.sha || '';
+    /* Start from cloud drills, overlay our local data on top */
     var drills = [];
     if (rJson.content) {
       try { drills = JSON.parse(atob(rJson.content.replace(/\n/g,''))).drills || []; } catch(e) { drills = []; }
     }
 
-    /* Write all sessions that have real data */
+    /* Merge: our local sessions overwrite cloud entries */
     SESSIONS.forEach(function(s) {
       if (!s.result) return;
       var r = s.result;
@@ -1676,30 +1682,34 @@ async function _saveToStorageCore() {
       var now = new Date().toISOString();
       var idx = drills.findIndex(function(d){ return d.num === s.num; });
       var entry = { num: s.num, result: r, updatedBy: currentAssessor.name, updatedAt: r._localUpdatedAt || now };
-      if (idx >= 0) drills[idx] = entry;
-      else drills.push(entry);
+      if (idx >= 0) drills[idx] = entry; else drills.push(entry);
     });
 
-    _saveInFlight = true;
-    /* Write back via GitHub Contents API */
+    /* Write back */
     var wBody = {
-      message: 'drill update by ' + (currentAssessor ? currentAssessor.name : 'system'),
+      message: 'drill update by ' + currentAssessor.name,
       content: btoa(unescape(encodeURIComponent(JSON.stringify({ drills: drills })))),
       branch:  GH_CONFIG.branch
     };
     if (fileSHA) wBody.sha = fileSHA;
     var wResp = await fetch(GH_CONFIG.apiUrl, {
-      method:  'PUT',
+      method: 'PUT',
       headers: { 'Authorization': 'token ' + GH_CONFIG.token, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
-      body:    JSON.stringify(wBody)
+      body: JSON.stringify(wBody)
     });
     _saveInFlight = false;
     _lastSaveAt = Date.now();
     showSPSyncIndicator(wResp.ok);
+
+    /* If another save was queued while we were writing, run it now */
+    if (_pendingSave) { _pendingSave = false; _saveToStorageCore(); }
+
   } catch(e) {
-    console.warn('JSONBin save failed:', e);
+    console.warn('Save failed:', e);
     _saveInFlight = false;
     showSPSyncIndicator(false);
+    /* Retry queued save */
+    if (_pendingSave) { _pendingSave = false; setTimeout(_saveToStorageCore, 2000); }
   }
 }
 
@@ -2678,34 +2688,46 @@ function filterSite(val,btn){
 
 /* ── NAV ── */
 
-async function goPage(name, btn) {
-  /* Save current data FIRST and wait for it to complete before loading new page */
-  try { await _saveToStorageCore(); } catch(e) { console.warn('Save before page switch failed:', e); }
-
+function goPage(name, btn) {
+  /* Switch page INSTANTLY — no waiting */
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.querySelectorAll('.ntab').forEach(function(t){t.classList.remove('active');});
   document.getElementById('page-' + name).classList.add('active');
   if (btn) btn.classList.add('active');
+
   /* Sign-in button only visible on Overview (when not signed in) */
   var _siBtn = document.getElementById('topbar-signin-btn');
   if (_siBtn) _siBtn.style.display = (name === 'overview' && !scheduleMode) ? 'inline-block' : 'none';
+
+  /* Save in background (fire-and-forget) then refresh the new page */
+  var savePromise = _saveToStorageCore().catch(function(e){ console.warn('bg save failed:', e); });
+
   if (name === 'overview') {
-    /* Reload from GitHub API AFTER save completes — now shows latest data */
-    try {
-      await loadFromStorage(SESSIONS);
-    } catch(e) { console.warn('Overview load failed:', e); }
+    /* Render from memory immediately, then reload from cloud after save lands */
     updateKPIs();
-    setTimeout(function(){
-      updateYearChart(); updateOverdueChart(); buildUpcomingGrid();
+    setTimeout(function(){ updateYearChart(); updateOverdueChart(); buildUpcomingGrid();
       setTimeout(function(){try{buildComplianceTracker();}catch(e){var g=document.getElementById('comp-grid');if(g)g.innerHTML='<div style="grid-column:1/-1;padding:16px;color:var(--red);font-size:11px;">Error: '+e.message+'</div>';}},50);
     }, 60);
+    /* After save completes, reload from cloud to show latest from all assessors */
+    savePromise.then(function(){
+      return loadFromStorage(SESSIONS).catch(function(){});
+    }).then(function(){
+      updateKPIs();
+      setTimeout(function(){ updateYearChart(); updateOverdueChart(); buildUpcomingGrid(); }, 60);
+    });
   }
-  if (name === 'members')   { buildMemberGrid(); setTimeout(renderMemberChart, 60); }
-  if (name === 'schedule')  {
-    /* Reload from cloud so latest data from other assessors is shown */
-    try { await loadFromStorage(SESSIONS); } catch(e) { console.warn('Schedule reload failed:', e); }
+
+  if (name === 'members') { buildMemberGrid(); setTimeout(renderMemberChart, 60); }
+
+  if (name === 'schedule') {
+    /* Render from memory immediately */
     buildMainTable();
+    /* Then reload cloud data after save lands */
+    savePromise.then(function(){
+      return loadFromStorage(SESSIONS).catch(function(){});
+    }).then(function(){ buildMainTable(); });
   }
+
   if (name === 'grading' || name === 'scenarios') {
     if (!currentAssessor) {
       document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
